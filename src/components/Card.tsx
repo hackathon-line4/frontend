@@ -12,13 +12,17 @@ import { Text } from './Text';
 
 type CardProps = {
   children: ReactNode;
-  /** outline: 그림자 없이 선만 (당사자 앱, 설정 목록) */
-  variant?: 'elevated' | 'outline';
+  /**
+   * elevated: 그림자 · outline: 그림자 없이 선만 (당사자 앱, 설정 목록)
+   * emphasis: 2px 진한 테두리 (연결 코드, 연결 대상처럼 꼭 확인할 정보)
+   */
+  variant?: 'elevated' | 'outline' | 'emphasis';
   style?: StyleProp<ViewStyle>;
 };
 
 export function Card({ children, variant = 'elevated', style }: CardProps) {
-  return <View style={[styles.card, variant === 'elevated' ? shadow.card : styles.outline, style]}>{children}</View>;
+  const variantStyle = variant === 'elevated' ? shadow.card : variant === 'outline' ? styles.outline : styles.emphasis;
+  return <View style={[styles.card, variantStyle, style]}>{children}</View>;
 }
 
 /* ---------- SignalTile ---------- */
@@ -127,6 +131,12 @@ const styles = StyleSheet.create({
   outline: {
     borderWidth: 1.5,
     borderColor: colors.line,
+  },
+  emphasis: {
+    borderWidth: 2,
+    borderColor: colors.ink900,
+    borderRadius: radius.xl,
+    padding: 20,
   },
 
   tile: {

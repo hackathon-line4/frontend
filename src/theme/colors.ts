@@ -34,6 +34,9 @@ export const colors = {
   textDisabled: '#B5B1A6', // 비활성 아이콘 전용. 정보 글자에 쓰지 않음
   textOnDark: '#FFFDF7',
 
+  // 어두운 화면(QR 인식 등) 위의 면
+  surfaceInverse: '#3A3936',
+
   // 상태 (fg / bg 한 쌍)
   successFg: '#1E6B3F',
   successBg: '#E3F1E8',

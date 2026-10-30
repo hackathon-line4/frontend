@@ -11,6 +11,7 @@ const icons = {
   close: () => <Path d="M6 6l12 12M18 6L6 18" />,
   'chevron-right': () => <Path d="M9 5l7 7-7 7" />,
   'chevron-down': () => <Path d="M6 9l6 6 6-6" />,
+  'arrow-right': () => <Path d="M5 12h14M13 6l6 6-6 6" />,
   plus: () => <Path d="M12 5v14M5 12h14" />,
   check: () => <Path d="M5 12.5l4.5 4.5L19 7.5" />,
   retry: () => <Path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" />,
@@ -57,6 +58,26 @@ const icons = {
     </>
   ),
   backspace: () => <Path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zM12 9l6 6M18 9l-6 6" />,
+  keyboard: () => (
+    <>
+      <Rect x="2" y="6" width="20" height="12" rx="3" />
+      <Path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10" />
+    </>
+  ),
+  timer: () => (
+    <>
+      <Circle cx="12" cy="13" r="8" />
+      <Path d="M12 9v4l3 2M9 2h6" />
+    </>
+  ),
+  more: (color: string) => (
+    <>
+      <Circle cx="5" cy="12" r="1.5" fill={color} />
+      <Circle cx="12" cy="12" r="1.5" fill={color} />
+      <Circle cx="19" cy="12" r="1.5" fill={color} />
+    </>
+  ),
+  shield: () => <Path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" />,
 
   // 탭
   'tab-home': () => <Path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" />,
@@ -116,7 +137,13 @@ const icons = {
       <Path d="M4 9v6M20 9v6" />
     </>
   ),
-  send: () => <Path d="M21.5 2.5L2.5 10.2l7.3 3.1 3.1 7.7zM21.5 2.5L9.8 13.3" />,
+  'vibrate-wave': () => (
+    <>
+      <Rect x="8" y="4" width="8" height="16" rx="2" />
+      <Path d="M4 9v6M20 9v6M1.5 11v2M22.5 11v2" />
+    </>
+  ),
+  send: () =><Path d="M21.5 2.5L2.5 10.2l7.3 3.1 3.1 7.7zM21.5 2.5L9.8 13.3" />,
   play: (color: string) => (
     <Path
       d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"

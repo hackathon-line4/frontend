@@ -11,16 +11,20 @@ type IconButtonProps = {
   onPress?: () => void;
   size?: number;
   color?: string;
+  strokeWidth?: number;
+  /** 터치 영역. 보호자 48 이상, 당사자 56 이상 */
+  touchSize?: number;
   style?: StyleProp<ViewStyle>;
 };
 
-// 터치 영역 48 × 48
 export function IconButton({
   icon,
   accessibilityLabel,
   onPress,
   size = 24,
   color = colors.textPrimary,
+  strokeWidth = 2.4,
+  touchSize = touch.guardianMin,
   style,
 }: IconButtonProps) {
   return (
@@ -28,22 +32,25 @@ export function IconButton({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      style={({ pressed }) => [styles.base, pressed && styles.pressed, style]}
+      style={({ pressed }) => [
+        styles.base,
+        { width: touchSize, height: touchSize },
+        pressed && styles.pressed,
+        style,
+      ]}
     >
-      <Icon name={icon} size={size} color={color} strokeWidth={2.4} />
+      <Icon name={icon} size={size} color={color} strokeWidth={strokeWidth} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   base: {
-    width: touch.guardianMin,
-    height: touch.guardianMin,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   pressed: {
-    backgroundColor: colors.surfaceMuted,
+    opacity: 0.6,
   },
 });

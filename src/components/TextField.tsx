@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
 
 import { colors, fontFamily, radius } from '@/theme';
 
@@ -12,15 +13,17 @@ type TextFieldProps = Omit<TextInputProps, 'style'> & {
   label: string;
   helper?: string;
   error?: string;
+  /** 확인 완료 문구 (예: '비밀번호가 일치해요') */
+  success?: string;
   /** 비밀번호 입력: 눈 아이콘 버튼 표시 */
   password?: boolean;
 };
 
-export function TextField({ label, helper, error, password, onFocus, onBlur, ...rest }: TextFieldProps) {
+export function TextField({ label, helper, error, success, password, onFocus, onBlur, ...rest }: TextFieldProps) {
   const [focused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(true);
 
-  const state = error ? 'error' : focused ? 'focus' : 'default';
+  const state = error ? 'error' : focused || success ? 'focus' : 'default';
 
   return (
     <View style={styles.root}>
@@ -30,7 +33,7 @@ export function TextField({ label, helper, error, password, onFocus, onBlur, ...
           {...rest}
           accessibilityLabel={label}
           // aria-describedby 대신 helper/error를 힌트로 전달
-          accessibilityHint={error ?? helper}
+          accessibilityHint={error ?? success ?? helper}
           secureTextEntry={password ? hidden : rest.secureTextEntry}
           placeholderTextColor={colors.textTertiary}
           onFocus={(e) => {
@@ -48,15 +51,33 @@ export function TextField({ label, helper, error, password, onFocus, onBlur, ...
             icon={hidden ? 'eye' : 'eye-off'}
             accessibilityLabel={hidden ? '비밀번호 보기' : '비밀번호 숨기기'}
             onPress={() => setHidden((v) => !v)}
-            size={22}
+            strokeWidth={2}
+            color={colors.textSecondary}
           />
         )}
       </View>
       {error ? (
         <View style={styles.message} accessibilityLiveRegion="polite">
           <Icon name="warning" size={16} color={colors.dangerFg} />
-          <Text variant="caption" color="dangerFg" style={styles.errorText}>
+          <Text variant="caption" color="dangerFg" style={styles.medium}>
             {error}
+          </Text>
+        </View>
+      ) : success ? (
+        <View style={styles.message} accessibilityLiveRegion="polite">
+          <Svg width={18} height={18} viewBox="0 0 24 24" accessible={false}>
+            <Circle cx="12" cy="12" r="11" fill={colors.yellow500} stroke={colors.ink900} strokeWidth={1.5} />
+            <Path
+              d="M7 12.5l3.2 3.2L17 9"
+              fill="none"
+              stroke={colors.ink900}
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </Svg>
+          <Text variant="caption" style={styles.medium}>
+            {success}
           </Text>
         </View>
       ) : (
@@ -80,6 +101,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: radius.sm,
     backgroundColor: colors.surface,
+    paddingRight: 4,
   },
   input: {
     flex: 1,
@@ -94,7 +116,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
   },
-  errorText: {
+  medium: {
     fontFamily: fontFamily.medium,
   },
 });

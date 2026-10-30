@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "DAYEON",
+    "name": "손울림",
     "slug": "DAYEON",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +23,18 @@
     },
     "plugins": [
       "expo-font",
-      "expo-splash-screen"
-    ]
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFFDF7"
+        }
+      ],
+      "expo-router"
+    ],
+    "scheme": "sonullim",
+    "backgroundColor": "#FFFDF7",
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }
