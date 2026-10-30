@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>신호 추가 5 · 저장 완료</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+.rh{display:inline-flex;align-items:center;gap:6px}
+.rd{display:inline-block;width:13px;height:13px;border-radius:7px;background:currentColor}
+.rl{display:inline-block;width:38px;height:13px;border-radius:7px;background:currentColor}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; padding: 52px 20px 36px">
+<div style="height: 48px"></div>
+<div role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="4" aria-label="4단계 중 4단계" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 6px"><span style="height: 6px; border-radius: 3px; background: #252525"></span><span style="height: 6px; border-radius: 3px; background: #252525"></span><span style="height: 6px; border-radius: 3px; background: #252525"></span><span style="height: 6px; border-radius: 3px; background: #252525"></span></div>
+
+<div role="status" style="margin-top: 36px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+<svg width="84" height="84" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="34" fill="#1E6B3F"></circle><path d="M22 37l10 10 19-21" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.03em">신호가 추가되었습니다</h1>
+</div>
+
+<section aria-label="추가된 신호" style="margin-top: 22px; background: #FFFFFF; border-radius: 20px; box-shadow: 0 1px 2px rgba(37,37,37,.06), 0 6px 16px rgba(37,37,37,.06); padding: 16px 18px; display: flex; align-items: center; gap: 14px">
+<span style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 14px; background: #F2EFE6; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 3.5a5 5 0 0 1 7 7l-7 7a5 5 0 0 1-7-7z"></path><path d="M7 10l7 7"></path></svg></span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+<span style="display: flex; align-items: center; gap: 6px"><span style="font-size: 18px; font-weight: 800">약 먹을 시간</span><span style="display: flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 10px; background: #252525; color: #FFFDF7; font-size: 11px; font-weight: 800">직접</span></span>
+<span style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #4A4844"><span class="rh" role="img" aria-label="길게 짧게 짧게" style="color: #252525"><span class="rl"></span><span class="rd"></span><span class="rd"></span></span>일상 · 약 2초</span>
+</span>
+</section>
+
+<section aria-labelledby="learn" style="margin-top: 14px; border-radius: 20px; background: #FCEFC4; border: 2px solid #252525; padding: 18px; display: flex; gap: 12px; align-items: flex-start">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2zM4 17a2 2 0 0 1 2-2h12"></path></svg>
+<span style="display: flex; flex-direction: column; gap: 6px">
+<h2 id="learn" style="margin: 0; font-size: 17px; font-weight: 800">김하늘은 이 신호를 아직 몰라요</h2>
+<span style="font-size: 15px; line-height: 1.6">연습 모드에서 함께 느껴 보며 알려 줘야 실제로 쓸 수 있어요. 익히기 전에는 신호 목록에 '연습 전'으로 표시돼요.</span>
+</span>
+</section>
+<div style="flex: 1"></div>
+<button type="button" style="height: 60px; border: 0; border-radius: 16px; background: {{accent}}; font-family: inherit; font-size: 18px; font-weight: 800; color: #252525; display: flex; align-items: center; justify-content: center; gap: 8px">지금 알려주기<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+<button type="button" style="margin-top: 6px; min-height: 48px; border: 0; background: transparent; font-family: inherit; font-size: 16px; font-weight: 800; color: #4A4844">나중에 할게요</button>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>보호자 · 연결 요청 확인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; padding: 52px 24px 40px">
+<div style="height: 48px; display: flex; align-items: center; gap: 4px; margin-left: -10px">
+<button type="button" aria-label="뒤로 가기" style="width: 48px; height: 48px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</button>
+<span style="font-size: 17px; font-weight: 800">계정 연결</span>
+</div>
+<p style="margin: 20px 0 0; align-self: flex-start; display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 16px; background: #FCEFC4; font-size: 14px; font-weight: 800">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"></path></svg>
+새 연결 요청
+</p>
+<h1 style="margin: 14px 0 0; font-size: 28px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.3">이 당사자와<br>연결할까요?</h1>
+<section aria-label="연결 대상" style="margin-top: 28px; border: 2px solid #252525; border-radius: 24px; background: #FFFFFF; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; align-items: center; gap: 16px">
+<span aria-hidden="true" style="width: 64px; height: 64px; border-radius: 50%; background: {{accent}}; border: 2px solid #252525; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800">하</span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 22px; font-weight: 800">김하늘</span>
+<span style="font-size: 15px; color: #4A4844">당사자 계정</span>
+</div>
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; font-size: 15px">
+<dt style="color: #4A4844">사용한 코드</dt><dd style="margin: 0; font-weight: 800">482 913</dd>
+<dt style="color: #4A4844">연결 방법</dt><dd style="margin: 0; font-weight: 800">코드 입력</dd>
+<dt style="color: #4A4844">요청 시간</dt><dd style="margin: 0; font-weight: 800">방금 전</dd>
+</dl>
+</section>
+<p style="margin: 16px 0 0; display: flex; gap: 8px; font-size: 14px; line-height: 1.6; color: #4A4844">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A4844" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 3px"><circle cx="12" cy="12" r="10"></circle><path d="M12 11v6M12 7.5v.5"></path></svg>
+내가 코드를 알려 준 사람이 맞는지 확인해 주세요.
+</p>
+<div style="flex: 1"></div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<button type="button" style="width: 100%; height: 60px; border: 0; border-radius: 16px; background: {{accent}}; color: #252525; font-family: inherit; font-size: 18px; font-weight: 800">연결하기</button>
+<button type="button" style="width: 100%; height: 60px; border: 2px solid #252525; border-radius: 16px; background: transparent; color: #252525; font-family: inherit; font-size: 18px; font-weight: 800">거절하기</button>
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

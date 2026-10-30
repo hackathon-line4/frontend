@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>신호 추가 3 · 진동 체험</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+.rh{display:inline-flex;align-items:center;gap:10px}
+.rd{display:inline-block;width:22px;height:22px;border-radius:11px;background:currentColor}
+.rl{display:inline-block;width:64px;height:22px;border-radius:11px;background:currentColor}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; padding: 52px 20px 36px">
+<div style="height: 48px; display: flex; align-items: center; justify-content: space-between; margin: 0 -10px">
+<button type="button" aria-label="뒤로 가기" style="width: 48px; height: 48px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+<span style="font-size: 16px; font-weight: 800">신호 추가</span>
+<button type="button" aria-label="닫기" style="width: 48px; height: 48px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="3" aria-label="4단계 중 3단계" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 6px"><span style="height: 6px; border-radius: 3px; background: #252525"></span><span style="height: 6px; border-radius: 3px; background: #252525"></span><span style="height: 6px; border-radius: 3px; background: #252525"></span><span style="height: 6px; border-radius: 3px; background: #E4E0D4"></span></div>
+<p style="margin: 14px 0 0; font-size: 13px; font-weight: 800; color: #4A4844">3단계 · 진동 체험</p>
+<h1 style="margin: 4px 0 0; font-size: 24px; font-weight: 800; letter-spacing: -0.03em">직접 느껴 보세요</h1>
+
+<section aria-label="만든 리듬" style="margin-top: 18px; background: #FFFFFF; border-radius: 22px; box-shadow: 0 1px 2px rgba(37,37,37,.06), 0 6px 16px rgba(37,37,37,.06); padding: 20px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; align-items: center; gap: 8px">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 3.5a5 5 0 0 1 7 7l-7 7a5 5 0 0 1-7-7z"></path><path d="M7 10l7 7"></path></svg>
+<span style="flex: 1; font-size: 18px; font-weight: 800">약 먹을 시간</span>
+<span style="display: flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 11px; background: #252525; color: #FFFDF7; font-size: 11px; font-weight: 800">직접</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 22px 0 14px; border-radius: 16px; background: #F6F3EA">
+<span class="rh" role="img" aria-label="길게 짧게 짧게"><span class="rl"></span><span class="rd" style="color: #252525"></span><span class="rd" style="color: #8A867C"></span></span>
+<span style="font-size: 13px; color: #4A4844">재생 중 · 2번째 진동</span>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 15px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l3 2M9 2h6"></path></svg>길이 <b style="font-weight: 800">약 2초</b></span>
+<button type="button" aria-label="리듬 화면에서 다시 보기" style="width: 48px; height: 48px; border: 2px solid #252525; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="#252525" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"></path></svg></button>
+</div>
+<button type="button" style="height: 68px; border: 0; border-radius: 18px; background: {{accent}}; font-family: inherit; font-size: 19px; font-weight: 800; color: #252525; display: flex; align-items: center; justify-content: center; gap: 10px">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"></rect><path d="M4 9v6M20 9v6"></path></svg>
+이 폰에서 느껴보기</button>
+</section>
+<p style="margin: 14px 0 0; font-size: 14px; line-height: 1.6; color: #4A4844">김하늘의 휴대폰에서는 김하늘의 진동 설정(세기 강하게 · 반복 2번)에 맞춰 울려요.</p>
+<div style="flex: 1"></div>
+<div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px">
+<button type="button" style="height: 58px; border: 2px solid #252525; border-radius: 16px; background: transparent; font-family: inherit; font-size: 16px; font-weight: 800; color: #252525">리듬 바꾸기</button>
+<button type="button" style="height: 58px; border: 0; border-radius: 16px; background: #252525; font-family: inherit; font-size: 16px; font-weight: 800; color: #FFFDF7">저장하기</button>
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

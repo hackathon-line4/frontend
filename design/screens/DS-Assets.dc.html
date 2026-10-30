@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>손울림 에셋</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;family=Roboto+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+.sh{width:1200px;box-sizing:border-box;background:#FFFDF7;padding:64px;font-family:'Noto Sans KR',system-ui,sans-serif;color:#252525}
+.mono{font-family:'Roboto Mono',monospace;font-size:12px;font-weight:500}
+.sec{margin-top:52px}
+.sec>h2{margin:0;font-size:28px;font-weight:800;letter-spacing:-0.02em}
+.sec>p{margin:6px 0 0;font-size:15px;line-height:1.6;color:#4A4844}
+.ig{margin-top:20px;display:grid;grid-template-columns:repeat(8,1fr);gap:12px}
+.ic{height:104px;background:#FFFFFF;border:1px solid #E4E0D4;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.ic .mono{color:#4A4844}
+.box{background:#FFFFFF;border:1px solid #E4E0D4;border-radius:18px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px}
+</style>
+</helmet>
+<div class="sh">
+<p class="mono" style="margin: 0; font-size: 13px; color: #4A4844">SONULLIM DESIGN SYSTEM · v0.1</p>
+<h1 style="margin: 8px 0 0; font-size: 44px; font-weight: 800; letter-spacing: -0.03em">에셋</h1>
+<p style="margin: 10px 0 0; font-size: 17px; line-height: 1.6; color: #4A4844; max-width: 880px">아이콘, 로고, 일러스트, 자리 표시 이미지를 모았어요. 모두 SVG로 그렸고 이름은 파일·컴포넌트 이름으로 그대로 쓸 수 있어요.</p>
+
+<section class="sec">
+<h2>1. 아이콘 (ic/*)</h2>
+<p>24×24 그리드 · 선 굵기 2 (16px 이하로 쓸 때 2.4–2.6) · 끝·모서리 둥글게 · 색은 currentColor. 신호 아이콘은 중립적인 사물 아이콘만 쓰고 손동작·진동 모양은 그리지 않아요.</p>
+<h3 style="margin: 24px 0 0; font-size: 16px; font-weight: 800">UI</h3>
+<div class="ig">
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg><span class="mono">back</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg><span class="mono">close</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg><span class="mono">chevron-right</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg><span class="mono">chevron-down</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span class="mono">plus</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span class="mono">check</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"></path></svg><span class="mono">retry</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg><span class="mono">search</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"></path></svg><span class="mono">bell</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg><span class="mono">eye</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg><span class="mono">lock</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><span class="mono">calendar</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"></path></svg><span class="mono">share</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg><span class="mono">external</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"></rect><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"></path></svg><span class="mono">copy</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zM12 9l6 6M18 9l-6 6"></path></svg><span class="mono">backspace</span></div>
+</div>
+<h3 style="margin: 24px 0 0; font-size: 16px; font-weight: 800">탭 · 상태 · 기능</h3>
+<div class="ig">
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg><span class="mono">tab-home</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="5" cy="12" r="2"></circle><path d="M10 12h9"></path></svg><span class="mono">tab-signal</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg><span class="mono">tab-location</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"></path></svg><span class="mono">tab-history</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg><span class="mono">tab-settings</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v5M12 18v.5"></path></svg><span class="mono">warning</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 11v6M12 7.5v.5"></path></svg><span class="mono">info</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="3 3"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg><span class="mono">no-reply</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 3h10M7 21h10M8 3v3l4 6-4 6v3M16 3v3l-4 6 4 6v3"></path></svg><span class="mono">waiting</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"></path></svg><span class="mono">link</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1M3 3l18 18"></path></svg><span class="mono">link-off</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14l-4-4 4-4M5 10h9a5 5 0 0 1 5 5v4"></path></svg><span class="mono">reply</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"></rect><path d="M10 18h4"></path></svg><span class="mono">device</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"></rect><path d="M4 9v6M20 9v6"></path></svg><span class="mono">vibrate</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.5 2.5L2.5 10.2l7.3 3.1 3.1 7.7z"></path><path d="M21.5 2.5L9.8 13.3"></path></svg><span class="mono">send</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="#252525" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"></path></svg><span class="mono">play</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2zM4 17a2 2 0 0 1 2-2h12"></path></svg><span class="mono">book (기본)</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg><span class="mono">pencil (직접)</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"></path><rect x="7" y="7" width="4" height="4"></rect><rect x="13" y="7" width="4" height="4"></rect><rect x="7" y="13" width="4" height="4"></rect><path d="M14 14h3v3"></path></svg><span class="mono">qr-scan</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM7 3v5h8V3M7 21v-7h10v7"></path></svg><span class="mono">save</span></div>
+</div>
+<h3 style="margin: 24px 0 0; font-size: 16px; font-weight: 800">신호 아이콘 (sig/*)</h3>
+<div class="ig">
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3 21h18"></path><circle cx="14.5" cy="12" r="1" fill="#252525"></circle></svg><span class="mono">door 누가 왔어</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg><span class="mono">person 여기 있어</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6"></path></svg><span class="mono">arrow 가자</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg><span class="mono">clock 기다려</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11h18a9 9 0 0 1-18 0zM9 7c0-2 2-2 2-4M14 7c0-2 2-2 2-4"></path></svg><span class="mono">bowl 밥 먹자</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 3.5a5 5 0 0 1 7 7l-7 7a5 5 0 0 1-7-7z"></path><path d="M7 10l7 7"></path></svg><span class="mono">pill 약</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17v.5"></path></svg><span class="mono">question 괜찮아?</span></div>
+<div class="ic"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6"></path></svg><span class="mono">lifebuoy 도움</span></div>
+</div>
+</section>
+
+<section class="sec">
+<h2>2. 로고 · 심볼</h2>
+<p>워드마크는 Noto Sans KR 800, 자간 -0.04em. 노란 파동 두 줄이 글자 오른쪽 위에 붙어요. 노란 파동은 아이보리·흰 바탕에서 장식으로만 쓰고, 정보 전달에는 쓰지 않아요.</p>
+<div style="margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px">
+<div class="box"><div style="display: flex; align-items: flex-start; gap: 4px"><span style="font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1">손울림</span><svg width="22" height="30" viewBox="0 0 22 30" fill="none" aria-hidden="true"><path d="M4 9 q4 6 0 12" stroke="#F5C84C" stroke-width="3.5" stroke-linecap="round"></path><path d="M12 4 q8 11 0 22" stroke="#F5C84C" stroke-width="3.5" stroke-linecap="round"></path></svg></div><span class="mono">logo/wordmark · 스플래시 52px</span></div>
+<div class="box"><div style="display: flex; align-items: flex-start; gap: 2px"><span style="font-size: 24px; font-weight: 800; letter-spacing: -0.04em; line-height: 1">손울림</span><svg width="13" height="18" viewBox="0 0 22 30" fill="none" aria-hidden="true"><path d="M4 9 q4 6 0 12" stroke="#F5C84C" stroke-width="4" stroke-linecap="round"></path><path d="M12 4 q8 11 0 22" stroke="#F5C84C" stroke-width="4" stroke-linecap="round"></path></svg></div><span class="mono">logo/wordmark-sm · 헤더 24px</span></div>
+<div class="box" style="background: #000"><span style="width: 96px; height: 96px; border-radius: 50%; border: 12px solid #F5C84C; box-sizing: border-box"></span><span class="mono" style="color: #F5C84C">logo/recipient-ring · 당사자 대기</span></div>
+</div>
+</section>
+
+<section class="sec">
+<h2>3. 일러스트 · 자리 표시 이미지</h2>
+<p>일러스트는 연한 노란 원(#FCEFC4) 안에 검정 선 2.5–4px + 노랑 채움으로만 그려요. 실제 사진·지도는 자리 표시로 두고 개발 시 교체해요.</p>
+<div style="margin-top: 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px">
+<div class="box"><span style="width: 160px; height: 160px; border-radius: 50%; background: #FCEFC4; display: flex; align-items: center; justify-content: center"><svg width="120" height="120" viewBox="0 0 220 220" fill="none" aria-hidden="true"><rect x="70" y="30" width="80" height="160" rx="18" fill="#FFFDF7" stroke="#252525" stroke-width="5"></rect><rect x="84" y="88" width="52" height="34" rx="12" fill="#F5C84C" stroke="#252525" stroke-width="4"></rect><g stroke="#252525" stroke-width="5" stroke-linecap="round"><path d="M56 86 q-9 24 0 48"></path><path d="M164 86 q9 24 0 48"></path></g></svg></span><span class="mono">illust/phone-message</span></div>
+<div class="box"><span style="width: 160px; height: 160px; border-radius: 50%; background: #FCEFC4; display: flex; align-items: center; justify-content: center"><svg width="130" height="86" viewBox="0 0 230 150" fill="none" aria-hidden="true"><rect x="14" y="14" width="64" height="122" rx="14" fill="#FFFDF7" stroke="#252525" stroke-width="5"></rect><rect x="152" y="14" width="64" height="122" rx="14" fill="#FFFDF7" stroke="#252525" stroke-width="5"></rect><g stroke="#252525" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M92 56 h44M128 48 l8 8 l-8 8M138 96 h-44M102 88 l-8 8 l8 8"></path></g></svg></span><span class="mono">illust/two-way</span></div>
+<div class="box"><span style="width: 160px; height: 160px; border-radius: 16px; overflow: hidden; display: block"><svg width="160" height="160" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" fill="#E9E5DA"></rect><path d="M0 34h96M0 70h96M30 0v96M70 0v96" stroke="#FFFFFF" stroke-width="6"></path><path d="M48 26c-7 0-12 5-12 11 0 8 12 19 12 19s12-11 12-19c0-6-5-11-12-11z" fill="#252525"></path><circle cx="48" cy="37" r="4.5" fill="#F5C84C"></circle></svg></span><span class="mono">placeholder/map + pin</span></div>
+<div class="box"><span style="display: flex; gap: 10px; align-items: center"><span style="width: 56px; height: 56px; border-radius: 50%; background: #F5C84C; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800">하</span><span style="width: 56px; height: 56px; border-radius: 50%; background: #F5C84C; border: 2px solid #252525; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800">영</span></span><span class="mono">avatar/initial · 40·52·64·96</span></div>
+</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

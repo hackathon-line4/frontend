@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>당사자 · 연결 완료</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+</style>
+</helmet>
+<main role="alert" style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; align-items: center; padding: 0 24px 40px">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center">
+<svg width="180" height="180" viewBox="0 0 120 120" role="img" aria-label="연결 완료">
+<circle cx="60" cy="60" r="58" fill="#FCEFC4"></circle>
+<circle cx="60" cy="60" r="42" fill="{{accent}}" stroke="#252525" stroke-width="4"></circle>
+<path d="M42 61 l12 12 l24 -26" fill="none" stroke="#252525" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<h1 style="margin: 32px 0 0; font-size: 36px; font-weight: 800; letter-spacing: -0.03em">연결됐어요</h1>
+<p style="margin: 12px 0 0; font-size: 20px; font-weight: 500; line-height: 1.5; text-align: center">이영희 보호자와<br>연결됐어요</p>
+</div>
+<button type="button" style="width: 100%; height: 80px; border: 0; border-radius: 20px; background: #252525; color: #FFFDF7; font-family: inherit; font-size: 22px; font-weight: 800">확인</button>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>신호 추가 2 · 프리셋</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+.rh{display:inline-flex;align-items:center;gap:5px}
+.rd{display:inline-block;width:11px;height:11px;border-radius:6px;background:currentColor}
+.rl{display:inline-block;width:32px;height:11px;border-radius:6px;background:currentColor}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; padding: 52px 20px 36px">
+<div style="height: 48px; display: flex; align-items: center; justify-content: space-between; margin: 0 -10px">
+<button type="button" aria-label="뒤로 가기" style="width: 48px; height: 48px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+<span style="font-size: 16px; font-weight: 800">신호 추가</span>
+<button type="button" aria-label="닫기" style="width: 48px; height: 48px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+<div role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="2" aria-label="4단계 중 2단계" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 6px"><span style="height: 6px; border-radius: 3px; background: #252525"></span><span style="height: 6px; border-radius: 3px; background: #252525"></span><span style="height: 6px; border-radius: 3px; background: #E4E0D4"></span><span style="height: 6px; border-radius: 3px; background: #E4E0D4"></span></div>
+<p style="margin: 14px 0 0; font-size: 13px; font-weight: 800; color: #4A4844">2단계 · 진동 리듬 만들기</p>
+<h1 style="margin: 4px 0 0; font-size: 24px; font-weight: 800; letter-spacing: -0.03em">'약 먹을 시간'의 리듬</h1>
+<div role="tablist" aria-label="리듬 만드는 방법" style="margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; border-radius: 14px; background: #F2EFE6">
+<button type="button" role="tab" aria-selected="true" style="height: 44px; border: 0; border-radius: 10px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(37,37,37,.12); font-family: inherit; font-size: 15px; font-weight: 800; color: #252525">프리셋에서 고르기</button>
+<button type="button" role="tab" aria-selected="false" style="height: 44px; border: 0; border-radius: 10px; background: transparent; font-family: inherit; font-size: 15px; font-weight: 500; color: #4A4844">직접 조합하기</button>
+</div>
+
+<div role="radiogroup" aria-label="리듬 프리셋" style="margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<button type="button" role="radio" aria-checked="false" aria-disabled="true" style="min-height: 92px; padding: 12px; border: 1.5px dashed #8A867C; border-radius: 16px; background: transparent; font-family: inherit; color: #5C5A54; text-align: left; display: flex; flex-direction: column; gap: 8px"><span class="rh" role="img" aria-label="짧게 짧게 짧게"><span class="rd"></span><span class="rd"></span><span class="rd"></span></span><span style="font-size: 13px; font-weight: 800">사용 중 · 밥 먹자</span></button>
+<button type="button" role="radio" aria-checked="true" style="min-height: 92px; padding: 12px; border: 2.5px solid #252525; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(37,37,37,.06), 0 6px 16px rgba(37,37,37,.06); font-family: inherit; color: #252525; text-align: left; display: flex; flex-direction: column; gap: 8px"><span style="display: flex; justify-content: space-between; width: 100%"><span class="rh" role="img" aria-label="길게 짧게 짧게"><span class="rl"></span><span class="rd"></span><span class="rd"></span></span><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#252525"></circle><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#FFFDF7" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span style="font-size: 13px; color: #4A4844">약 1.6초</span></button>
+<button type="button" role="radio" aria-checked="false" aria-disabled="true" style="min-height: 92px; padding: 12px; border: 1.5px dashed #8A867C; border-radius: 16px; background: transparent; font-family: inherit; color: #5C5A54; text-align: left; display: flex; flex-direction: column; gap: 8px"><span class="rh" role="img" aria-label="짧게 길게 짧게"><span class="rd"></span><span class="rl"></span><span class="rd"></span></span><span style="font-size: 13px; font-weight: 800">사용 중 · 가자</span></button>
+<button type="button" role="radio" aria-checked="false" aria-disabled="true" style="min-height: 92px; padding: 12px; border: 1.5px dashed #8A867C; border-radius: 16px; background: transparent; font-family: inherit; color: #5C5A54; text-align: left; display: flex; flex-direction: column; gap: 8px"><span class="rh" role="img" aria-label="짧게 짧게 길게"><span class="rd"></span><span class="rd"></span><span class="rl"></span></span><span style="font-size: 13px; font-weight: 800">사용 중 · 누가 왔어</span></button>
+<button type="button" role="radio" aria-checked="false" style="min-height: 92px; padding: 12px; border: 1.5px solid #CFCBC0; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(37,37,37,.06), 0 6px 16px rgba(37,37,37,.06); font-family: inherit; color: #252525; text-align: left; display: flex; flex-direction: column; gap: 8px"><span class="rh" role="img" aria-label="길게 길게 짧게"><span class="rl"></span><span class="rl"></span><span class="rd"></span></span><span style="font-size: 13px; color: #4A4844">약 2초</span></button>
+<button type="button" role="radio" aria-checked="false" style="min-height: 92px; padding: 12px; border: 1.5px solid #CFCBC0; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(37,37,37,.06), 0 6px 16px rgba(37,37,37,.06); font-family: inherit; color: #252525; text-align: left; display: flex; flex-direction: column; gap: 8px"><span class="rh" role="img" aria-label="짧게 길게 길게"><span class="rd"></span><span class="rl"></span><span class="rl"></span></span><span style="font-size: 13px; color: #4A4844">약 2초</span></button>
+<button type="button" role="radio" aria-checked="false" style="min-height: 92px; padding: 12px; border: 1.5px solid #CFCBC0; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(37,37,37,.06), 0 6px 16px rgba(37,37,37,.06); font-family: inherit; color: #252525; text-align: left; display: flex; flex-direction: column; gap: 8px"><span class="rh" role="img" aria-label="길게 짧게 길게"><span class="rl"></span><span class="rd"></span><span class="rl"></span></span><span style="font-size: 13px; color: #4A4844">약 2초</span></button>
+<button type="button" role="radio" aria-checked="false" style="min-height: 92px; padding: 12px; border: 1.5px solid #CFCBC0; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(37,37,37,.06), 0 6px 16px rgba(37,37,37,.06); font-family: inherit; color: #252525; text-align: left; display: flex; flex-direction: column; gap: 8px"><span class="rh" role="img" aria-label="짧게 짧게 짧게 짧게"><span class="rd"></span><span class="rd"></span><span class="rd"></span><span class="rd"></span></span><span style="font-size: 13px; color: #4A4844">약 1.4초</span></button>
+</div>
+<div style="flex: 1"></div>
+<button type="button" style="height: 58px; border: 0; border-radius: 16px; background: {{accent}}; font-family: inherit; font-size: 18px; font-weight: 800; color: #252525">다음 · 느껴 보기</button>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

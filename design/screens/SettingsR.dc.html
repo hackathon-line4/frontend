@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>당사자 · 설정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+</style>
+</helmet>
+<main style="width: 390px; min-height: 1500px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; gap: 28px; padding: 52px 16px 40px">
+<div>
+<div style="height: 56px; display: flex; align-items: center; margin-left: -8px">
+<button type="button" aria-label="닫고 대기 화면으로" style="width: 56px; height: 56px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0">
+<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+</div>
+<h1 style="margin: 4px 0 0 4px; font-size: 32px; font-weight: 800; letter-spacing: -0.03em">설정</h1>
+</div>
+
+<section aria-labelledby="r-conn" style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="r-conn" style="margin: 0 0 0 4px; font-size: 18px; font-weight: 800">연결</h2>
+<div style="border: 3px solid #252525; border-radius: 24px; background: #FFFFFF; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+<p role="status" style="margin: 0; display: flex; align-items: center; gap: 14px">
+<span aria-hidden="true" style="width: 60px; height: 60px; flex-shrink: 0; border-radius: 50%; background: {{accent}}; border: 2px solid #252525; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800">영</span>
+<span style="display: flex; flex-direction: column"><span style="font-size: 22px; font-weight: 800">이영희 보호자</span><span style="font-size: 18px; font-weight: 800">연결됨</span></span>
+</p>
+<button type="button" style="height: 72px; border: 2px solid #252525; border-radius: 18px; background: #FFFDF7; font-family: inherit; font-size: 20px; font-weight: 800; color: #252525">연결 확인하기</button>
+</div>
+</section>
+
+<section aria-labelledby="r-vib" style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="r-vib" style="margin: 0 0 0 4px; font-size: 18px; font-weight: 800">진동</h2>
+<a href="#" style="min-height: 80px; padding: 0 20px; border: 2px solid #252525; border-radius: 20px; background: #FFFFFF; display: flex; align-items: center; gap: 14px; text-decoration: none; color: #252525"><span style="flex: 1; font-size: 21px; font-weight: 800">내 진동 설정</span><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+<a href="#" style="min-height: 80px; padding: 0 20px; border: 2px solid #252525; border-radius: 20px; background: #FFFFFF; display: flex; align-items: center; gap: 14px; text-decoration: none; color: #252525"><span style="flex: 1; font-size: 21px; font-weight: 800">진동 테스트 다시 하기</span><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+</section>
+
+<section aria-labelledby="r-loc" style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="r-loc" style="margin: 0 0 0 4px; font-size: 18px; font-weight: 800">위치</h2>
+<div style="border: 3px dashed #252525; border-radius: 24px; background: #FFFFFF; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<p role="status" style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 21px; font-weight: 800">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z"></path><path d="M4 4l16 16"></path></svg>
+위치 권한 꺼짐</p>
+<p style="margin: 0; font-size: 18px; line-height: 1.6">도움 요청을 보낼 때만, 그 순간의 위치를 이영희 보호자에게 보내요. 평소에는 보내지 않아요.</p>
+<p style="margin: 0; font-size: 18px; line-height: 1.6">지금은 권한이 꺼져 있어서 도움 요청만 가고 위치는 가지 않아요.</p>
+<button type="button" style="height: 72px; border: 0; border-radius: 18px; background: {{accent}}; font-family: inherit; font-size: 20px; font-weight: 800; color: #252525; display: flex; align-items: center; justify-content: center; gap: 10px">휴대폰 설정 열기
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></button>
+</div>
+<label style="min-height: 80px; padding: 0 20px; border: 2px solid #252525; border-radius: 20px; background: #FFFFFF; display: flex; align-items: center; gap: 14px; cursor: pointer">
+<span style="flex: 1; font-size: 20px; font-weight: 800">도움 요청에 위치 보내기</span>
+<span style="font-size: 18px; font-weight: 800">켜짐</span>
+<span style="position: relative; width: 64px; height: 40px; flex-shrink: 0; border-radius: 20px; background: #252525"><input type="checkbox" role="switch" checked style="position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0"><span style="position: absolute; top: 5px; left: 29px; width: 30px; height: 30px; border-radius: 15px; background: {{accent}}"></span></span>
+</label>
+</section>
+
+<section aria-labelledby="r-noti" style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="r-noti" style="margin: 0 0 0 4px; font-size: 18px; font-weight: 800">알림</h2>
+<p role="status" style="margin: 0; min-height: 80px; box-sizing: border-box; padding: 16px 20px; border: 2px solid #252525; border-radius: 20px; background: #FFFFFF; display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 800">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+알림 권한 켜짐 · 신호를 받을 수 있어요</p>
+</section>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":1500}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

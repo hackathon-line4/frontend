@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>진동 느낌 확인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; padding: 108px 24px 40px">
+<p style="margin: 0; align-self: flex-start; display: flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border-radius: 18px; border: 2px solid #252525; font-size: 15px; font-weight: 800">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+테스트 끝
+</p>
+<h1 style="margin: 16px 0 0; font-size: 30px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.35">진동이 잘<br>느껴졌나요?</h1>
+<p style="margin: 8px 0 0; font-size: 17px; color: #4A4844">세기 강하게 · 길이 보통 · 반복 2번</p>
+<div style="flex: 1"></div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<button type="button" style="width: 100%; height: 88px; border: 0; border-radius: 20px; background: {{accent}}; color: #252525; font-family: inherit; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+잘 느껴져요</button>
+<button type="button" style="width: 100%; height: 88px; border: 2px solid #252525; border-radius: 20px; background: #FFFFFF; color: #252525; font-family: inherit; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>
+조금 더 강하게</button>
+<button type="button" style="width: 100%; height: 88px; border: 2px solid #252525; border-radius: 20px; background: #FFFFFF; color: #252525; font-family: inherit; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 12px">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"></path></svg>
+다시 테스트하기</button>
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>당사자 · 연결 대상 확인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; align-items: center; padding: 120px 24px 40px">
+<h1 style="margin: 0; font-size: 30px; font-weight: 800; letter-spacing: -0.03em; text-align: center; line-height: 1.35">이 보호자와<br>연결할까요?</h1>
+<section aria-label="연결 대상" style="margin-top: 36px; width: 100%; box-sizing: border-box; border: 2px solid #252525; border-radius: 28px; background: #FFFFFF; padding: 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px">
+<span aria-hidden="true" style="width: 96px; height: 96px; border-radius: 50%; background: {{accent}}; border: 3px solid #252525; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 800">영</span>
+<span style="font-size: 30px; font-weight: 800">이영희</span>
+<span style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 18px; background: #FCEFC4; font-size: 17px; font-weight: 800">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path></svg>
+보호자</span>
+</section>
+<div style="flex: 1"></div>
+<div style="width: 100%; display: flex; flex-direction: column; gap: 14px">
+<button type="button" style="width: 100%; height: 80px; border: 0; border-radius: 20px; background: {{accent}}; color: #252525; font-family: inherit; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+연결하기</button>
+<button type="button" style="width: 100%; height: 80px; border: 2px solid #252525; border-radius: 20px; background: transparent; color: #252525; font-family: inherit; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+아니요</button>
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

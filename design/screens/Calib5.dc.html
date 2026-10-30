@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>설정 저장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; padding: 108px 24px 40px">
+<h1 style="margin: 0; font-size: 30px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.35">이 설정으로<br>저장할까요?</h1>
+<dl style="margin: 24px 0 0; border: 2px solid #252525; border-radius: 20px; background: #FFFFFF; padding: 6px 18px; display: flex; flex-direction: column">
+<div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid #E4E0D4"><dt style="font-size: 18px; color: #4A4844">세기</dt><dd style="margin: 0; font-size: 20px; font-weight: 800">강하게</dd></div>
+<div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid #E4E0D4"><dt style="font-size: 18px; color: #4A4844">길이</dt><dd style="margin: 0; font-size: 20px; font-weight: 800">보통</dd></div>
+<div style="min-height: 56px; display: flex; align-items: center; justify-content: space-between"><dt style="font-size: 18px; color: #4A4844">반복</dt><dd style="margin: 0; font-size: 20px; font-weight: 800">2번</dd></div>
+</dl>
+<div style="margin-top: 18px; display: flex; flex-direction: column; gap: 10px; font-size: 16px; line-height: 1.55">
+<p style="margin: 0; display: flex; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 3px"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>신호의 뜻은 바뀌지 않아요. 느낌의 세기와 길이만 바뀌어요.</p>
+<p style="margin: 0; display: flex; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 3px"><path d="M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2zM4 17a2 2 0 0 1 2-2h12"></path></svg>신호끼리 잘 구분되는지는 촉신호 연습에서 확인해 보세요.</p>
+<p style="margin: 0; display: flex; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 3px"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"></path></svg>설정 &gt; 내 진동 설정에서 언제든 다시 맞출 수 있어요.</p>
+</div>
+<div style="flex: 1"></div>
+<div style="display: flex; flex-direction: column; gap: 14px">
+<button type="button" style="width: 100%; height: 80px; border: 0; border-radius: 20px; background: {{accent}}; color: #252525; font-family: inherit; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM7 3v5h8V3M7 21v-7h10v7"></path></svg>
+설정 저장하기</button>
+<button type="button" style="width: 100%; height: 72px; border: 2px solid #252525; border-radius: 20px; background: transparent; color: #252525; font-family: inherit; font-size: 20px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"></path></svg>
+다시 테스트하기</button>
+</div>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>

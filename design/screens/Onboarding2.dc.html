@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>온보딩 2 · 주고받는 방식</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+</style>
+</helmet>
+<main style="width: 390px; height: 844px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; padding: 52px 24px 40px">
+<div style="height: 48px; display: flex; justify-content: flex-end; align-items: center">
+<button type="button" style="min-height: 44px; padding: 0 12px; border: 0; background: transparent; font-family: inherit; font-size: 15px; font-weight: 500; color: #4A4844">건너뛰기</button>
+</div>
+<div style="flex: 1; display: flex; align-items: center; justify-content: center">
+<div style="width: 280px; height: 280px; border-radius: 50%; background: {{tint}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+<svg width="230" height="150" viewBox="0 0 230 150" fill="none" role="img" aria-label="보호자의 글이 당사자에게 진동으로 가고, 당사자의 탭 응답이 보호자에게 돌아오는 모습">
+<rect x="14" y="14" width="64" height="122" rx="14" fill="#FFFDF7" stroke="#252525" stroke-width="4"></rect>
+<rect x="26" y="42" width="40" height="8" rx="4" fill="#252525"></rect>
+<rect x="26" y="58" width="30" height="8" rx="4" fill="#252525"></rect>
+<rect x="26" y="82" width="40" height="22" rx="8" fill="{{accent}}" stroke="#252525" stroke-width="3"></rect>
+<rect x="152" y="14" width="64" height="122" rx="14" fill="#FFFDF7" stroke="#252525" stroke-width="4"></rect>
+<path d="M164 75 q7 -14 14 0 t14 0 t14 0" stroke="#252525" stroke-width="4" stroke-linecap="round"></path>
+<circle cx="184" cy="108" r="10" fill="{{accent}}" stroke="#252525" stroke-width="3"></circle>
+<g stroke="#252525" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M92 56 h44"></path>
+<path d="M128 48 l8 8 l-8 8"></path>
+<path d="M138 96 h-44"></path>
+<path d="M102 88 l-8 8 l8 8"></path>
+</g>
+</svg>
+<div style="display: flex; gap: 70px; font-size: 14px; font-weight: 800">
+<span>보호자</span>
+<span>당사자</span>
+</div>
+</div>
+</div>
+<div style="text-align: center; padding: 0 8px">
+<h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.3">글은 진동으로,<br>답은 터치로</h1>
+<p style="margin: 14px 0 0; font-size: 16px; line-height: 1.65; color: #4A4844">보호자가 쓴 글은 진동으로 도착해요. 당사자는 화면을 탭해 답하거나 먼저 메시지를 보낼 수 있어요.</p>
+</div>
+<div role="img" aria-label="3페이지 중 2페이지" style="display: flex; justify-content: center; align-items: center; gap: 8px; margin: 40px 0 24px">
+<span style="width: 8px; height: 8px; border-radius: 4px; background: #CFCBC0"></span>
+<span style="width: 24px; height: 8px; border-radius: 4px; background: #252525"></span>
+<span style="width: 8px; height: 8px; border-radius: 4px; background: #CFCBC0"></span>
+</div>
+<button type="button" style="width: 100%; height: 60px; border: 0; border-radius: 16px; background: {{accent}}; color: #252525; font-family: inherit; font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px">다음
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</button>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"tint":{"editor":"color","default":"#FCEFC4"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C', tint: this.props.tint ?? '#FCEFC4' };
+}
+}
+</script>
+</body>
+</html>

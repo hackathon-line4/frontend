@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>손울림 디자인 기준</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;family=Roboto+Mono:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+.sh{width:1200px;box-sizing:border-box;background:#FFFDF7;padding:64px;font-family:'Noto Sans KR',system-ui,sans-serif;color:#252525}
+.sec{margin-top:56px}
+.sec>h2{margin:0;font-size:28px;font-weight:800;letter-spacing:-0.02em}
+.sec>p.d{margin:6px 0 0;font-size:15px;color:#4A4844}
+.mono{font-family:'Roboto Mono',monospace;font-size:13px;font-weight:500}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+.sw{background:#FFFFFF;border:1px solid #E4E0D4;border-radius:16px;overflow:hidden}
+.sw .c{height:72px;border-bottom:1px solid #E4E0D4}
+.sw .t{padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.sw .n{font-size:14px;font-weight:800}
+.sw .u{font-size:13px;color:#4A4844;line-height:1.5}
+.grp{margin:28px 0 0;font-size:16px;font-weight:800}
+.tbl{width:100%;border-collapse:collapse;margin-top:16px;background:#FFFFFF;border-radius:16px;overflow:hidden}
+.tbl th{text-align:left;font-size:13px;font-weight:800;color:#4A4844;padding:12px 16px;background:#F6F3EA}
+.tbl td{padding:14px 16px;border-top:1px solid #EEEAE0;font-size:14px;vertical-align:middle}
+</style>
+</helmet>
+<div class="sh">
+<p class="mono" style="margin: 0; color: #4A4844">SONULLIM DESIGN SYSTEM · v0.1</p>
+<h1 style="margin: 8px 0 0; font-size: 44px; font-weight: 800; letter-spacing: -0.03em">디자인 기준 (Foundations)</h1>
+<p style="margin: 10px 0 0; font-size: 17px; line-height: 1.6; color: #4A4844; max-width: 860px">컬러, 타이포그래피, 간격, 모서리, 그림자, 터치 영역의 기준이에요. 토큰 이름은 그대로 코드 변수로 쓸 수 있게 정했어요. 보호자 앱과 당사자 앱은 같은 토큰을 쓰되, 당사자 앱은 고대비·대형 스케일을 따로 써요.</p>
+
+<section class="sec">
+<h2>1. 컬러</h2>
+<p class="d">대비 값은 WCAG 2.1 기준. 본문 글자는 4.5:1 이상, 큰 글자(24px+ 또는 18.7px+ 굵게)와 아이콘·테두리는 3:1 이상.</p>
+
+<h3 class="grp">브랜드</h3>
+<div class="g4">
+<div class="sw"><div class="c" style="background: #F5C84C"></div><div class="t"><span class="n">yellow-500</span><span class="mono">#F5C84C</span><span class="u">주 버튼 채움, 선택 탭, 강조. 위에는 text-primary만 (9.67:1)</span></div></div>
+<div class="sw"><div class="c" style="background: #FCEFC4"></div><div class="t"><span class="n">yellow-100</span><span class="mono">#FCEFC4</span><span class="u">아이콘 원 배경, 안내 박스, 상태 칩 배경</span></div></div>
+<div class="sw"><div class="c" style="background: #252525"></div><div class="t"><span class="n">ink-900</span><span class="mono">#252525</span><span class="u">본문, 진한 버튼, 테두리 강조, '직접' 배지</span></div></div>
+<div class="sw"><div class="c" style="background: #1C1C1C"></div><div class="t"><span class="n">ink-950</span><span class="mono">#1C1C1C</span><span class="u">긴급 버튼 배경 (흰 글자 17.04:1)</span></div></div>
+</div>
+
+<h3 class="grp">배경 · 면 · 선</h3>
+<div class="g4">
+<div class="sw"><div class="c" style="background: #FFFDF7"></div><div class="t"><span class="n">bg-ivory</span><span class="mono">#FFFDF7</span><span class="u">기본 화면 배경 (보호자 앱)</span></div></div>
+<div class="sw"><div class="c" style="background: #FFFFFF"></div><div class="t"><span class="n">surface</span><span class="mono">#FFFFFF</span><span class="u">카드, 입력창, 시트, 탭바</span></div></div>
+<div class="sw"><div class="c" style="background: #F6F3EA"></div><div class="t"><span class="n">surface-sunken</span><span class="mono">#F6F3EA</span><span class="u">카드 안 보조 영역, 리듬 미리보기 배경</span></div></div>
+<div class="sw"><div class="c" style="background: #F2EFE6"></div><div class="t"><span class="n">surface-muted</span><span class="mono">#F2EFE6</span><span class="u">세그먼트 탭 트랙, 도움말 박스, 비활성 버튼</span></div></div>
+<div class="sw"><div class="c" style="background: #EEEAE0"></div><div class="t"><span class="n">line-subtle</span><span class="mono">#EEEAE0</span><span class="u">목록 구분선</span></div></div>
+<div class="sw"><div class="c" style="background: #E4E0D4"></div><div class="t"><span class="n">line</span><span class="mono">#E4E0D4</span><span class="u">카드 테두리, 진행 막대 빈 칸, 탭바 위 선</span></div></div>
+<div class="sw"><div class="c" style="background: #CFCBC0"></div><div class="t"><span class="n">line-strong</span><span class="mono">#CFCBC0</span><span class="u">선택 안 된 카드 테두리, 페이지 점</span></div></div>
+<div class="sw"><div class="c" style="background: #8A867C"></div><div class="t"><span class="n">border-input</span><span class="mono">#8A867C</span><span class="u">입력창 테두리, 라디오 빈 원 (3.57:1, UI 기준 충족)</span></div></div>
+</div>
+
+<h3 class="grp">글자</h3>
+<div class="g4">
+<div class="sw"><div class="c" style="background: #252525"></div><div class="t"><span class="n">text-primary</span><span class="mono">#252525</span><span class="u">제목·본문·버튼 (15.07:1)</span></div></div>
+<div class="sw"><div class="c" style="background: #4A4844"></div><div class="t"><span class="n">text-secondary</span><span class="mono">#4A4844</span><span class="u">설명, 보조 문구, 시간 (8.97:1)</span></div></div>
+<div class="sw"><div class="c" style="background: #5C5A54"></div><div class="t"><span class="n">text-tertiary</span><span class="mono">#5C5A54</span><span class="u">비활성 항목 글자, 보조 라벨 (6.78:1)</span></div></div>
+<div class="sw"><div class="c" style="background: #B5B1A6"></div><div class="t"><span class="n">text-disabled</span><span class="mono">#B5B1A6</span><span class="u">비활성 아이콘 전용 (2.11:1). 정보 글자에 쓰지 않음</span></div></div>
+</div>
+
+<h3 class="grp">상태 (글자색 / 배경색 한 쌍으로 사용, 반드시 아이콘 + 글자와 함께)</h3>
+<div class="g4">
+<div class="sw"><div class="c" style="background: #E3F1E8; display: flex; align-items: center; justify-content: center"><span style="font-size: 15px; font-weight: 800; color: #1E6B3F">응답 완료 · 연결됨</span></div><div class="t"><span class="n">success</span><span class="mono">#1E6B3F / #E3F1E8</span><span class="u">응답 완료, 연결됨, 저장 완료 (5.58:1)</span></div></div>
+<div class="sw"><div class="c" style="background: #E8EDF3; display: flex; align-items: center; justify-content: center"><span style="font-size: 15px; font-weight: 800; color: #2D4A6B">수신만</span></div><div class="t"><span class="n">info</span><span class="mono">#2D4A6B / #E8EDF3</span><span class="u">기기 도착, 터치 응답 없음 (7.74:1)</span></div></div>
+<div class="sw"><div class="c" style="background: #FDF0DC; display: flex; align-items: center; justify-content: center"><span style="font-size: 15px; font-weight: 800; color: #8A4B00">미확인 · 주의</span></div><div class="t"><span class="n">warning</span><span class="mono">#8A4B00 / #FDF0DC</span><span class="u">전달 미확인, 응답 대기 초과 (6.05:1). 테두리 #D9822B는 장식용</span></div></div>
+<div class="sw"><div class="c" style="background: #FBE4E1; display: flex; align-items: center; justify-content: center"><span style="font-size: 15px; font-weight: 800; color: #A3241B">실패</span></div><div class="t"><span class="n">danger</span><span class="mono">#A3241B / #FBE4E1</span><span class="u">전송 실패, 오류 (6.12:1)</span></div></div>
+<div class="sw"><div class="c" style="background: #1C1C1C; display: flex; align-items: center; justify-content: center"><span style="width: 36px; height: 36px; border-radius: 50%; background: #E5484D"></span></div><div class="t"><span class="n">emergency</span><span class="mono">#E5484D on #1C1C1C</span><span class="u">긴급 버튼 아이콘 원 전용 (4.35:1). 글자는 흰색</span></div></div>
+</div>
+
+<h3 class="grp">당사자 앱 고대비 (수신·응답 화면)</h3>
+<div class="g4">
+<div class="sw"><div class="c" style="background: #000000"></div><div class="t"><span class="n">r-black</span><span class="mono">#000000</span><span class="u">대기·보내기·응답 완료 화면 배경</span></div></div>
+<div class="sw"><div class="c" style="background: #F5C84C"></div><div class="t"><span class="n">r-yellow (= yellow-500)</span><span class="mono">#F5C84C</span><span class="u">수신·보냄 화면 배경, 검정 위 강조 (13.25:1)</span></div></div>
+<div class="sw" style="grid-column: span 2"><div class="c" style="display: grid; grid-template-columns: repeat(5, 1fr)"><span style="background: #000; display: flex; align-items: center; justify-content: center"><span style="width: 32px; height: 32px; border-radius: 50%; border: 6px solid #F5C84C"></span></span><span style="background: #000; display: flex; align-items: center; justify-content: center"><span style="width: 40px; height: 40px; border-radius: 50%; background: #F5C84C"></span></span><span style="background: #F5C84C; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 2.5L2.5 10.2l7.3 3.1 3.1 7.7z" fill="#000"></path></svg></span><span style="background: #F5C84C; display: flex; align-items: center; justify-content: center"><span style="width: 40px; height: 40px; border-radius: 50%; background: #000"></span></span><span style="background: #000; display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#F5C84C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span></div><div class="t"><span class="n">상태별 화면 조합 (07)</span><span class="u">대기 = 검정 + 노란 고리 / 보내기 = 검정 + 노란 원 / 보냄 = 노랑 + 검정 비행기 / 수신 = 노랑 + 검정 원 / 응답 완료 = 검정 + 노란 체크. 노랑 + 흰색 조합 금지</span></div></div>
+</div>
+</section>
+
+<section class="sec">
+<h2>2. 타이포그래피</h2>
+<p class="d">서체: Noto Sans KR (400 · 500 · 800). 숫자 코드(연결 코드)는 Roboto Mono 700. 굵기는 3단계만 사용.</p>
+<table class="tbl">
+<thead><tr><th style="width: 170px">토큰</th><th style="width: 230px">크기 / 행간 / 굵기 / 자간</th><th>예시</th><th style="width: 250px">쓰는 곳</th></tr></thead>
+<tbody>
+<tr><td class="mono">display</td><td class="mono">44 / 1.1 / 800 / -0.04em</td><td style="font-size: 44px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.1">손울림</td><td>스플래시 로고, 완료 문구</td></tr>
+<tr><td class="mono">title-1</td><td class="mono">28 / 1.3 / 800 / -0.03em</td><td style="font-size: 28px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.3">당사자와 연결해요</td><td>화면 제목</td></tr>
+<tr><td class="mono">title-2</td><td class="mono">24 / 1.35 / 800 / -0.03em</td><td style="font-size: 24px; font-weight: 800; letter-spacing: -0.03em">촉신호 목록에서 고르기</td><td>플로우 단계 제목</td></tr>
+<tr><td class="mono">heading</td><td class="mono">18 / 1.4 / 800 / 0</td><td style="font-size: 18px; font-weight: 800">자주 쓰는 신호</td><td>카드 제목, 버튼 글자</td></tr>
+<tr><td class="mono">body-strong</td><td class="mono">16 / 1.5 / 800 / 0</td><td style="font-size: 16px; font-weight: 800">나 여기 있어</td><td>목록 항목 이름, 라벨</td></tr>
+<tr><td class="mono">body</td><td class="mono">16 / 1.6 / 400 / 0</td><td style="font-size: 16px; line-height: 1.6">연결하면 서로 메시지를 주고받을 수 있어요.</td><td>본문 설명</td></tr>
+<tr><td class="mono">label</td><td class="mono">15 / 1.5 / 800 / 0</td><td style="font-size: 15px; font-weight: 800">이메일</td><td>입력 라벨, 섹션 소제목</td></tr>
+<tr><td class="mono">caption</td><td class="mono">14 / 1.55 / 400 / 0</td><td style="font-size: 14px; line-height: 1.55; color: #4A4844">마지막 업데이트 18:51 · 3분 전</td><td>보조 정보, 시간</td></tr>
+<tr><td class="mono">small</td><td class="mono">13 / 1.5 / 500 / 0</td><td style="font-size: 13px; font-weight: 500; color: #4A4844">2단계 · 진동 리듬 만들기</td><td>단계 표시, 상태 칩</td></tr>
+<tr><td class="mono">badge</td><td class="mono">11 / 1 / 800 / 0</td><td><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 11px; border: 1.5px solid #252525; font-size: 11px; font-weight: 800">기본</span></td><td>배지 (최소 11px)</td></tr>
+<tr><td class="mono">code</td><td class="mono">48 / 1 / 700 / 0.08em · Mono</td><td style="font-family: 'Roboto Mono', monospace; font-size: 48px; font-weight: 700; letter-spacing: 0.08em; line-height: 1">482 913</td><td>연결 코드</td></tr>
+</tbody>
+</table>
+<h3 class="grp">당사자 앱 스케일 (최소 18px, 주요 글자 20px 이상)</h3>
+<table class="tbl">
+<thead><tr><th style="width: 170px">토큰</th><th style="width: 230px">크기 / 행간 / 굵기</th><th>예시</th><th style="width: 250px">쓰는 곳</th></tr></thead>
+<tbody>
+<tr><td class="mono">r-display</td><td class="mono">52 / 1.15 / 800</td><td style="font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.15">누가 왔어</td><td>수신 신호 이름</td></tr>
+<tr><td class="mono">r-title</td><td class="mono">30–36 / 1.35 / 800</td><td style="font-size: 32px; font-weight: 800; letter-spacing: -0.03em">연결 코드 입력</td><td>화면 제목, 완료 문구</td></tr>
+<tr><td class="mono">r-button</td><td class="mono">20–22 / 1.3 / 800</td><td style="font-size: 22px; font-weight: 800">연결하기</td><td>대형 버튼</td></tr>
+<tr><td class="mono">r-body</td><td class="mono">18–20 / 1.6 / 500</td><td style="font-size: 18px; font-weight: 500; line-height: 1.6">보호자에게 받은 숫자 6자리</td><td>설명 (한 문장 이내)</td></tr>
+</tbody>
+</table>
+</section>
+
+<section class="sec">
+<h2>3. 간격 · 모서리 · 그림자</h2>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 20px">
+<div style="background: #FFFFFF; border: 1px solid #E4E0D4; border-radius: 16px; padding: 20px">
+<h3 style="margin: 0 0 14px; font-size: 16px; font-weight: 800">간격 (4px 단위)</h3>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 12px"><span class="mono" style="width: 80px">space-1</span><span style="width: 4px; height: 16px; background: #F5C84C"></span><span class="mono">4</span></div>
+<div style="display: flex; align-items: center; gap: 12px"><span class="mono" style="width: 80px">space-2</span><span style="width: 8px; height: 16px; background: #F5C84C"></span><span class="mono">8</span></div>
+<div style="display: flex; align-items: center; gap: 12px"><span class="mono" style="width: 80px">space-3</span><span style="width: 12px; height: 16px; background: #F5C84C"></span><span class="mono">12</span></div>
+<div style="display: flex; align-items: center; gap: 12px"><span class="mono" style="width: 80px">space-4</span><span style="width: 16px; height: 16px; background: #F5C84C"></span><span class="mono">16</span></div>
+<div style="display: flex; align-items: center; gap: 12px"><span class="mono" style="width: 80px">space-5</span><span style="width: 20px; height: 16px; background: #F5C84C"></span><span class="mono">20</span></div>
+<div style="display: flex; align-items: center; gap: 12px"><span class="mono" style="width: 80px">space-6</span><span style="width: 24px; height: 16px; background: #F5C84C"></span><span class="mono">24</span></div>
+<div style="display: flex; align-items: center; gap: 12px"><span class="mono" style="width: 80px">space-8</span><span style="width: 32px; height: 16px; background: #F5C84C"></span><span class="mono">32</span></div>
+<div style="display: flex; align-items: center; gap: 12px"><span class="mono" style="width: 80px">space-10</span><span style="width: 40px; height: 16px; background: #F5C84C"></span><span class="mono">40</span></div>
+</div>
+<p style="margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: #4A4844">화면 좌우 여백 20 (홈·탭 화면 16, 당사자 24). 카드 안쪽 16. 카드 사이 16. 섹션 사이 28. 상단 상태바 영역 52.</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E4E0D4; border-radius: 16px; padding: 20px">
+<h3 style="margin: 0 0 14px; font-size: 16px; font-weight: 800">모서리 반경</h3>
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 64px; height: 48px; border: 2px solid #252525; border-radius: 10px"></span><span class="mono">radius-xs 10</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 64px; height: 48px; border: 2px solid #252525; border-radius: 14px"></span><span class="mono">radius-sm 14</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 64px; height: 48px; border: 2px solid #252525; border-radius: 16px"></span><span class="mono">radius-md 16</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 64px; height: 48px; border: 2px solid #252525; border-radius: 20px"></span><span class="mono">radius-lg 20</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 64px; height: 48px; border: 2px solid #252525; border-radius: 24px"></span><span class="mono">radius-xl 24</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><span style="width: 64px; height: 48px; border: 2px solid #252525; border-radius: 24px"></span><span class="mono">radius-full</span></div>
+</div>
+<p style="margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: #4A4844">xs: 세그먼트 탭 안쪽, 배지 · sm: 입력창, 작은 버튼 · md: 주 버튼, 신호 타일 · lg: 카드, 당사자 버튼 · xl: 큰 카드, 바텀시트 상단 · full: 칩, 아바타, 원형 버튼</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E4E0D4; border-radius: 16px; padding: 20px">
+<h3 style="margin: 0 0 14px; font-size: 16px; font-weight: 800">그림자</h3>
+<div style="display: flex; flex-direction: column; gap: 18px; padding: 8px; background: #FFFDF7; border-radius: 12px">
+<div style="height: 56px; border-radius: 16px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(37,37,37,.06), 0 6px 16px rgba(37,37,37,.06); display: flex; align-items: center; padding: 0 14px" class="mono">shadow-card</div>
+<div style="height: 56px; border-radius: 16px; background: #FFFFFF; box-shadow: 0 -4px 16px rgba(37,37,37,.08); display: flex; align-items: center; padding: 0 14px" class="mono">shadow-sheet</div>
+<div style="height: 56px; border-radius: 16px; background: #FFFFFF; border: 1.5px solid #E4E0D4; display: flex; align-items: center; padding: 0 14px" class="mono">shadow-none + line</div>
+</div>
+<p style="margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: #4A4844">card: 0 1px 2px / 0 6px 16px, rgba(37,37,37,.06) · sheet: 0 -4px 16px .08 · 당사자 앱과 설정 목록은 그림자 없이 선만 사용</p>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<h2>4. 터치 영역 · 접근성 기준</h2>
+<table class="tbl">
+<thead><tr><th style="width: 220px">항목</th><th>보호자 앱</th><th>당사자 앱</th></tr></thead>
+<tbody>
+<tr><td style="font-weight: 800">최소 터치 영역</td><td>48 × 48 (아이콘 버튼, 링크 줄 높이 44 이상)</td><td>72 높이 이상, 주요 조작은 화면 전체</td></tr>
+<tr><td style="font-weight: 800">주 버튼</td><td>높이 56–60, 화면 폭 가득</td><td>높이 80–88</td></tr>
+<tr><td style="font-weight: 800">목록 한 줄</td><td>56–76</td><td>80 이상</td></tr>
+<tr><td style="font-weight: 800">버튼 사이 간격</td><td>10–12</td><td>14 이상</td></tr>
+<tr><td style="font-weight: 800">상태 표현</td><td colspan="2">색 + 아이콘 + 글자를 함께. 선택 상태는 채움·테두리 두께·체크 아이콘으로 구분하고 aria-pressed / aria-checked / aria-selected / aria-current로 전달</td></tr>
+<tr><td style="font-weight: 800">스크린리더</td><td colspan="2">아이콘만 있는 버튼은 aria-label 필수. 장식 SVG는 aria-hidden. 리듬 그림은 role=img + '짧게 짧게 길게' 대체 텍스트</td></tr>
+<tr><td style="font-weight: 800">햅틱</td><td colspan="2">진동 패턴은 신호 사전(Signal registry)에서만 가져옴. 확인·실패 진동은 검증 후 확정 (임의로 만들지 않음)</td></tr>
+</tbody>
+</table>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":3300}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

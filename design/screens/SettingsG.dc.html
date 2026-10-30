@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>보호자 · 설정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#252525}a:hover{color:#000}
+</style>
+</helmet>
+<main style="width: 390px; min-height: 1700px; box-sizing: border-box; background: #FFFDF7; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #252525; display: flex; flex-direction: column; gap: 28px; padding: 52px 20px 40px">
+<div>
+<div style="height: 48px; display: flex; align-items: center; margin-left: -10px">
+<button type="button" aria-label="뒤로 가기" style="width: 48px; height: 48px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+</button>
+</div>
+<h1 style="margin: 4px 0 0; font-size: 28px; font-weight: 800; letter-spacing: -0.03em">설정</h1>
+</div>
+
+<section aria-labelledby="s-conn" style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="s-conn" style="margin: 0; font-size: 15px; font-weight: 800; color: #4A4844">연결 관리</h2>
+<div style="border: 2px solid #252525; border-radius: 20px; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 12px">
+<span aria-hidden="true" style="width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%; background: {{accent}}; border: 2px solid #252525; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800">하</span>
+<div style="flex: 1; display: flex; flex-direction: column">
+<span style="font-size: 19px; font-weight: 800">김하늘</span>
+<span style="font-size: 14px; color: #4A4844">당사자 · 10월 26일 연결</span>
+</div>
+</div>
+<p role="status" style="margin: 0; display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border-radius: 14px; background: #FCEFC4; font-size: 15px; line-height: 1.5">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"></path></svg>
+<span><b style="font-weight: 800">연결됨</b><br>18:58에 김하늘의 휴대폰과 연결을 확인했어요.</span>
+</p>
+<button type="button" style="height: 52px; border: 2px solid #252525; border-radius: 14px; background: transparent; font-family: inherit; font-size: 16px; font-weight: 800; color: #252525; display: flex; align-items: center; justify-content: center; gap: 8px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"></path></svg>
+지금 연결 확인하기</button>
+</div>
+<div style="border: 1.5px solid #CFCBC0; border-radius: 18px; background: #FFFFFF; overflow: hidden">
+<a href="#" style="min-height: 60px; padding: 0 16px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #252525; border-bottom: 1.5px solid #E4E0D4"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg><span style="flex: 1; font-size: 16px; font-weight: 800">다른 당사자 연결하기</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+<a href="#" style="min-height: 60px; padding: 0 16px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #252525"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16v.5"></path></svg><span style="flex: 1; font-size: 16px; font-weight: 800">연결이 안 될 때</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+</div>
+</section>
+
+<section aria-labelledby="s-vib" style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="s-vib" style="margin: 0; font-size: 15px; font-weight: 800; color: #4A4844">진동 설정</h2>
+<div style="border: 1.5px solid #CFCBC0; border-radius: 18px; background: #FFFFFF; overflow: hidden">
+<div style="padding: 14px 16px; border-bottom: 1.5px solid #E4E0D4; font-size: 15px; line-height: 1.55">
+<span style="font-weight: 800">김하늘의 진동 설정</span><br>
+<span style="color: #4A4844">10월 26일 보정 · 세기 강하게 · 길이 보통 · 반복 2번</span>
+</div>
+<a href="#" style="min-height: 60px; padding: 0 16px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #252525; border-bottom: 1.5px solid #E4E0D4"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg><span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 800">내 진동 설정 (보정)</span><span style="font-size: 14px; color: #4A4844">내 휴대폰에서 신호를 느껴 볼 때 쓰여요</span></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+<a href="#" style="min-height: 60px; padding: 0 16px; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #252525"><svg width="22" height="22" viewBox="0 0 24 24" fill="#252525" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z"></path></svg><span style="flex: 1; font-size: 16px; font-weight: 800">진동 테스트 다시 하기</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+</div>
+</section>
+
+<section aria-labelledby="s-noti" style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="s-noti" style="margin: 0; font-size: 15px; font-weight: 800; color: #4A4844">알림</h2>
+<div style="border: 1.5px solid #CFCBC0; border-radius: 18px; background: #FFFFFF; overflow: hidden">
+<label style="min-height: 64px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1.5px solid #E4E0D4; cursor: pointer">
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 800">터치 응답 알림</span><span style="font-size: 14px; color: #4A4844">김하늘이 화면을 터치해 응답하면</span></span>
+<span style="font-size: 14px; font-weight: 800">켜짐</span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0; border-radius: 16px; background: #252525"><input type="checkbox" role="switch" checked style="position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0"><span style="position: absolute; top: 4px; left: 24px; width: 24px; height: 24px; border-radius: 12px; background: {{accent}}"></span></span>
+</label>
+<label style="min-height: 64px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1.5px solid #E4E0D4; cursor: pointer">
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 800">응답 없음 알림</span><span style="font-size: 14px; color: #4A4844">정한 시간 동안 터치 응답이 없으면</span></span>
+<span style="font-size: 14px; font-weight: 800">켜짐</span>
+<span style="position: relative; width: 52px; height: 32px; flex-shrink: 0; border-radius: 16px; background: #252525"><input type="checkbox" role="switch" checked style="position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0"><span style="position: absolute; top: 4px; left: 24px; width: 24px; height: 24px; border-radius: 12px; background: {{accent}}"></span></span>
+</label>
+<div style="padding: 12px 16px; border-bottom: 1.5px solid #E4E0D4; display: flex; align-items: center; gap: 12px">
+<label for="wait" style="flex: 1; font-size: 16px; font-weight: 800">응답 기다리는 시간</label>
+<select id="wait" style="height: 48px; padding: 0 12px; border: 1.5px solid #8A867C; border-radius: 12px; background: #FFFDF7; font-family: inherit; font-size: 16px; font-weight: 800; color: #252525">
+<option>5분</option><option selected>10분</option><option>30분</option>
+</select>
+</div>
+<div style="min-height: 64px; padding: 0 16px; display: flex; align-items: center; gap: 12px">
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 800">도움 요청 알림</span><span style="font-size: 14px; color: #4A4844">놓치지 않도록 항상 켜져 있어요</span></span>
+<span style="display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 800"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>항상 켜짐</span>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="s-priv" style="display: flex; flex-direction: column; gap: 10px">
+<h2 id="s-priv" style="margin: 0; font-size: 15px; font-weight: 800; color: #4A4844">개인정보 및 위치</h2>
+<div style="border: 1.5px solid #CFCBC0; border-radius: 18px; background: #FFFFFF; padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.6">
+<p style="margin: 0; display: flex; align-items: flex-start; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 3px"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+<span><b style="font-weight: 800">김하늘의 위치 공유: 도움 요청 때만</b><br><span style="color: #4A4844">김하늘이 도움 요청을 보낼 때, 그 순간의 위치가 한 번 함께 와요. 평소에는 위치를 받지 않아요. 이 설정은 김하늘의 휴대폰에서만 바꿀 수 있어요.</span></span>
+</p>
+<p style="margin: 0; display: flex; align-items: flex-start; gap: 10px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 3px"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"></path></svg>
+<span><b style="font-weight: 800">내 알림 권한: 허용됨</b><br><span style="color: #4A4844">알림을 끄면 도움 요청을 바로 받을 수 없어요.</span></span>
+</p>
+<a href="#" style="min-height: 48px; display: flex; align-items: center; gap: 6px; font-weight: 800">휴대폰 설정에서 권한 바꾸기
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#252525" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
+<a href="#" style="min-height: 48px; display: flex; align-items: center; font-weight: 800">기록 보관과 삭제</a>
+</div>
+</section>
+
+<button type="button" style="height: 56px; border: 0; background: transparent; font-family: inherit; font-size: 16px; font-weight: 800; color: #4A4844; text-decoration: underline">로그아웃</button>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F5C84C"},"$preview":{"width":390,"height":1700}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F5C84C' };
+}
+}
+</script>
+</body>
+</html>
