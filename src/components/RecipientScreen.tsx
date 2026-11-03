@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { colors, typography } from '@/theme';
+import { colors, radius, space, typography } from '@/theme';
 
 import { Text } from './Text';
 
@@ -163,18 +163,19 @@ const styles = StyleSheet.create({
   },
   composeWrap: {
     alignItems: 'center',
-    gap: 36,
+    gap: space[10],
   },
   composeCircle: {
     width: 300,
     height: 300,
-    borderRadius: 150,
+    borderRadius: radius.full,
     backgroundColor: colors.rYellow,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // 종이비행기 글리프의 시각 중심을 원 가운데로
   composeGlyph: {
-    marginRight: 10,
+    paddingRight: space[3],
   },
   composeText: {
     ...typography.rTitle,
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
   },
   sentWrap: {
     alignItems: 'center',
-    gap: 40,
+    gap: space[10],
   },
   sentText: {
     ...typography.display,
@@ -192,11 +193,11 @@ const styles = StyleSheet.create({
   incomingCircle: {
     width: 320,
     height: 320,
-    borderRadius: 160,
+    borderRadius: radius.full,
     backgroundColor: colors.rBlack,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 40,
+    padding: space[10],
   },
   incomingText: {
     ...typography.rDisplay,

@@ -1,5 +1,16 @@
-import PlaceholderScreen from '@/screens/PlaceholderScreen';
+import { router } from 'expo-router';
 
-export default function Route() {
-  return <PlaceholderScreen title="07-1 대기" />;
+import { connectedGuardian, playConnectionCheck, requestHelp } from '@/features/recipient';
+import RecipientIdleScreen from '@/screens/recipient/RecipientIdleScreen';
+
+export default function RecipientIdleRoute() {
+  return (
+    <RecipientIdleScreen
+      guardianName={connectedGuardian.name}
+      onTap={playConnectionCheck}
+      onSend={() => router.push('/recipient/send')}
+      onHelp={requestHelp}
+      onSettings={() => router.push('/recipient/settings')}
+    />
+  );
 }

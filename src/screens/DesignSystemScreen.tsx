@@ -9,6 +9,7 @@ import {
   CheckboxRow,
   Chip,
   CodeInput,
+  Grid,
   InfoBox,
   ListRow,
   Logo,
@@ -16,9 +17,11 @@ import {
   RadioCard,
   RecipientScreen,
   Rhythm,
+  Row,
   SegmentedTabs,
   SignalBadge,
   SignalTile,
+  Stack,
   StatusChip,
   StepBar,
   SwitchRow,
@@ -29,7 +32,7 @@ import {
   type SignalStatus,
   type TabKey,
 } from '@/components';
-import { colors, screen, typography, type TypeVariant } from '@/theme';
+import { colors, radius, screen, space, touch, typography, type TypeVariant } from '@/theme';
 
 // 디자인 시스템 미리보기 (design/screens/DS-*.dc.html 대응). 실제 화면 작업 전 확인용.
 
@@ -98,17 +101,19 @@ export default function DesignSystemScreen() {
         <Logo />
 
         <Section title="컬러">
-          <View style={styles.swatchGrid}>
+          <Grid columns={3} gap={3}>
             {swatches.map((key) => (
-              <View key={key} style={styles.swatch}>
+              <Stack key={key} gap={1}>
                 <View style={[styles.swatchColor, { backgroundColor: colors[key] }]} />
-                <Text variant="small">{key}</Text>
-                <Text variant="small" color="textSecondary">
-                  {colors[key]}
-                </Text>
-              </View>
+                <View>
+                  <Text variant="small">{key}</Text>
+                  <Text variant="small" color="textSecondary">
+                    {colors[key]}
+                  </Text>
+                </View>
+              </Stack>
             ))}
-          </View>
+          </Grid>
         </Section>
 
         <Section title="타이포그래피">
@@ -140,10 +145,10 @@ export default function DesignSystemScreen() {
         </Section>
 
         <Section title="Selection">
-          <View accessibilityRole="radiogroup" style={styles.stack}>
+          <Stack gap={3} accessibilityRole="radiogroup">
             <RadioCard label="촉신호 목록에서 고르기" selected={mode === 'list'} onPress={() => setMode('list')} />
             <RadioCard label="직접 만들기" selected={mode === 'custom'} onPress={() => setMode('custom')} />
-          </View>
+          </Stack>
           <SegmentedTabs
             options={[
               { value: 'preset', label: '프리셋에서 고르기' },
@@ -152,46 +157,46 @@ export default function DesignSystemScreen() {
             value={segment}
             onChange={setSegment}
           />
-          <View style={styles.chipRow}>
+          <Row gap={2} align="stretch">
             {['일상', '외출', '확인', '긴급'].map((c) => (
               <Chip key={c} label={c} selected={category === c} onPress={() => setCategory(c)} />
             ))}
-          </View>
+          </Row>
           <SwitchRow label="응답 없음 알림" value={noReplyAlert} onValueChange={setNoReplyAlert} />
           <SwitchRow label="터치 응답 알림" value={touchAlert} onValueChange={setTouchAlert} />
           <CheckboxRow checked={agree} onChange={setAgree} accessibilityLabel="필수, 이용약관에 동의해요">
-            <Text variant="label" style={{ fontFamily: typography.small.fontFamily }}>
+            <Text variant="label" weight="medium">
               <Text variant="label">[필수]</Text> 이용약관에 동의해요
             </Text>
           </CheckboxRow>
         </Section>
 
         <Section title="Badge · StatusChip">
-          <View style={styles.wrapRow}>
+          <Row wrap gap={3}>
             <SignalBadge type="basic" />
             <SignalBadge type="custom" />
             <SignalBadge type="untrained" />
-          </View>
-          <View style={styles.wrapRow}>
+          </Row>
+          <Row wrap gap={3}>
             {statuses.map((s) => (
               <StatusChip key={s} status={s} />
             ))}
-          </View>
+          </Row>
         </Section>
 
         <Section title="RhythmGlyph">
-          <View style={styles.wrapRow}>
+          <Row wrap gap={3}>
             <Rhythm beats={['L', 'S', 'M']} size="sm" />
             <Rhythm beats={['L', 'S', 'M']} size="md" />
             <Rhythm beats={['L', 'S', 'M']} size="lg" playingIndex={1} />
-          </View>
+          </Row>
         </Section>
 
         <Section title="Card · SignalTile · ListRow · InfoBox">
-          <View style={styles.wrapRow}>
+          <Row wrap gap={3}>
             <SignalTile name="가자" icon="sig-arrow" badge="basic" beats={['S', 'L', 'S']} style={styles.tile} />
             <SignalTile name="약 먹을 시간" icon="sig-pill" badge="custom" beats={['M', 'M']} style={styles.tile} />
-          </View>
+          </Row>
           <Card style={styles.listCard}>
             <ListRow title="나 여기 있어" subtitle="18:47 보냄" trailing={<StatusChip status="replied" />} />
             <ListRow title="다른 당사자 연결하기" icon="plus" divider onPress={() => {}} />
@@ -207,7 +212,7 @@ export default function DesignSystemScreen() {
         </Section>
 
         <Section title="RecipientScreen">
-          <View style={styles.wrapRow}>
+          <Row wrap gap={3}>
             {(Object.keys(recipientLabels) as RecipientState[]).map((s) => (
               <Pressable
                 key={s}
@@ -219,7 +224,7 @@ export default function DesignSystemScreen() {
                 <Text variant="small">{s}</Text>
               </Pressable>
             ))}
-          </View>
+          </Row>
         </Section>
       </ScrollView>
 
@@ -241,12 +246,12 @@ export default function DesignSystemScreen() {
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <View style={styles.section}>
+    <Stack gap={4}>
       <Text variant="title2" accessibilityRole="header">
         {title}
       </Text>
-      <View style={styles.stack}>{children}</View>
-    </View>
+      <Stack gap={3}>{children}</Stack>
+    </Stack>
   );
 }
 
@@ -258,51 +263,26 @@ const styles = StyleSheet.create({
   content: {
     padding: screen.gutter,
     gap: screen.sectionGap,
-    paddingBottom: 48,
+    paddingBottom: space[10],
   },
-  section: {
-    gap: 16,
-  },
-  stack: {
-    gap: 12,
-  },
-  swatchGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-  },
-  swatch: {
-    width: '30%',
-    gap: 2,
-  },
+  // 미리보기 견본 크기
   swatchColor: {
     height: 48,
-    borderRadius: 12,
+    borderRadius: radius.xs,
     borderWidth: 1,
     borderColor: colors.line,
-    marginBottom: 4,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  wrapRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: 10,
   },
   tile: {
     width: 168,
   },
   listCard: {
-    paddingVertical: 4,
+    paddingVertical: space[1],
   },
   recipientThumb: {
     minWidth: 96,
-    height: 48,
-    paddingHorizontal: 12,
-    borderRadius: 12,
+    height: touch.guardianMin,
+    paddingHorizontal: space[3],
+    borderRadius: radius.xs,
     borderWidth: 1.5,
     borderColor: colors.lineStrong,
     backgroundColor: colors.surface,

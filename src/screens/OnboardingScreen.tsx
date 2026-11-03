@@ -11,9 +11,9 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button, PageDots, Text } from '@/components';
+import { Button, PageDots, Rhythm, Row, Stack, Text } from '@/components';
 import { PhoneMessageIllustration, TouchWaveGlyph, TwoWayIllustration } from '@/components/Illustrations';
-import { colors, fontFamily, screen } from '@/theme';
+import { colors, radius, screen, space, touch } from '@/theme';
 
 // 02 온보딩 (design/screens/Onboarding1~3.dc.html)
 // 이동: '다음' 또는 좌우 스와이프. 마지막 장 '시작하기' → 로그인. 1·2장 '건너뛰기' → 로그인.
@@ -59,8 +59,12 @@ export default function OnboardingScreen({ onFinish, onTryVibration }: Onboardin
         >
           <TwoWayIllustration />
           <View style={styles.roles}>
-            <Text style={styles.roleText}>보호자</Text>
-            <Text style={styles.roleText}>당사자</Text>
+            <Text variant="caption" weight="extraBold">
+              보호자
+            </Text>
+            <Text variant="caption" weight="extraBold">
+              당사자
+            </Text>
           </View>
         </View>
       ),
@@ -69,7 +73,7 @@ export default function OnboardingScreen({ onFinish, onTryVibration }: Onboardin
       title: '직접 느껴 보세요',
       body: "위 버튼을 누르면 '밥 먹었어?'라는 메시지가 진동으로 전해져요.",
       visual: (
-        <View style={styles.tryWrap}>
+        <Stack align="center" gap={5}>
           <View style={styles.tint}>
             <Pressable
               onPress={onTryVibration}
@@ -78,19 +82,23 @@ export default function OnboardingScreen({ onFinish, onTryVibration }: Onboardin
               style={({ pressed }) => [styles.tryButton, pressed && styles.tryPressed]}
             >
               <TouchWaveGlyph />
-              <Text style={styles.tryLabel}>{'눌러서\n진동 느끼기'}</Text>
+              <Text variant="heading" style={styles.center}>
+                {'눌러서\n진동 느끼기'}
+              </Text>
             </Pressable>
           </View>
-          <View style={styles.pill} accessible accessibilityLabel="밥 먹었어?, 짧게 짧게 길게">
-            <Text style={styles.pillName}>밥 먹었어?</Text>
-            <View style={styles.pillBeats}>
-              <View style={[styles.beat, styles.beatShort]} />
-              <View style={[styles.beat, styles.beatShort]} />
-              <View style={[styles.beat, styles.beatLong]} />
+          <Row gap={3} paddingX={4} style={styles.pill} accessible accessibilityLabel="밥 먹었어?, 짧게 짧게 길게">
+            <Text variant="caption" weight="extraBold">
+              밥 먹었어?
+            </Text>
+            <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+              <Rhythm beats={['S', 'S', 'L']} />
             </View>
-            <Text style={styles.pillDesc}>짧게 · 짧게 · 길게</Text>
-          </View>
-        </View>
+            <Text variant="caption" weight="medium" color="textSecondary">
+              짧게 · 짧게 · 길게
+            </Text>
+          </Row>
+        </Stack>
       ),
     },
   ];
@@ -107,11 +115,13 @@ export default function OnboardingScreen({ onFinish, onTryVibration }: Onboardin
   };
 
   return (
-    <View style={[styles.root, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 16) + 24 }]}>
+    <View style={[styles.root, { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, space[4]) + space[6] }]}>
       <View style={styles.topBar}>
         {!isLast && (
           <Pressable onPress={onFinish} accessibilityRole="button" style={styles.skip}>
-            <Text style={styles.skipText}>건너뛰기</Text>
+            <Text variant="label" weight="medium" color="textSecondary">
+              건너뛰기
+            </Text>
           </Pressable>
         )}
       </View>
@@ -133,28 +143,28 @@ export default function OnboardingScreen({ onFinish, onTryVibration }: Onboardin
             accessibilityElementsHidden={i !== index}
           >
             <View style={styles.visual}>{page.visual}</View>
-            <View style={styles.copy}>
+            <Stack gap={3} paddingX={2}>
               <Text variant="title1" accessibilityRole="header" style={styles.center}>
                 {page.title}
               </Text>
-              <Text variant="body" color="textSecondary" style={styles.body}>
+              <Text variant="body" color="textSecondary" style={styles.center}>
                 {page.body}
               </Text>
-            </View>
+            </Stack>
           </View>
         ))}
       </ScrollView>
 
-      <View style={styles.footer}>
-        <View style={styles.dots}>
+      <Stack gap={6} style={styles.footer}>
+        <Row justify="center">
           <PageDots total={pages.length} current={index + 1} />
-        </View>
+        </Row>
         {isLast ? (
-          <Button label="시작하기" variant="dark" onPress={onFinish} style={styles.cta} />
+          <Button label="시작하기" variant="dark" onPress={onFinish} />
         ) : (
-          <Button label="다음" trailingIcon="arrow-right" onPress={() => goTo(index + 1)} style={styles.cta} />
+          <Button label="다음" trailingIcon="arrow-right" onPress={() => goTo(index + 1)} />
         )}
-      </View>
+      </Stack>
     </View>
   );
 }
@@ -165,22 +175,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bgIvory,
   },
   topBar: {
-    height: 48,
+    height: touch.guardianMin,
     paddingHorizontal: screen.gutterRecipient,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
   skip: {
-    minHeight: 44,
-    paddingHorizontal: 12,
+    minHeight: touch.guardianMin,
+    paddingHorizontal: space[3],
     justifyContent: 'center',
-  },
-  skipText: {
-    fontFamily: fontFamily.medium,
-    fontSize: 15,
-    lineHeight: 22,
-    color: colors.textSecondary,
   },
   pager: {
     flex: 1,
@@ -194,105 +198,50 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  copy: {
-    paddingHorizontal: 8,
-  },
   center: {
-    textAlign: 'center',
-  },
-  body: {
-    marginTop: 14,
-    lineHeight: 26,
     textAlign: 'center',
   },
   footer: {
     paddingHorizontal: screen.gutterRecipient,
-  },
-  dots: {
-    alignItems: 'center',
-    marginTop: 40,
-    marginBottom: 24,
-  },
-  cta: {
-    minHeight: 60,
+    paddingTop: space[10],
   },
 
+  // 일러스트 배경 원 (일러스트 고유 크기)
   tint: {
     width: 280,
     height: 280,
-    borderRadius: 140,
+    borderRadius: radius.full,
     backgroundColor: colors.yellow100,
     alignItems: 'center',
     justifyContent: 'center',
   },
   twoWay: {
-    gap: 10,
+    gap: space[3],
   },
+  // 두 휴대폰 그림 아래에 이름을 맞춘다 (TwoWayIllustration 고유 간격)
   roles: {
     flexDirection: 'row',
     gap: 70,
   },
-  roleText: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 14,
-    lineHeight: 20,
-  },
 
-  tryWrap: {
-    alignItems: 'center',
-    gap: 20,
-  },
   tryButton: {
     width: 200,
     height: 200,
-    borderRadius: 100,
+    borderRadius: radius.full,
     borderWidth: 4,
     borderColor: colors.ink900,
     backgroundColor: colors.yellow500,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    gap: space[3],
   },
   tryPressed: {
     opacity: 0.85,
   },
-  tryLabel: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 18,
-    lineHeight: 24,
-    textAlign: 'center',
-  },
   pill: {
     height: 40,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    borderRadius: radius.full,
     borderWidth: 1.5,
     borderColor: colors.ink900,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  pillName: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  pillBeats: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  beat: {
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.ink900,
-  },
-  beatShort: { width: 8 },
-  beatLong: { width: 24 },
-  pillDesc: {
-    fontFamily: fontFamily.medium,
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.textSecondary,
   },
 });

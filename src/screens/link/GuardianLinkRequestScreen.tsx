@@ -1,8 +1,9 @@
 import { StyleSheet } from 'react-native';
 
-import { Button, Card, DefinitionList, Note, ProfileRow, Screen, ScreenHeader, ScreenTitle, Tag } from '@/components';
+import { Button, Card, DefinitionList, Note, ProfileRow, Screen, ScreenHeader, ScreenTitle, Stack, Tag } from '@/components';
 import { formatLinkCode } from '@/features/link/code';
 import { linkMethodLabel, type LinkMethod } from '@/features/link/mock';
+import { space } from '@/theme';
 
 type Props = {
   recipientName: string;
@@ -29,6 +30,8 @@ export default function GuardianLinkRequestScreen({
     <Screen
       scroll
       header={<ScreenHeader title="계정 연결" onBack={onBack} />}
+      paddingTop={5}
+      gap={7}
       footer={
         <>
           <Button label="연결하기" onPress={onAccept} />
@@ -36,21 +39,24 @@ export default function GuardianLinkRequestScreen({
         </>
       }
     >
-      <Tag icon="bell" label="새 연결 요청" style={styles.tag} />
-      <ScreenTitle title={'이 당사자와\n연결할까요?'} style={styles.title} />
+      <Stack gap={3}>
+        <Tag icon="bell" label="새 연결 요청" style={styles.tag} />
+        <ScreenTitle title={'이 당사자와\n연결할까요?'} />
+      </Stack>
 
-      <Card variant="emphasis" style={styles.card}>
-        <ProfileRow name={recipientName} caption="당사자 계정" />
-        <DefinitionList
-          items={[
-            ['사용한 코드', formatLinkCode(code)],
-            ['연결 방법', linkMethodLabel[method]],
-            ['요청 시간', requestedAt],
-          ]}
-        />
-      </Card>
-
-      <Note style={styles.note}>내가 코드를 알려 준 사람이 맞는지 확인해 주세요.</Note>
+      <Stack gap={4}>
+        <Card variant="emphasis" style={styles.card}>
+          <ProfileRow name={recipientName} caption="당사자 계정" />
+          <DefinitionList
+            items={[
+              ['사용한 코드', formatLinkCode(code)],
+              ['연결 방법', linkMethodLabel[method]],
+              ['요청 시간', requestedAt],
+            ]}
+          />
+        </Card>
+        <Note>내가 코드를 알려 준 사람이 맞는지 확인해 주세요.</Note>
+      </Stack>
     </Screen>
   );
 }
@@ -58,17 +64,9 @@ export default function GuardianLinkRequestScreen({
 const styles = StyleSheet.create({
   tag: {
     alignSelf: 'flex-start',
-    marginTop: 20,
-  },
-  title: {
-    marginTop: 14,
   },
   card: {
-    marginTop: 28,
-    padding: 24,
-    gap: 20,
-  },
-  note: {
-    marginTop: 16,
+    padding: space[6],
+    gap: space[5],
   },
 });

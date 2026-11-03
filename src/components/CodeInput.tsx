@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View, type TextInputInstance } from 'react-native';
 
-import { colors, fontFamily } from '@/theme';
+import { colors, fontFamily, radius, space } from '@/theme';
 
 import { Text } from './Text';
 
@@ -85,13 +85,13 @@ export function CodeInput({
 }
 
 const sizes = {
-  md: { height: 56, radius: 12, gap: 6, font: 26 },
-  lg: { height: 72, radius: 14, gap: 8, font: 34 },
+  md: { height: 56, radius: radius.xs, gap: space[2], font: 26 },
+  lg: { height: 72, radius: radius.sm, gap: space[2], font: 34 },
 } as const;
 
 const styles = StyleSheet.create({
   root: {
-    gap: 8,
+    gap: space[2],
   },
   cells: {
     flexDirection: 'row',

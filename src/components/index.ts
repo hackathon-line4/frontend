@@ -23,6 +23,7 @@ export { RecipientScreen, type RecipientState } from './RecipientScreen';
 export { Rhythm } from './Rhythm';
 export { Grid, Row, Spacer, Stack } from './Layout';
 export { Screen, ScreenHeader, ScreenTitle } from './Screen';
+export { ListGroup, Section, SwitchListRow } from './Section';
 export { CheckboxRow, Chip, RadioCard, SegmentedTabs, SwitchRow } from './Selection';
 export { Text, type TextProps } from './Text';
 export { TextField } from './TextField';

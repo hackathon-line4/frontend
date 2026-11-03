@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
-import { Button, Screen, ScreenHeader, ScreenTitle, StatusMessage } from '@/components';
+import { Button, Screen, ScreenHeader, ScreenTitle, Stack, StatusMessage } from '@/components';
 import { ScanFrame } from '@/components/Illustrations';
 import { colors, radius } from '@/theme';
 
@@ -15,38 +15,31 @@ export default function RecipientQrScanScreen({ onClose, onEnterCode }: Props) {
   return (
     <Screen
       tone="dark"
-      contentStyle={styles.content}
+      align="center"
+      paddingTop={4}
+      gap={8}
       header={<ScreenHeader size="lg" tone="dark" onClose={onClose} />}
       footer={<Button label="코드 직접 입력" icon="keyboard" variant="light" size="lg" onPress={onEnterCode} />}
     >
-      <ScreenTitle title={'보호자 화면의 QR을\n비춰 주세요'} align="center" tone="dark" style={styles.title} />
-      <View style={styles.camera} accessible accessibilityRole="image" accessibilityLabel="카메라 화면">
-        <ScanFrame />
-      </View>
-      <View style={styles.status}>
+      <ScreenTitle title={'보호자 화면의 QR을\n비춰 주세요'} align="center" tone="dark" />
+      <Stack gap={7} align="center">
+        <View style={styles.camera} accessible accessibilityRole="image" accessibilityLabel="카메라 화면">
+          <ScanFrame />
+        </View>
         <StatusMessage icon="vibrate-wave" variant="pill">
           가까워질수록 진동이 빨라져요
         </StatusMessage>
-      </View>
+      </Stack>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
-    alignItems: 'center',
-  },
-  title: {
-    marginTop: 16,
-  },
+  // 카메라 미리보기 자리 (ScanFrame 고유 크기)
   camera: {
-    marginTop: 36,
     width: 260,
     height: 260,
     borderRadius: radius.xl,
     backgroundColor: colors.surfaceInverse,
-  },
-  status: {
-    marginTop: 28,
   },
 });

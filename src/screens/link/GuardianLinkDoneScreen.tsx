@@ -1,6 +1,7 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { Button, Card, ProfileRow, Screen, ScreenTitle, SuccessMark, Tag } from '@/components';
+import { Button, Card, ProfileRow, Screen, ScreenTitle, Stack, SuccessMark, Tag } from '@/components';
+import { radius, space } from '@/theme';
 
 type Props = {
   recipientName: string;
@@ -13,22 +14,26 @@ export default function GuardianLinkDoneScreen({ recipientName, onSendFirstMessa
   return (
     <Screen
       scroll
-      contentStyle={styles.content}
+      reserveHeader="md"
+      paddingTop={10}
+      gap={8}
+      align="center"
       footer={
-        <View>
+        <Stack gap={2}>
           <Button label="첫 메시지 보내기" onPress={onSendFirstMessage} />
-          <Button label="홈으로" variant="text" underline={false} onPress={onHome} style={styles.home} />
-        </View>
+          <Button label="홈으로" variant="text" underline={false} onPress={onHome} />
+        </Stack>
       }
     >
-      <SuccessMark label="연결 완료" />
-      <ScreenTitle
-        title="연결됐어요"
-        description={`이제 ${recipientName}님과 메시지를 주고받을 수 있어요.`}
-        size={30}
-        align="center"
-        style={styles.title}
-      />
+      <Stack gap={7} align="center">
+        <SuccessMark label="연결 완료" />
+        <ScreenTitle
+          title="연결됐어요"
+          description={`이제 ${recipientName}님과 메시지를 주고받을 수 있어요.`}
+          size={30}
+          align="center"
+        />
+      </Stack>
       <Card variant="emphasis" style={styles.card}>
         <ProfileRow
           name={recipientName}
@@ -42,21 +47,10 @@ export default function GuardianLinkDoneScreen({ recipientName, onSendFirstMessa
 }
 
 const styles = StyleSheet.create({
-  content: {
-    alignItems: 'center',
-    paddingTop: 88,
-  },
-  title: {
-    marginTop: 28,
-  },
   card: {
     alignSelf: 'stretch',
-    marginTop: 32,
-    borderRadius: 20,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-  },
-  home: {
-    marginTop: 8,
+    borderRadius: radius.lg,
+    paddingVertical: space[4],
+    paddingHorizontal: space[5],
   },
 });

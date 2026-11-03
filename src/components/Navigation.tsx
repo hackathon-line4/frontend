@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, fontFamily, radius, screen, shadow } from '@/theme';
+import { colors, fontFamily, radius, screen, shadow, space, touch } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
 import { IconButton } from './IconButton';
@@ -60,7 +60,7 @@ type TabBarProps = {
 export function TabBar({ active, onSelect }: TabBarProps) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.tabBar, { paddingBottom: Math.max(insets.bottom, 8) }]} accessibilityRole="tablist">
+    <View style={[styles.tabBar, { paddingBottom: Math.max(insets.bottom, space[2]) }]} accessibilityRole="tablist">
       {tabs.map((tab) => {
         const selected = tab.key === active;
         return (
@@ -105,8 +105,10 @@ export function StickyAction({ children, style }: { children: ReactNode; style?:
 export function BottomSheet({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 16) }, style]}>
-      <View style={styles.handle} />
+    <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, space[4]) }, style]}>
+      <View style={styles.handleArea}>
+        <View style={styles.handle} />
+      </View>
       {children}
     </View>
   );
@@ -114,12 +116,12 @@ export function BottomSheet({ children, style }: { children: ReactNode; style?: 
 
 const styles = StyleSheet.create({
   header: {
-    height: 48,
+    height: touch.guardianMin,
     flexDirection: 'row',
     alignItems: 'center',
   },
   headerSide: {
-    width: 48,
+    width: touch.guardianMin,
     alignItems: 'center',
   },
   headerTitle: {
@@ -132,20 +134,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.line,
-    paddingTop: 6,
-    paddingHorizontal: 4,
+    paddingTop: space[2],
+    paddingHorizontal: space[1],
   },
   tab: {
     flex: 1,
     minHeight: 56,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 3,
+    gap: space[1],
   },
   tabIcon: {
     width: 52,
     height: 30,
-    borderRadius: 15,
+    borderRadius: radius.full,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.line,
     paddingHorizontal: screen.gutter,
-    paddingVertical: 12,
+    paddingVertical: space[3],
     gap: screen.buttonGap,
   },
 
@@ -173,13 +175,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: screen.gutter,
     ...shadow.sheet,
   },
+  handleArea: {
+    alignItems: 'center',
+    paddingTop: space[2],
+    paddingBottom: space[3],
+  },
   handle: {
-    alignSelf: 'center',
     width: 40,
     height: 5,
-    borderRadius: 3,
+    borderRadius: radius.full,
     backgroundColor: colors.lineStrong,
-    marginTop: 8,
-    marginBottom: 12,
   },
 });

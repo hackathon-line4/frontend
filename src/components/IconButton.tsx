@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, touch } from '@/theme';
+import { colors, radius, touch } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
 
@@ -46,7 +46,7 @@ export function IconButton({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: 12,
+    borderRadius: radius.xs,
     alignItems: 'center',
     justifyContent: 'center',
   },

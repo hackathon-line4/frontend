@@ -1,5 +1,18 @@
-import PlaceholderScreen from '@/screens/PlaceholderScreen';
+import { router } from 'expo-router';
 
-export default function Route() {
-  return <PlaceholderScreen title="08-1 신호 기록" />;
+import { resendSignal, useHistoryRecords } from '@/features/history';
+import { mockRecipient } from '@/features/link/mock';
+import HistoryListScreen from '@/screens/history/HistoryListScreen';
+
+export default function HistoryRoute() {
+  const records = useHistoryRecords();
+  return (
+    <HistoryListScreen
+      // TODO: 연결된 당사자 정보 (서버)
+      recipientName={mockRecipient.name}
+      records={records}
+      onOpenRecord={(id) => router.push({ pathname: '/guardian/record/[id]', params: { id } })}
+      onResend={resendSignal}
+    />
+  );
 }

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, describeRhythm, fontFamily, radius, shadow, type Beat } from '@/theme';
+import { colors, describeRhythm, fontFamily, radius, screen, shadow, space, type Beat } from '@/theme';
 
 import { SignalBadge, type SignalBadgeType } from './Badge';
 import { Icon, type IconName } from './Icon';
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
-    padding: 16,
+    padding: screen.cardPadding,
   },
   outline: {
     borderWidth: 1.5,
@@ -136,17 +136,17 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.ink900,
     borderRadius: radius.xl,
-    padding: 20,
+    padding: space[5],
   },
 
   tile: {
     minHeight: 116,
-    padding: 12,
+    padding: space[3],
     borderWidth: 1.5,
     borderColor: colors.line,
     borderRadius: radius.md,
     backgroundColor: colors.bgIvory,
-    gap: 8,
+    gap: space[2],
   },
   tilePressed: { backgroundColor: colors.surfaceSunken },
   tileTop: {
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
     minHeight: 60,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingVertical: 8,
+    gap: space[3],
+    paddingVertical: space[2],
   },
   rowPressed: { opacity: 0.7 },
   divider: {
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
 
   info: {
     borderRadius: radius.sm,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: space[3],
+    paddingHorizontal: space[4],
   },
   infoText: {
     fontFamily: fontFamily.regular,

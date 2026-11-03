@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
-import { Button, CheckboxRow, Screen, ScreenHeader, ScreenTitle, Text, TextField } from '@/components';
+import { Button, CheckboxRow, Row, Screen, ScreenHeader, ScreenTitle, Stack, Text, TextField } from '@/components';
 import { isValidEmail, isValidPassword, PASSWORD_RULE } from '@/features/auth/validation';
-import { fontFamily } from '@/theme';
+import { space, touch } from '@/theme';
 
 type SignupScreenProps = {
   onSubmit: (form: { email: string; password: string }) => void;
@@ -20,7 +20,7 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
   const [agreed, setAgreed] = useState(false);
   const [touched, setTouched] = useState({ email: false, password: false, confirm: false });
 
-  const touch = (field: keyof typeof touched) => setTouched((t) => ({ ...t, [field]: true }));
+  const markTouched = (field: keyof typeof touched) => setTouched((t) => ({ ...t, [field]: true }));
 
   const emailOk = isValidEmail(email);
   const passwordOk = isValidPassword(password);
@@ -31,8 +31,10 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
     <Screen
       scroll
       header={<ScreenHeader onBack={onBack} />}
+      paddingTop={4}
+      gap={7}
       footer={
-        <View>
+        <Stack gap={2}>
           <Button
             label="가입하기"
             disabled={!canSubmit}
@@ -40,29 +42,29 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
             accessibilityHint={!agreed ? '약관에 동의해 주세요' : undefined}
           />
           {!agreed && (
-            <Text variant="caption" color="textSecondary" style={styles.hint}>
+            <Text variant="caption" color="textSecondary" style={styles.center}>
               약관에 동의해 주세요
             </Text>
           )}
-          <View style={styles.loginRow}>
-            <Text color="textSecondary" style={styles.loginText}>
+          <Row justify="center" gap={1}>
+            <Text variant="label" weight="regular" color="textSecondary">
               이미 계정이 있나요?
             </Text>
             <Pressable onPress={onLogin} accessibilityRole="link" style={styles.loginLink}>
-              <Text style={[styles.loginText, styles.bold]}>로그인</Text>
+              <Text variant="label">로그인</Text>
             </Pressable>
-          </View>
-        </View>
+          </Row>
+        </Stack>
       }
     >
-      <ScreenTitle title="회원가입" description="보호자와 당사자 모두 같은 방법으로 가입해요." style={styles.title} />
+      <ScreenTitle title="회원가입" description="보호자와 당사자 모두 같은 방법으로 가입해요." />
 
-      <View style={styles.form}>
+      <Stack gap={5}>
         <TextField
           label="이메일"
           value={email}
           onChangeText={setEmail}
-          onBlur={() => touch('email')}
+          onBlur={() => markTouched('email')}
           placeholder="example@email.com"
           keyboardType="email-address"
           autoCapitalize="none"
@@ -74,7 +76,7 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
           label="비밀번호"
           value={password}
           onChangeText={setPassword}
-          onBlur={() => touch('password')}
+          onBlur={() => markTouched('password')}
           password
           autoComplete="new-password"
           textContentType="newPassword"
@@ -85,7 +87,7 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
           label="비밀번호 확인"
           value={confirm}
           onChangeText={setConfirm}
-          onBlur={() => touch('confirm')}
+          onBlur={() => markTouched('confirm')}
           password
           autoComplete="new-password"
           textContentType="newPassword"
@@ -97,46 +99,22 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
           onChange={setAgreed}
           accessibilityLabel="필수, 이용약관 및 개인정보 처리방침에 동의해요"
         >
-          <Text style={styles.terms}>
-            <Text style={[styles.terms, styles.bold]}>[필수]</Text> 이용약관 및 개인정보 처리방침에 동의해요
+          <Text variant="label" weight="medium">
+            <Text variant="label">[필수]</Text> 이용약관 및 개인정보 처리방침에 동의해요
           </Text>
         </CheckboxRow>
-      </View>
+      </Stack>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  bold: { fontFamily: fontFamily.extraBold },
-  title: {
-    marginTop: 16,
-  },
-  form: {
-    marginTop: 28,
-    gap: 18,
-  },
-  terms: {
-    fontFamily: fontFamily.medium,
-    fontSize: 15,
-    lineHeight: 22,
-  },
-  hint: {
-    marginTop: 8,
+  center: {
     textAlign: 'center',
   },
-  loginRow: {
-    marginTop: 8,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 4,
-  },
-  loginText: {
-    fontSize: 15,
-  },
   loginLink: {
-    minHeight: 44,
-    paddingHorizontal: 4,
+    minHeight: touch.guardianMin,
+    paddingHorizontal: space[1],
     justifyContent: 'center',
   },
 });

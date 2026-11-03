@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
-import { Card, Tag, Text } from '@/components';
+import { Card, Row, Tag, Text } from '@/components';
 import { QrPlaceholder } from '@/components/Illustrations';
-import { colors, typography } from '@/theme';
+import { colors, space, typography } from '@/theme';
 
 import { formatLinkCode, spellLinkCode } from './code';
 import { formatMinutes } from './useCountdown';
@@ -34,14 +34,14 @@ export function LinkCodeCard({ code, remainingSeconds }: LinkCodeCardProps) {
 
       <View style={styles.divider} />
 
-      <View style={[styles.qrRow, expired && styles.dimmed]}>
+      <Row gap={4} style={[styles.stretch, expired && styles.dimmed]}>
         <View accessible accessibilityRole="image" accessibilityLabel="연결용 QR 코드">
           <QrPlaceholder />
         </View>
-        <Text color="textSecondary" style={styles.qrText}>
-          당사자 휴대폰의 <Text style={styles.qrStrong}>QR 코드로 연결</Text>을 눌러 이 화면을 비춰도 돼요.
+        <Text variant="label" weight="regular" color="textSecondary" style={styles.flex}>
+          당사자 휴대폰의 <Text variant="label">QR 코드로 연결</Text>을 눌러 이 화면을 비춰도 돼요.
         </Text>
-      </View>
+      </Row>
     </Card>
   );
 }
@@ -49,10 +49,11 @@ export function LinkCodeCard({ code, remainingSeconds }: LinkCodeCardProps) {
 const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    gap: 14,
+    gap: space[3],
   },
   code: {
     ...typography.code,
+    // 48 글자가 잘리지 않게 한 줄 높이만 늘린다
     lineHeight: 56,
   },
   expiredCode: {
@@ -64,22 +65,13 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: colors.line,
   },
-  qrRow: {
+  stretch: {
     alignSelf: 'stretch',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
   },
   dimmed: {
     opacity: 0.3,
   },
-  qrText: {
+  flex: {
     flex: 1,
-    fontSize: 15,
-    lineHeight: 24,
-  },
-  qrStrong: {
-    fontFamily: typography.label.fontFamily,
-    color: colors.textPrimary,
   },
 });

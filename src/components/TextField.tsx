@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { colors, fontFamily, radius } from '@/theme';
+import { colors, fontFamily, radius, space } from '@/theme';
 
 import { Icon } from './Icon';
 import { IconButton } from './IconButton';
@@ -93,7 +93,7 @@ export function TextField({ label, helper, error, success, password, onFocus, on
 
 const styles = StyleSheet.create({
   root: {
-    gap: 8,
+    gap: space[2],
   },
   box: {
     minHeight: 56,
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: radius.sm,
     backgroundColor: colors.surface,
-    paddingRight: 4,
+    paddingRight: space[1],
   },
   input: {
     flex: 1,
     alignSelf: 'stretch',
-    paddingHorizontal: 16,
+    paddingHorizontal: space[4],
     fontFamily: fontFamily.regular,
     fontSize: 17,
     color: colors.textPrimary,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   message: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: space[2],
   },
   medium: {
     fontFamily: fontFamily.medium,

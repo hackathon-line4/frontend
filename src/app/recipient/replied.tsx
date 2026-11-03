@@ -1,5 +1,6 @@
-import PlaceholderScreen from '@/screens/PlaceholderScreen';
+import { backToIdle } from '@/features/recipient';
+import RecipientRepliedScreen from '@/screens/recipient/RecipientRepliedScreen';
 
-export default function Route() {
-  return <PlaceholderScreen title="07-5 응답 완료" />;
+export default function RecipientRepliedRoute() {
+  return <RecipientRepliedScreen onDone={backToIdle} />;
 }

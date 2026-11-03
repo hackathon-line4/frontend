@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { colors, fontFamily, radius } from '@/theme';
+import { colors, fontFamily, radius, space, touch } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
 import { Text } from './Text';
@@ -52,7 +52,7 @@ export function Tag({ label, icon, size = 'md', tone = 'brand', bold = true, sty
         styles.tag,
         {
           height: isLg ? 36 : 32,
-          paddingHorizontal: isLg ? 14 : 12,
+          paddingHorizontal: isLg ? space[4] : space[3],
           backgroundColor: tone === 'dark' ? colors.ink900 : colors.yellow100,
         },
         style,
@@ -80,7 +80,7 @@ export function Note({ children, align = 'left', style }: { children: string; al
   return (
     <View style={[styles.note, align === 'center' && styles.noteCenter, style]}>
       <View style={styles.noteIcon}>
-        <Icon name="info" size={18} color={colors.textSecondary} strokeWidth={2} />
+        <Icon name="info" size={NOTE_ICON} color={colors.textSecondary} strokeWidth={2} />
       </View>
       <Text variant="caption" color="textSecondary" style={[styles.noteText, align === 'center' && styles.noteTextCenter]}>
         {children}
@@ -195,7 +195,7 @@ type ProfileRowProps = {
 export function ProfileRow({ name, caption, size = 'lg', trailing }: ProfileRowProps) {
   const isLg = size === 'lg';
   return (
-    <View style={[styles.profile, { gap: isLg ? 16 : 14 }]}>
+    <View style={[styles.profile, { gap: isLg ? space[4] : space[3] }]}>
       <Avatar name={name} size={isLg ? 'lg' : 'md'} />
       <View style={styles.flex} accessible accessibilityLabel={`${name}, ${caption}`}>
         <Text style={[styles.bold, { fontSize: isLg ? 22 : 18, lineHeight: isLg ? 30 : 26 }]}>{name}</Text>
@@ -261,6 +261,10 @@ export function ChoiceCard({ title, description, visual, onPress }: ChoiceCardPr
   );
 }
 
+// Note: 아이콘을 첫 줄 글자 가운데에 맞춘다
+const NOTE_ICON = 18;
+const NOTE_LINE = 22;
+
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   bold: { fontFamily: fontFamily.extraBold },
@@ -279,25 +283,25 @@ const styles = StyleSheet.create({
   tag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: space[2],
     borderRadius: radius.full,
   },
 
   note: {
     flexDirection: 'row',
-    gap: 8,
+    gap: space[2],
   },
   noteCenter: {
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
+    gap: space[2],
   },
   noteIcon: {
-    marginTop: 2,
+    paddingTop: (NOTE_LINE - NOTE_ICON) / 2,
   },
   noteText: {
     flexShrink: 1,
-    lineHeight: 22,
+    lineHeight: NOTE_LINE,
   },
   noteTextCenter: {
     flexShrink: 0,
@@ -307,15 +311,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: space[2],
   },
   statusPill: {
     alignSelf: 'center',
-    minHeight: 48,
-    paddingHorizontal: 18,
-    borderRadius: 24,
+    minHeight: touch.guardianMin,
+    paddingHorizontal: space[5],
+    borderRadius: radius.xl,
     backgroundColor: colors.surfaceInverse,
-    gap: 10,
+    gap: space[3],
   },
   statusText: {
     fontFamily: fontFamily.medium,
@@ -328,17 +332,17 @@ const styles = StyleSheet.create({
   },
 
   steps: {
-    gap: 14,
+    gap: space[3],
   },
   stepRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: space[3],
   },
   stepNumber: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: radius.full,
     backgroundColor: colors.ink900,
     alignItems: 'center',
     justifyContent: 'center',
@@ -359,7 +363,7 @@ const styles = StyleSheet.create({
   or: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: space[3],
   },
   orLine: {
     flex: 1,
@@ -369,10 +373,10 @@ const styles = StyleSheet.create({
 
   dl: {
     flexDirection: 'row',
-    gap: 16,
+    gap: space[4],
   },
   dlColumn: {
-    gap: 10,
+    gap: space[3],
   },
   dlCell: {
     fontSize: 15,
@@ -390,12 +394,12 @@ const styles = StyleSheet.create({
 
   choice: {
     minHeight: 232,
-    padding: 24,
+    padding: space[6],
     borderWidth: 2,
     borderColor: colors.ink900,
     borderRadius: radius.xl,
     backgroundColor: colors.surface,
-    gap: 14,
+    gap: space[3],
   },
   choicePressed: {
     backgroundColor: colors.surfaceSunken,
@@ -408,7 +412,7 @@ const styles = StyleSheet.create({
   choiceVisual: {
     width: 64,
     height: 64,
-    borderRadius: 32,
+    borderRadius: radius.full,
     backgroundColor: colors.yellow500,
     alignItems: 'center',
     justifyContent: 'center',

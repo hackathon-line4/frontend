@@ -1,5 +1,20 @@
-import PlaceholderScreen from '@/screens/PlaceholderScreen';
+import { router } from 'expo-router';
 
-export default function Route() {
-  return <PlaceholderScreen title="05-5 응답 없음 상세" />;
+import { mockNoReplyRecord } from '@/features/home';
+import GuardianNoReplyScreen from '@/screens/guardian/GuardianNoReplyScreen';
+
+const goBack = () => (router.canGoBack() ? router.back() : router.navigate('/guardian'));
+
+export default function GuardianNoReplyRoute() {
+  return (
+    <GuardianNoReplyScreen
+      record={mockNoReplyRecord}
+      onBack={goBack}
+      onResend={() => {
+        // TODO: 같은 신호(mockNoReplyRecord.signalId) 다시 전송 API + 전송 햅틱
+        goBack();
+      }}
+      onKeepWaiting={goBack}
+    />
+  );
 }

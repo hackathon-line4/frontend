@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
 
-import { Button, CodeInput, OrDivider, Screen, ScreenHeader, ScreenTitle, Text } from '@/components';
+import { Button, CodeInput, OrDivider, Screen, ScreenHeader, ScreenTitle, Stack, Text } from '@/components';
 import { LINK_CODE_LENGTH } from '@/features/link/code';
-import { fontFamily } from '@/theme';
 
 type Props = {
   onBack: () => void;
@@ -24,6 +22,8 @@ export default function RecipientCodeEntryScreen({ onBack, onScanQr, onSubmit, e
     <Screen
       scroll
       header={<ScreenHeader size="lg" onBack={onBack} />}
+      paddingTop={4}
+      gap={8}
       footer={
         <Button
           label="연결 요청하기"
@@ -34,36 +34,26 @@ export default function RecipientCodeEntryScreen({ onBack, onScanQr, onSubmit, e
         />
       }
     >
-      <ScreenTitle title="연결 코드 입력" description="보호자에게 받은 숫자 6자리" size={30} descriptionSize={18} style={styles.title} />
+      <Stack gap={7}>
+        <ScreenTitle title="연결 코드 입력" description="보호자에게 받은 숫자 6자리" size={30} descriptionSize={18} />
+        <Stack gap={3}>
+          <CodeInput
+            value={code}
+            onChangeText={setCode}
+            size="lg"
+            accessibilityLabel="연결 코드 입력, 보호자에게 받은 숫자 6자리"
+            accessibilityHint={countText}
+          />
+          <Text weight="medium" color={error ? 'dangerFg' : 'textSecondary'} accessibilityLiveRegion="polite">
+            {error ?? countText}
+          </Text>
+        </Stack>
+      </Stack>
 
-      <CodeInput
-        value={code}
-        onChangeText={setCode}
-        size="lg"
-        accessibilityLabel="연결 코드 입력, 보호자에게 받은 숫자 6자리"
-        accessibilityHint={countText}
-      />
-      <Text color={error ? 'dangerFg' : 'textSecondary'} style={styles.count} accessibilityLiveRegion="polite">
-        {error ?? countText}
-      </Text>
-
-      <OrDivider style={styles.or} />
-      <Button label="QR 코드로 연결" icon="qr-scan" variant="secondary" size="lg" onPress={onScanQr} />
+      <Stack gap={5}>
+        <OrDivider />
+        <Button label="QR 코드로 연결" icon="qr-scan" variant="secondary" size="lg" onPress={onScanQr} />
+      </Stack>
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    marginTop: 16,
-    marginBottom: 28,
-  },
-  count: {
-    marginTop: 12,
-    fontFamily: fontFamily.medium,
-  },
-  or: {
-    marginTop: 32,
-    marginBottom: 20,
-  },
-});

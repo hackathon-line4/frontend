@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { AccessibilityInfo, StyleSheet } from 'react-native';
 
 import { Avatar, Button, Card, Screen, ScreenTitle, StatusMessage, Tag, Text } from '@/components';
-import { fontFamily } from '@/theme';
+import { radius, space } from '@/theme';
 
 type Props = {
   guardianName: string;
@@ -21,7 +21,9 @@ export default function RecipientConfirmScreen({ guardianName, waiting, onConfir
   return (
     <Screen
       scroll
-      contentStyle={styles.content}
+      reserveHeader="lg"
+      paddingTop={3}
+      gap={8}
       footer={
         waiting ? (
           <>
@@ -41,7 +43,7 @@ export default function RecipientConfirmScreen({ guardianName, waiting, onConfir
       <ScreenTitle title={'이 보호자와\n연결할까요?'} size={30} align="center" />
       <Card variant="emphasis" style={styles.card}>
         <Avatar name={guardianName} size="xl" />
-        <Text style={styles.name}>{guardianName}</Text>
+        <Text variant="rTitle">{guardianName}</Text>
         <Tag icon="shield" label="보호자" size="lg" />
       </Card>
     </Screen>
@@ -49,20 +51,11 @@ export default function RecipientConfirmScreen({ guardianName, waiting, onConfir
 }
 
 const styles = StyleSheet.create({
-  content: {
-    paddingTop: 68,
-  },
   card: {
-    marginTop: 36,
-    borderRadius: 28,
-    paddingVertical: 32,
-    paddingHorizontal: 24,
+    borderRadius: radius.xl,
+    paddingVertical: space[8],
+    paddingHorizontal: space[6],
     alignItems: 'center',
-    gap: 12,
-  },
-  name: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 30,
-    lineHeight: 40,
+    gap: space[3],
   },
 });

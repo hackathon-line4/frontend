@@ -1,6 +1,4 @@
-import { StyleSheet, View } from 'react-native';
-
-import { ChoiceCard, Note, Screen, ScreenTitle } from '@/components';
+import { ChoiceCard, Note, Screen, ScreenTitle, Stack } from '@/components';
 import { GuardianRoleGlyph, RecipientRoleGlyph } from '@/components/Illustrations';
 import type { Role } from '@/features/session';
 
@@ -9,11 +7,12 @@ export default function RoleSelectScreen({ onSelect }: { onSelect: (role: Role) 
   return (
     <Screen
       scroll
-      contentStyle={styles.content}
+      reserveHeader="md"
+      gap={8}
       footer={<Note align="center">역할은 나중에 설정에서 바꿀 수 있어요.</Note>}
     >
       <ScreenTitle title="어떻게 사용하시나요?" description="나에게 맞는 역할을 골라 주세요." />
-      <View style={styles.cards}>
+      <Stack gap={4}>
         <ChoiceCard
           title="보호자로 시작하기"
           description="가족이나 활동지원사로서 메시지를 글로 쓰고, 전달 방식과 진동 세기를 설정해요."
@@ -26,17 +25,7 @@ export default function RoleSelectScreen({ onSelect }: { onSelect: (role: Role) 
           visual={<RecipientRoleGlyph />}
           onPress={() => onSelect('recipient')}
         />
-      </View>
+      </Stack>
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  content: {
-    paddingTop: 48,
-  },
-  cards: {
-    marginTop: 32,
-    gap: 16,
-  },
-});

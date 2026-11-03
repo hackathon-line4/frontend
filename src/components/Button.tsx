@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, radius, typography } from '@/theme';
+import { colors, radius, space, touch, typography } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
 import { Text } from './Text';
@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    paddingHorizontal: 16,
+    gap: space[2],
+    paddingHorizontal: space[4],
   },
   disabled: {
     backgroundColor: colors.surfaceMuted,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 const sizeStyles = StyleSheet.create({
   sm: { minHeight: 56, borderRadius: radius.md },
   md: { minHeight: 60, borderRadius: radius.md },
-  lg: { minHeight: 80, borderRadius: radius.lg, gap: 10 },
+  lg: { minHeight: touch.recipientPrimary, borderRadius: radius.lg, gap: space[3] },
 });
 
 const labelStyles = StyleSheet.create({
@@ -145,12 +145,12 @@ const variantStyles = StyleSheet.create({
   secondary: { backgroundColor: 'transparent', borderWidth: 2, borderColor: colors.ink900 },
   dark: { backgroundColor: colors.ink900 },
   light: { backgroundColor: colors.bgIvory },
-  text: { backgroundColor: 'transparent', minHeight: 48, alignSelf: 'center' },
+  text: { backgroundColor: 'transparent', minHeight: touch.guardianMin, alignSelf: 'center' },
   emergency: {
     backgroundColor: colors.ink950,
     minHeight: 60,
     justifyContent: 'flex-start',
-    paddingHorizontal: 14,
-    gap: 12,
+    paddingHorizontal: space[4],
+    gap: space[3],
   },
 });
