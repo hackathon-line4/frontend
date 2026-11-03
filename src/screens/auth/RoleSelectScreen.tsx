@@ -2,8 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { ChoiceCard, Note, Screen, ScreenTitle } from '@/components';
 import { GuardianRoleGlyph, RecipientRoleGlyph } from '@/components/Illustrations';
-
-export type Role = 'guardian' | 'recipient';
+import type { Role } from '@/features/session';
 
 // 03-3 역할 선택 (design/screens/RoleSelect.dc.html). 역할은 나중에 설정에서 변경 가능.
 export default function RoleSelectScreen({ onSelect }: { onSelect: (role: Role) => void }) {

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, screen } from '@/theme';
+import { colors, screen, space, type SpaceToken } from '@/theme';
 
 import { IconButton } from './IconButton';
 import { Text } from './Text';
@@ -23,42 +23,70 @@ type ScreenProps = {
   header?: ReactNode;
   /** 화면 아래 고정 (주요 버튼). 본문과 사이는 비워 둔다 */
   footer?: ReactNode;
-  /** 입력 화면: 스크롤 + 키보드 회피 */
+  /** 입력 화면·긴 화면: 스크롤 + 키보드 회피 */
   scroll?: boolean;
   /** dark: 어두운 화면 (QR 인식 등) */
   tone?: 'light' | 'dark';
+  /** 본문 자식 사이 간격 (space 토큰). margin 대신 이 값으로 띄운다 */
+  gap?: SpaceToken;
+  /** 본문 맨 위 여백 (space 토큰). 헤더 없는 화면의 첫 요소 위치 */
+  paddingTop?: SpaceToken;
+  /** 좌우 여백: default 24 · tab 16 (홈·탭 화면) */
+  gutter?: 'default' | 'tab';
+  /** 탭 화면: 하단 안전영역은 탭바가 맡으므로 하단 여백을 줄인다 */
+  inTabs?: boolean;
+  /** 본문 정렬 */
+  align?: ViewStyle['alignItems'];
+  justify?: ViewStyle['justifyContent'];
   contentStyle?: StyleProp<ViewStyle>;
 };
 
-// 모든 단계 화면의 기본 틀. 좌우 여백 24, 하단 여백 = 안전영역 + 24.
-export function Screen({ children, header, footer, scroll, tone = 'light', contentStyle }: ScreenProps) {
+// 모든 화면의 기본 틀. 좌우 여백 24(탭 16), 하단 여백 = 안전영역 + 24.
+export function Screen({
+  children,
+  header,
+  footer,
+  scroll,
+  tone = 'light',
+  gap = 0,
+  paddingTop = 0,
+  gutter = 'default',
+  inTabs,
+  align,
+  justify,
+  contentStyle,
+}: ScreenProps) {
   const insets = useSafeAreaInsets();
   const background = tone === 'dark' ? colors.ink900 : colors.bgIvory;
+  const gutterX = gutter === 'tab' ? screen.gutterTab : screen.gutterRecipient;
+  const bodyLayout: ViewStyle = {
+    gap: space[gap],
+    paddingTop: space[paddingTop],
+    alignItems: align,
+    justifyContent: justify,
+  };
 
   const body = scroll ? (
     <ScrollView
       style={styles.flex}
-      contentContainerStyle={[styles.scrollContent, contentStyle]}
+      contentContainerStyle={[styles.scrollContent, bodyLayout, inTabs && styles.scrollTabsBottom, contentStyle]}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
       {children}
     </ScrollView>
   ) : (
-    <View style={[styles.flex, contentStyle]}>{children}</View>
+    <View style={[styles.flex, bodyLayout, contentStyle]}>{children}</View>
   );
+
+  const bottom = inTabs ? (footer ? space[3] : 0) : Math.max(insets.bottom, space[4]) + space[6];
 
   return (
     <KeyboardAvoidingView
       style={[styles.flex, { backgroundColor: background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View
-        style={[
-          styles.root,
-          { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 16) + 24 },
-        ]}
-      >
+      <View style={[styles.root, { paddingTop: insets.top, paddingBottom: bottom, paddingHorizontal: gutterX }]}>
         {header}
         {body}
         {footer && <View style={styles.footer}>{footer}</View>}
@@ -172,19 +200,21 @@ const styles = StyleSheet.create({
   },
   root: {
     flex: 1,
-    paddingHorizontal: screen.gutterRecipient,
   },
   scrollContent: {
     flexGrow: 1,
   },
+  scrollTabsBottom: {
+    paddingBottom: space[6],
+  },
   footer: {
     gap: screen.buttonGap,
-    paddingTop: 16,
+    paddingTop: space[4],
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: space[1],
   },
   headerTitle: {
     fontSize: 17,

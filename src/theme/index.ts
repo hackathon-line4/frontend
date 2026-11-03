@@ -1,6 +1,6 @@
 export { colors, palette, type ColorToken } from './colors';
 export { fontFamily, typography, type TypeVariant } from './typography';
-export { radius, screen, shadow, space, touch } from './layout';
+export { radius, screen, shadow, space, touch, type SpaceToken } from './layout';
 export {
   beatLabel,
   beatMs,
