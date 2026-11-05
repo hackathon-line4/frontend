@@ -1,0 +1,7 @@
+{
+  "name": "sonullim-native",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.ts",
+  "description": "손울림 Android 네이티브 기능 (진동, 이후 포그라운드 서비스 · 앱 실행 트리거)"
+}
