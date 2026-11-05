@@ -1,5 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
+import { getVibrationCapability } from '@/native/vibration';
+
 // 내 진동 설정(06) 보정값. 저장값(saved)과 06-1에서 바꾸는 중인 값(draft)을 따로 둔다.
 // 저장하지 않고 나가면 이전 저장값을 유지한다 (calSpec '다시 보정').
 // 보정값은 모든 신호에 같은 비율로 적용 (전체 세기 · 전체 시간 배율 · 반복 횟수). 신호의 뜻은 바뀌지 않음.
@@ -13,10 +15,13 @@ type CalibrationState = {
   draft: CalibrationValues;
 };
 
-// TODO: 기기 확인 후 결정. iOS Core Haptics 지원 기기 / Android hasAmplitudeControl 지원 기기에서만 세기 조절.
-//       단계 수도 기기 확인 후 결정 (지금은 3단계 가정).
+const vibration = getVibrationCapability();
+
+// 세기 조절은 Android hasAmplitudeControl 지원 기기에서만. 미지원 기기는 길이·반복으로만 구분한다.
+// 네이티브 모듈이 없는 곳(Expo Go·웹)은 화면 확인용으로 세기 항목을 그대로 보여준다.
+// TODO: 단계 수는 기기 확인 후 결정 (지금은 3단계 가정).
 export const device = {
-  strengthSupported: true,
+  strengthSupported: !vibration.available || vibration.amplitudeControl,
   strengthLevels: 3,
 } as const;
 

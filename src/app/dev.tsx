@@ -2,12 +2,25 @@ import { router, type Href } from 'expo-router';
 
 import { Card, ListRow, Screen, ScreenTitle, SegmentedTabs, Stack, Text } from '@/components';
 import { setRole, useRole, type Role } from '@/features/session';
+import {
+  getVibrationCapability,
+  playFeedback,
+  playRhythm,
+  stopRhythm,
+  type FeedbackKind,
+} from '@/features/vibration';
+import type { Beat } from '@/theme';
 
-import SonullimNative from '../../modules/sonullim-native';
+// 진동 엔진 확인용. 보정값(세기·길이·반복)은 06 진동 설정의 저장값을 쓴다
+const TEST_BEATS: Beat[] = ['S', 'M', 'L'];
 
-// B-1 네이티브 진동 확인용. S·M·L (0.2·0.5·0.9초, 간격 0.3초)
-const TEST_TIMINGS = [0, 200, 300, 500, 300, 900];
-const testAmplitudes = (level: number) => TEST_TIMINGS.map((_, i) => (i % 2 === 1 ? level : 0));
+const feedbackRows: [label: string, kind: FeedbackKind][] = [
+  ['확인 · 연결 상태', 'connection'],
+  ['확인 · 보냄', 'sent'],
+  ['확인 · 실패', 'failed'],
+  ['확인 · 카운트다운 1회', 'countdown'],
+  ['확인 · 앱 켜짐', 'launched'],
+];
 
 // 개발용 화면 목록. 서버 연결 전에는 이어지지 않는 화면(요청 수신, 승인 완료 등)을 여기서 바로 연다.
 // 보호자/당사자 화면은 역할이 맞아야 열리므로 위에서 역할을 먼저 고른다.
@@ -100,6 +113,12 @@ const sections: { title: string; items: Item[] }[] = [
   },
 ];
 
+function vibrationTitle() {
+  const { available, amplitudeControl } = getVibrationCapability();
+  if (!available) return '진동 엔진 (네이티브 모듈 없음 · Expo Go)';
+  return `진동 엔진 (세기 조절 ${amplitudeControl ? '지원' : '미지원'})`;
+}
+
 export default function DevRoute() {
   const role = useRole();
 
@@ -127,19 +146,28 @@ export default function DevRoute() {
         </Stack>
         <Stack gap={2}>
           <Text variant="label" color="textSecondary">
-            네이티브 진동 (세기 조절 {SonullimNative.hasAmplitudeControl() ? '지원' : '미지원'})
+            {vibrationTitle()}
           </Text>
           <Card>
             <ListRow
-              title="S·M·L 강하게"
-              onPress={() => SonullimNative.vibrateWaveform(TEST_TIMINGS, testAmplitudes(255))}
+              title="S·M·L 강하게 · 1번"
+              onPress={() => playRhythm(TEST_BEATS, { strength: 3, length: 2, repeat: 1 })}
             />
             <ListRow
-              title="S·M·L 약하게"
+              title="S·M·L 약하게 · 1번"
               divider
-              onPress={() => SonullimNative.vibrateWaveform(TEST_TIMINGS, testAmplitudes(60))}
+              onPress={() => playRhythm(TEST_BEATS, { strength: 1, length: 2, repeat: 1 })}
             />
-            <ListRow title="진동 멈추기" divider onPress={() => SonullimNative.cancelVibration()} />
+            <ListRow
+              title="S·M·L 길게 · 2번 반복"
+              divider
+              onPress={() => playRhythm(TEST_BEATS, { strength: 3, length: 3, repeat: 2 })}
+            />
+            <ListRow title="내 진동 설정으로 재생" divider onPress={() => playRhythm(TEST_BEATS)} />
+            {feedbackRows.map(([label, kind]) => (
+              <ListRow key={kind} title={label} divider onPress={() => playFeedback(kind)} />
+            ))}
+            <ListRow title="진동 멈추기" divider onPress={stopRhythm} />
           </Card>
         </Stack>
         {sections.map((section) => (
