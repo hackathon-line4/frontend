@@ -3,6 +3,12 @@ import { router, type Href } from 'expo-router';
 import { Card, ListRow, Screen, ScreenTitle, SegmentedTabs, Stack, Text } from '@/components';
 import { setRole, useRole, type Role } from '@/features/session';
 
+import SonullimNative from '../../modules/sonullim-native';
+
+// B-1 네이티브 진동 확인용. S·M·L (0.2·0.5·0.9초, 간격 0.3초)
+const TEST_TIMINGS = [0, 200, 300, 500, 300, 900];
+const testAmplitudes = (level: number) => TEST_TIMINGS.map((_, i) => (i % 2 === 1 ? level : 0));
+
 // 개발용 화면 목록. 서버 연결 전에는 이어지지 않는 화면(요청 수신, 승인 완료 등)을 여기서 바로 연다.
 // 보호자/당사자 화면은 역할이 맞아야 열리므로 위에서 역할을 먼저 고른다.
 type Item = [label: string, href: Href, role?: Role];
@@ -118,6 +124,23 @@ export default function DevRoute() {
             value={role ?? 'guardian'}
             onChange={setRole}
           />
+        </Stack>
+        <Stack gap={2}>
+          <Text variant="label" color="textSecondary">
+            네이티브 진동 (세기 조절 {SonullimNative.hasAmplitudeControl() ? '지원' : '미지원'})
+          </Text>
+          <Card>
+            <ListRow
+              title="S·M·L 강하게"
+              onPress={() => SonullimNative.vibrateWaveform(TEST_TIMINGS, testAmplitudes(255))}
+            />
+            <ListRow
+              title="S·M·L 약하게"
+              divider
+              onPress={() => SonullimNative.vibrateWaveform(TEST_TIMINGS, testAmplitudes(60))}
+            />
+            <ListRow title="진동 멈추기" divider onPress={() => SonullimNative.cancelVibration()} />
+          </Card>
         </Stack>
         {sections.map((section) => (
           <Stack key={section.title} gap={2}>
