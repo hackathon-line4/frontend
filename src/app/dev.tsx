@@ -178,7 +178,7 @@ export default function DevRoute() {
         <Stack gap={2}>
           <Text variant="label" color="textSecondary">
             백그라운드 서비스 ({service.running ? '실행 중' : '꺼짐'}
-            {service.enabled ? ' · 재부팅 후 자동 켜짐' : ''})
+            {service.enabled ? ' · 재부팅 후 자동 켜짐' : ''} · 전원 3번 감지 {service.powerTriggers}회)
           </Text>
           <Card>
             <ListRow

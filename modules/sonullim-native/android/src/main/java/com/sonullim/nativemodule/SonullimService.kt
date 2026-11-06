@@ -8,8 +8,13 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.hardware.display.DisplayManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.util.Log
+import android.view.Display
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 
@@ -19,9 +24,47 @@ import androidx.core.content.ContextCompat
 class SonullimService : Service() {
   override fun onBind(intent: Intent?): IBinder? = null
 
+  // B-6 전원 버튼 3번 → 앱 켜짐 확인 진동 (+ B-7에서 앱 띄우기)
+  private val powerDetector = PowerPressDetector(::onPowerTrigger)
+
+  // 화면 켜짐/꺼짐은 SCREEN_ON/OFF 방송 대신 디스플레이 상태 변화로 듣는다.
+  // 방송은 폰 안의 여러 앱에 차례로 전달돼서 빠르게 누르면 몇 초씩 밀린다 (A16에서 확인).
+  private val displayManager by lazy { getSystemService(DisplayManager::class.java) }
+  private var screenOn = false
+
+  private val displayListener = object : DisplayManager.DisplayListener {
+    override fun onDisplayChanged(displayId: Int) {
+      if (displayId != Display.DEFAULT_DISPLAY) return
+      val on = isScreenOn()
+      if (on == screenOn) return
+      screenOn = on
+      Log.d("Sonullim", "화면 ${if (on) "켜짐" else "꺼짐"}")
+      powerDetector.onScreenToggled()
+    }
+
+    override fun onDisplayAdded(displayId: Int) {}
+    override fun onDisplayRemoved(displayId: Int) {}
+  }
+
+  /** AOD(꺼진 화면에 시계 표시)는 꺼짐으로 본다 */
+  private fun isScreenOn(): Boolean =
+    when (displayManager.getDisplay(Display.DEFAULT_DISPLAY)?.state) {
+      Display.STATE_ON, Display.STATE_ON_SUSPEND, Display.STATE_VR -> true
+      else -> false
+    }
+
   override fun onCreate() {
     super.onCreate()
     running = true
+    screenOn = isScreenOn()
+    displayManager.registerDisplayListener(displayListener, Handler(Looper.getMainLooper()))
+  }
+
+  private fun onPowerTrigger() {
+    Log.i("Sonullim", "전원 버튼 ${PowerPressDetector.PRESSES}번 감지")
+    triggerCount++
+    // 앱 켜짐 확인 진동. JS feedback.ts의 'launched'와 같은 패턴 (화면이 없을 때도 울려야 해서 네이티브에 둔다)
+    SonullimVibrator.vibrate(this, LAUNCHED_TIMINGS, LAUNCHED_AMPLITUDES)
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -37,6 +80,7 @@ class SonullimService : Service() {
 
   override fun onDestroy() {
     running = false
+    displayManager.unregisterDisplayListener(displayListener)
     super.onDestroy()
   }
 
@@ -74,8 +118,17 @@ class SonullimService : Service() {
     private const val PREFS = "sonullim_service"
     private const val KEY_ENABLED = "enabled"
 
+    // feedback.ts 'launched' = [300, 150, 80, 150, 80]
+    private val LAUNCHED_TIMINGS = longArrayOf(0, 300, 150, 80, 150, 80)
+    private val LAUNCHED_AMPLITUDES = intArrayOf(0, 255, 0, 255, 0, 255)
+
     @Volatile
     var running = false
+      private set
+
+    /** 서비스가 켜진 뒤 전원 3번이 감지된 횟수 (개발 확인용) */
+    @Volatile
+    var triggerCount = 0
       private set
 
     /** 서비스 켜기. 켠 상태는 저장해서 재부팅 후에도 다시 켠다 */

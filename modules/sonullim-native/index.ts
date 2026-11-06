@@ -5,6 +5,8 @@ export type BackgroundServiceState = {
   running: boolean;
   /** 켜두기로 저장됨 (재부팅 후 다시 켜짐) */
   enabled: boolean;
+  /** 서비스가 켜진 뒤 전원 버튼 3번이 감지된 횟수 (개발 확인용) */
+  powerTriggers: number;
 };
 
 declare class SonullimNativeModule extends NativeModule {

@@ -40,9 +40,13 @@ class SonullimNativeModule : Module() {
       SonullimService.stop(context)
     }
 
-    /** running: 지금 돌고 있음 · enabled: 켜두기로 저장됨 (재부팅 후 다시 켜짐) */
+    /** running: 지금 돌고 있음 · enabled: 켜두기로 저장됨 (재부팅 후 다시 켜짐) · powerTriggers: 전원 3번 감지 횟수 */
     Function("getBackgroundServiceState") {
-      mapOf("running" to SonullimService.running, "enabled" to SonullimService.isEnabled(context))
+      mapOf(
+        "running" to SonullimService.running,
+        "enabled" to SonullimService.isEnabled(context),
+        "powerTriggers" to SonullimService.triggerCount,
+      )
     }
   }
 
