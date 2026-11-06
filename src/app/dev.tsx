@@ -1,4 +1,5 @@
 import { router, type Href } from 'expo-router';
+import { useState } from 'react';
 
 import { Card, ListRow, Screen, ScreenTitle, SegmentedTabs, Stack, Text } from '@/components';
 import { setRole, useRole, type Role } from '@/features/session';
@@ -9,6 +10,7 @@ import {
   stopRhythm,
   type FeedbackKind,
 } from '@/features/vibration';
+import { getBackgroundServiceState, startBackgroundService, stopBackgroundService } from '@/native/background';
 import type { Beat } from '@/theme';
 
 // 진동 엔진 확인용. 보정값(세기·길이·반복)은 06 진동 설정의 저장값을 쓴다
@@ -121,6 +123,9 @@ function vibrationTitle() {
 
 export default function DevRoute() {
   const role = useRole();
+  const [service, setService] = useState(getBackgroundServiceState);
+  // 서비스는 시작 요청 후 조금 뒤에 켜지므로 잠깐 기다렸다 읽는다
+  const refreshService = () => setTimeout(() => setService(getBackgroundServiceState()), 300);
 
   const open = ([, href, needs]: Item) => {
     if (needs) setRole(needs);
@@ -168,6 +173,30 @@ export default function DevRoute() {
               <ListRow key={kind} title={label} divider onPress={() => playFeedback(kind)} />
             ))}
             <ListRow title="진동 멈추기" divider onPress={stopRhythm} />
+          </Card>
+        </Stack>
+        <Stack gap={2}>
+          <Text variant="label" color="textSecondary">
+            백그라운드 서비스 ({service.running ? '실행 중' : '꺼짐'}
+            {service.enabled ? ' · 재부팅 후 자동 켜짐' : ''})
+          </Text>
+          <Card>
+            <ListRow
+              title="서비스 켜기"
+              onPress={async () => {
+                await startBackgroundService();
+                refreshService();
+              }}
+            />
+            <ListRow
+              title="서비스 끄기"
+              divider
+              onPress={() => {
+                stopBackgroundService();
+                refreshService();
+              }}
+            />
+            <ListRow title="상태 새로고침" divider onPress={refreshService} />
           </Card>
         </Stack>
         {sections.map((section) => (
