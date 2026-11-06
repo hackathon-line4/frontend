@@ -48,6 +48,17 @@ class SonullimNativeModule : Module() {
         "powerTriggers" to SonullimService.triggerCount,
       )
     }
+
+    // ── 잠금화면 위로 앱 띄우기 (B-7) ──
+
+    /** '다른 앱 위에 표시' 권한. 없으면 전원 3번을 눌러도 앱이 뜨지 않는다 */
+    Function("canDrawOverlays") {
+      AppLauncher.canDrawOverlays(context)
+    }
+
+    Function("openOverlaySettings") {
+      AppLauncher.openOverlaySettings(context)
+    }
   }
 
   private val context: Context

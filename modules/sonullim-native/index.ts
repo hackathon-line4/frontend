@@ -19,6 +19,9 @@ declare class SonullimNativeModule extends NativeModule {
   startBackgroundService(): void;
   stopBackgroundService(): void;
   getBackgroundServiceState(): BackgroundServiceState;
+
+  canDrawOverlays(): boolean;
+  openOverlaySettings(): void;
 }
 
 // Android 전용. Expo Go에는 없으므로 development build에서만 동작한다.

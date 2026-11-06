@@ -7,6 +7,9 @@
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+  <!-- B-7 전원 3번 → 백그라운드에서 앱 띄우기 ('다른 앱 위에 표시') -->
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
   <application>
     <service
         android:name="com.sonullim.nativemodule.SonullimService"
