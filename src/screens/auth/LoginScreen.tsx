@@ -10,12 +10,14 @@ type LoginScreenProps = {
   onForgotPassword?: () => void;
   /** 로그인 실패 문구 (서버 응답) */
   error?: string;
+  errorField?: string;
+  onFormChange?: () => void;
   busy?: boolean;
   retryAfterSec?: number;
 };
 
 // 03-1 로그인 (design/screens/Login.dc.html)
-export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error, busy, retryAfterSec = 0 }: LoginScreenProps) {
+export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error, errorField, onFormChange, busy, retryAfterSec = 0 }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -37,10 +39,12 @@ export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error
       <ScreenTitle title="다시 만나서 반가워요" description="이메일로 로그인해 주세요." />
 
       <Stack gap={5}>
+        {error && errorField !== 'password' && <Text accessibilityRole="alert" color="dangerFg">{error}</Text>}
         <TextField
           label="이메일"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(value) => { setEmail(value); onFormChange?.(); }}
+          editable={!busy}
           placeholder="example@email.com"
           keyboardType="email-address"
           autoCapitalize="none"
@@ -52,13 +56,14 @@ export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error
           <TextField
             label="비밀번호"
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(value) => { setPassword(value); onFormChange?.(); }}
+            editable={!busy}
             placeholder="비밀번호 입력"
             password
             autoComplete="current-password"
             textContentType="password"
             returnKeyType="done"
-            error={error}
+            error={errorField === 'password' ? error : undefined}
           />
           <Pressable onPress={onForgotPassword} accessibilityRole="link" style={styles.forgot}>
             <Text variant="caption" weight="medium" color="textSecondary" style={styles.underline}>

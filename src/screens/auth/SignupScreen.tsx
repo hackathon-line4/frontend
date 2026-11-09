@@ -13,11 +13,12 @@ type SignupScreenProps = {
   busy?: boolean;
   error?: string;
   errorField?: string;
+  onFormChange?: () => void;
 };
 
 // 03-2 회원가입 (design/screens/Signup.dc.html)
 // 입력을 마치고 다음 칸으로 이동할 때 검사. 필수 약관에 동의해야 '가입하기' 활성화.
-export default function SignupScreen({ onSubmit, onBack, onLogin, busy, error, errorField }: SignupScreenProps) {
+export default function SignupScreen({ onSubmit, onBack, onLogin, busy, error, errorField, onFormChange }: SignupScreenProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -65,12 +66,13 @@ export default function SignupScreen({ onSubmit, onBack, onLogin, busy, error, e
       <ScreenTitle title="회원가입" description="보호자와 당사자 모두 같은 방법으로 가입해요." />
 
       <Stack gap={5}>
-        {error && errorField !== 'email' && errorField !== 'name' && <Text accessibilityRole="alert">{error}</Text>}
-        <TextField label="이름" value={name} onChangeText={setName} maxLength={20} autoComplete="name" error={errorField === 'name' ? error : undefined} />
+        {error && !['email', 'name', 'password'].includes(errorField ?? '') && <Text accessibilityRole="alert" color="dangerFg">{error}</Text>}
+        <TextField label="이름" value={name} onChangeText={(value) => { setName(value); onFormChange?.(); }} editable={!busy} maxLength={20} autoComplete="name" error={errorField === 'name' ? error : undefined} />
         <TextField
           label="이메일"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(value) => { setEmail(value); onFormChange?.(); }}
+          editable={!busy}
           onBlur={() => markTouched('email')}
           placeholder="example@email.com"
           keyboardType="email-address"
@@ -82,24 +84,26 @@ export default function SignupScreen({ onSubmit, onBack, onLogin, busy, error, e
         <TextField
           label="비밀번호"
           value={password}
-          onChangeText={setPassword}
+          onChangeText={(value) => { setPassword(value); onFormChange?.(); }}
+          editable={!busy}
           onBlur={() => markTouched('password')}
           password
           autoComplete="new-password"
           textContentType="newPassword"
           helper={PASSWORD_RULE}
-          error={touched.password && !passwordOk ? PASSWORD_RULE : undefined}
+          error={errorField === 'password' ? error : touched.password && !passwordOk ? PASSWORD_RULE : undefined}
         />
         <TextField
           label="비밀번호 확인"
           value={confirm}
-          onChangeText={setConfirm}
+          onChangeText={(value) => { setConfirm(value); onFormChange?.(); }}
+          editable={!busy}
           onBlur={() => markTouched('confirm')}
           password
           autoComplete="new-password"
           textContentType="newPassword"
           success={confirmOk ? '비밀번호가 일치해요' : undefined}
-          error={touched.confirm && confirm.length > 0 && !confirmOk ? '비밀번호가 일치하지 않아요' : undefined}
+          error={touched.confirm && !confirmOk ? '비밀번호가 일치하지 않아요' : undefined}
         />
         <CheckboxRow
           checked={agreed}

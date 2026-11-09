@@ -1,7 +1,8 @@
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 
-import { ApiError, errorMessage } from '@/api';
+import { ApiError } from '@/api';
+import { signupFailure } from '@/features/auth/errors';
 import { getSession, sessionHref, signup } from '@/features/session';
 import SignupScreen, { type SignupForm } from '@/screens/auth/SignupScreen';
 
@@ -23,8 +24,8 @@ export default function SignupRoute() {
     } catch (error) {
       if (getSession().status === 'error' && getSession().tokens) { router.replace('/'); return; }
       if (error instanceof ApiError && error.idempotencyKey) retry.current = { body, key: error.idempotencyKey };
-      setFailure({ message: errorMessage(error), field: error instanceof ApiError ? error.field : undefined });
+      setFailure(signupFailure(error));
     } finally { submitting.current = false; setBusy(false); }
   };
-  return <SignupScreen onSubmit={(form) => { void submit(form); }} busy={busy} error={failure?.message} errorField={failure?.field} onBack={() => router.back()} onLogin={() => router.replace('/auth/login')} />;
+  return <SignupScreen onSubmit={(form) => { void submit(form); }} onFormChange={() => setFailure(undefined)} busy={busy} error={failure?.message} errorField={failure?.field} onBack={() => router.back()} onLogin={() => router.replace('/auth/login')} />;
 }

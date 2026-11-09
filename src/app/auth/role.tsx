@@ -28,6 +28,7 @@ export default function RoleRoute() {
   };
   if (session.status === 'loading' || session.status === 'error') return <Redirect href="/" />;
   if (session.status !== 'authenticated') return <Redirect href="/auth/login" />;
+  if (session.role && !busy && !error) return <Redirect href={sessionHref(session)} />;
   if (busy || error) return <Screen gap={4} reserveHeader="lg">
     <Text accessibilityRole={error ? 'alert' : undefined}>{error ?? '역할을 저장하고 있어요…'}</Text>
     {error && <Button label="다시 선택" onPress={() => setError(undefined)} />}

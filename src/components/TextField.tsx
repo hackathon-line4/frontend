@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
   },
   medium: {
     fontFamily: fontFamily.medium,
+    flexShrink: 1,
   },
 });
 

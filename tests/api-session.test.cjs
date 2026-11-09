@@ -172,7 +172,7 @@ function sessionHarness({ storedTokens, onboarded = 'true', me, error, writeErro
   if (storedTokens) stored.set('sonullim.tokens', JSON.stringify(storedTokens));
   let adapter;
   let calls = 0;
-  const api = { setAuth: (value) => { adapter = value; }, request: async (endpoint) => { calls++; if (request) return request(endpoint); if (error || endpoint === '/auth/logout') throw error ?? new ApiError('NETWORK_ERROR'); return me; } };
+  const api = { setAuth: (value) => { adapter = value; }, request: async (endpoint, options) => { calls++; if (request) return request(endpoint, options); if (error || endpoint === '/auth/logout') throw error ?? new ApiError('NETWORK_ERROR'); return me; } };
   const session = loader({
     '@/api': { api, ApiError, errorMessage: (failure) => failure.message },
     react: { useSyncExternalStore: () => {} },
@@ -184,11 +184,68 @@ function sessionHarness({ storedTokens, onboarded = 'true', me, error, writeErro
 const tokens = { accessToken: 'access', refreshToken: 'refresh' };
 const me = (role, links = [], pendingLinkRequest = null) => ({ user: { id: 'u1', role, name: '이름', email: 'a@b.c', createdAt: '2026-11-07T10:00:00+09:00' }, links, pendingLinkRequest });
 
+const authErrors = loader({ '@/api': { ApiError, errorMessage: (error) => error instanceof ApiError ? error.message : '잠시 후 다시 시도해 주세요' } })('src/features/auth/errors.ts');
+
+test('duplicate signup email targets the email input even without a server field', () => {
+  const result = authErrors.signupFailure(new ApiError('EMAIL_ALREADY_EXISTS', { message: 'Email exists' }));
+  assert.equal(result.field, 'email');
+  assert.match(result.message, /이미 가입된 이메일/);
+});
+
+test('signup password validation preserves the field and server rule', () => {
+  assert.deepEqual(authErrors.signupFailure(new ApiError('VALIDATION_FAILED', { field: 'password', message: '비밀번호는 12자 이상이어야 해요' })), {
+    field: 'password', message: '비밀번호는 12자 이상이어야 해요',
+  });
+});
+
+test('only invalid login credentials target the password input', () => {
+  const invalid = authErrors.loginFailure(new ApiError('INVALID_CREDENTIALS', { message: 'Invalid credentials' }));
+  assert.equal(invalid.field, 'password');
+  assert.match(invalid.message, /이메일 또는 비밀번호/);
+  for (const code of ['NETWORK_ERROR', 'TOO_MANY_ATTEMPTS', 'CONFIGURATION_ERROR']) {
+    const error = new ApiError(code);
+    assert.deepEqual(authErrors.loginFailure(error), { message: error.message });
+  }
+});
+
+test('password rules require eight characters with both an English letter and a digit', () => {
+  const { isValidPassword } = load('src/features/auth/validation.ts');
+  for (const value of ['abc123', 'abcdefgh', '12345678', '가나다라마바사1']) assert.equal(isValidPassword(value), false);
+  for (const value of ['abcdefg1', 'ABC12345', 'pass123!']) assert.equal(isValidPassword(value), true);
+});
+
+test('saving either role sends the server value and opens its home without a link', async () => {
+  for (const [role, serverRole, href] of [['guardian', 'GUARDIAN', '/guardian'], ['recipient', 'RECIPIENT', '/recipient']]) {
+    const h = sessionHarness({ storedTokens: tokens, request: async (endpoint, options) => {
+      if (endpoint === '/me') return me(null);
+      assert.equal(endpoint, '/me/role');
+      assert.equal(options.method, 'PUT');
+      assert.deepEqual(options.body, { role: serverRole });
+      return { user: me(serverRole).user };
+    } });
+    await h.session.restoreSession();
+    assert.equal(h.session.sessionHref(), '/auth/role');
+    await h.session.selectRole(role);
+    assert.equal(h.session.sessionHref(), href);
+  }
+});
+
+test('failed role save stays on role selection without applying the local choice', async () => {
+  const h = sessionHarness({ storedTokens: tokens, request: async (endpoint) => {
+    if (endpoint === '/me') return me(null);
+    throw new ApiError('NETWORK_ERROR');
+  } });
+  await h.session.restoreSession();
+  await assert.rejects(h.session.selectRole('guardian'), { code: 'NETWORK_ERROR' });
+  assert.equal(h.session.getSession().role, null);
+  assert.equal(h.session.sessionHref(), '/auth/role');
+});
+
 test('startup restores persisted tokens and routes all account states', async () => {
   const cases = [
     [null, [], null, '/auth/role'],
-    ['GUARDIAN', [], null, '/link/guardian'],
-    ['RECIPIENT', [], null, '/link/recipient'],
+    ['GUARDIAN', [], null, '/guardian'],
+    ['RECIPIENT', [], null, '/recipient'],
     ['GUARDIAN', [{ id: 'l1' }], null, '/guardian'],
     ['RECIPIENT', [{ id: 'l1' }], null, '/recipient'],
     ['RECIPIENT', [], { id: 'pending' }, '/link/recipient/confirm'],
