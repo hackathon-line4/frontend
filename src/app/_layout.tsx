@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import DevShortcut from '@/features/dev/DevShortcut';
+import { SessionBoundary } from '@/features/session/SessionBoundary';
 import { colors, useAppFonts } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -34,6 +35,7 @@ export default function RootLayout() {
         <Stack.Screen name="onboarding" options={{ animation: 'fade', gestureEnabled: false }} />
       </Stack>
       <DevShortcut />
+      <SessionBoundary />
       <StatusBar style="dark" />
     </SafeAreaProvider>
   );

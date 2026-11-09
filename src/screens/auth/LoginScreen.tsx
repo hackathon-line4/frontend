@@ -10,10 +10,12 @@ type LoginScreenProps = {
   onForgotPassword?: () => void;
   /** 로그인 실패 문구 (서버 응답) */
   error?: string;
+  busy?: boolean;
+  retryAfterSec?: number;
 };
 
 // 03-1 로그인 (design/screens/Login.dc.html)
-export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error }: LoginScreenProps) {
+export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error, busy, retryAfterSec = 0 }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -64,7 +66,7 @@ export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error
             </Text>
           </Pressable>
         </Stack>
-        <Button label="로그인" onPress={() => onLogin({ email, password })} />
+        <Button label={busy ? '로그인 중…' : retryAfterSec > 0 ? `${retryAfterSec}초 후 다시 시도` : '로그인'} disabled={busy || retryAfterSec > 0 || !email.trim() || !password} onPress={() => onLogin({ email, password })} />
       </Stack>
     </Screen>
   );
