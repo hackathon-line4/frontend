@@ -2,14 +2,15 @@ import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
 
-import { ApiError, errorMessage } from '@/api';
+import { ApiError } from '@/api';
+import { loginFailure, type AuthFailure } from '@/features/auth/errors';
 import { getSession, login, sessionHref, useSession } from '@/features/session';
 import { playWaveform } from '@/native/vibration';
 import LoginScreen from '@/screens/auth/LoginScreen';
 
 export default function LoginRoute() {
   const session = useSession();
-  const [error, setError] = useState<string>();
+  const [failure, setFailure] = useState<AuthFailure>();
   const [busy, setBusy] = useState(false);
   const [retryUntil, setRetryUntil] = useState(0);
   const [remaining, setRemaining] = useState(0);
@@ -25,15 +26,15 @@ export default function LoginRoute() {
     if (submitting.current || Date.now() < retryUntil) return;
     submitting.current = true;
     setBusy(true);
-    setError(undefined);
+    setFailure(undefined);
     try {
       await login(email, password);
       if (getSession().status === 'authenticated') router.replace(sessionHref());
     } catch (failure) {
       if (getSession().status === 'error' && getSession().tokens) { router.replace('/'); return; }
-      const message = errorMessage(failure);
-      setError(message);
-      AccessibilityInfo.announceForAccessibility(message);
+      const feedback = loginFailure(failure);
+      setFailure(feedback);
+      AccessibilityInfo.announceForAccessibility(feedback.message);
       if (failure instanceof ApiError && failure.code === 'INVALID_CREDENTIALS') {
         playWaveform({ timings: [0, 80, 80, 80, 80, 80], amplitudes: [0, 120, 0, 120, 0, 120] });
       }
@@ -46,5 +47,5 @@ export default function LoginRoute() {
       }
     } finally { submitting.current = false; setBusy(false); }
   };
-  return <LoginScreen onLogin={(form) => { void submit(form); }} busy={busy} retryAfterSec={remaining} error={error ?? session.error ?? undefined} onSignup={() => router.push('/auth/signup')} />;
+  return <LoginScreen onLogin={(form) => { void submit(form); }} onFormChange={() => setFailure(undefined)} busy={busy} retryAfterSec={remaining} error={failure?.message ?? session.error ?? undefined} errorField={failure?.field} onSignup={() => router.push('/auth/signup')} />;
 }

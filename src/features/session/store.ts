@@ -175,6 +175,5 @@ export function sessionHref(session = state) {
   if (session.status !== 'authenticated') return session.onboarded ? '/auth/login' as const : '/onboarding' as const;
   if (!session.role) return '/auth/role' as const;
   if (session.role === 'recipient' && session.pendingLinkRequest) return '/link/recipient/confirm' as const;
-  if (!session.links.length) return session.role === 'guardian' ? '/link/guardian' as const : '/link/recipient' as const;
   return homeHref(session.role);
 }

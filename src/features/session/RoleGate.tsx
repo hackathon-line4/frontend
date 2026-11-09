@@ -8,6 +8,6 @@ export function RoleGate({ role, children }: { role: Role; children: ReactNode }
   const session = useSession();
   if (session.status === 'loading' || session.status === 'error') return <Redirect href="/" />;
   if (__DEV__ && !session.tokens && session.role === role) return children;
-  if (session.status !== 'authenticated' || session.role !== role || !session.links.length) return <Redirect href={sessionHref(session)} />;
+  if (session.status !== 'authenticated' || session.role !== role || (session.role === 'recipient' && session.pendingLinkRequest)) return <Redirect href={sessionHref(session)} />;
   return children;
 }
