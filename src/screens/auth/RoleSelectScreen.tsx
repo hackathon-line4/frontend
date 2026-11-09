@@ -2,14 +2,14 @@ import { ChoiceCard, Note, Screen, ScreenTitle, Stack } from '@/components';
 import { GuardianRoleGlyph, RecipientRoleGlyph } from '@/components/Illustrations';
 import type { Role } from '@/features/session';
 
-// 03-3 역할 선택 (design/screens/RoleSelect.dc.html). 역할은 나중에 설정에서 변경 가능.
+// 03-3 역할 선택. MVP에서는 계정의 역할을 변경할 수 없다.
 export default function RoleSelectScreen({ onSelect }: { onSelect: (role: Role) => void }) {
   return (
     <Screen
       scroll
       reserveHeader="md"
       gap={8}
-      footer={<Note align="center">역할은 나중에 설정에서 바꿀 수 있어요.</Note>}
+      footer={<Note align="center">한 번 선택한 역할은 변경할 수 없어요.</Note>}
     >
       <ScreenTitle title="어떻게 사용하시나요?" description="나에게 맞는 역할을 골라 주세요." />
       <Stack gap={4}>

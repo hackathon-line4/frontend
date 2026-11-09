@@ -5,15 +5,20 @@ import { Button, CheckboxRow, Row, Screen, ScreenHeader, ScreenTitle, Stack, Tex
 import { isValidEmail, isValidPassword, PASSWORD_RULE } from '@/features/auth/validation';
 import { space, touch } from '@/theme';
 
+export type SignupForm = { email: string; password: string; name: string; agreements: { terms: boolean; privacy: boolean } };
 type SignupScreenProps = {
-  onSubmit: (form: { email: string; password: string }) => void;
+  onSubmit: (form: SignupForm) => void;
   onBack: () => void;
   onLogin: () => void;
+  busy?: boolean;
+  error?: string;
+  errorField?: string;
 };
 
 // 03-2 회원가입 (design/screens/Signup.dc.html)
 // 입력을 마치고 다음 칸으로 이동할 때 검사. 필수 약관에 동의해야 '가입하기' 활성화.
-export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreenProps) {
+export default function SignupScreen({ onSubmit, onBack, onLogin, busy, error, errorField }: SignupScreenProps) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -25,7 +30,7 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
   const emailOk = isValidEmail(email);
   const passwordOk = isValidPassword(password);
   const confirmOk = confirm.length > 0 && confirm === password;
-  const canSubmit = emailOk && passwordOk && confirmOk && agreed;
+  const canSubmit = name.trim().length >= 1 && name.trim().length <= 20 && emailOk && passwordOk && confirmOk && agreed;
 
   return (
     <Screen
@@ -36,9 +41,9 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
       footer={
         <Stack gap={2}>
           <Button
-            label="가입하기"
-            disabled={!canSubmit}
-            onPress={() => onSubmit({ email, password })}
+            label={busy ? '가입 중…' : '가입하기'}
+            disabled={!canSubmit || busy}
+            onPress={() => onSubmit({ email, password, name, agreements: { terms: agreed, privacy: agreed } })}
             accessibilityHint={!agreed ? '약관에 동의해 주세요' : undefined}
           />
           {!agreed && (
@@ -60,6 +65,8 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
       <ScreenTitle title="회원가입" description="보호자와 당사자 모두 같은 방법으로 가입해요." />
 
       <Stack gap={5}>
+        {error && errorField !== 'email' && errorField !== 'name' && <Text accessibilityRole="alert">{error}</Text>}
+        <TextField label="이름" value={name} onChangeText={setName} maxLength={20} autoComplete="name" error={errorField === 'name' ? error : undefined} />
         <TextField
           label="이메일"
           value={email}
@@ -70,7 +77,7 @@ export default function SignupScreen({ onSubmit, onBack, onLogin }: SignupScreen
           autoCapitalize="none"
           autoComplete="email"
           textContentType="emailAddress"
-          error={touched.email && !emailOk ? '이메일 주소를 다시 확인해 주세요' : undefined}
+          error={errorField === 'email' ? error : touched.email && !emailOk ? '이메일 주소를 다시 확인해 주세요' : undefined}
         />
         <TextField
           label="비밀번호"

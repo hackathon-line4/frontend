@@ -30,7 +30,8 @@
           "backgroundColor": "#FFFDF7"
         }
       ],
-      "expo-router"
+      "expo-router",
+      "expo-secure-store"
     ],
     "scheme": "sonullim",
     "backgroundColor": "#FFFDF7",
