@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { CalibrationSync } from '@/features/calibration/CalibrationSync';
 import DevShortcut from '@/features/dev/DevShortcut';
 import { SessionBoundary } from '@/features/session/SessionBoundary';
 import { colors, useAppFonts } from '@/theme';
@@ -36,6 +37,7 @@ export default function RootLayout() {
       </Stack>
       <DevShortcut />
       <SessionBoundary />
+      <CalibrationSync />
       <StatusBar style="dark" />
     </SafeAreaProvider>
   );

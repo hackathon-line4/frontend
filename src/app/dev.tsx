@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
 import { Card, ListRow, Screen, ScreenTitle, SegmentedTabs, Stack, Text } from '@/components';
+import type { IncomingMessage } from '@/api';
+import { handleIncoming } from '@/features/recipient';
 import { setRole, useRole, type Role } from '@/features/session';
+import { tactilePulses } from '@/features/signals';
 import {
   getVibrationCapability,
   playFeedback,
@@ -25,6 +28,39 @@ const feedbackRows: [label: string, kind: FeedbackKind][] = [
   ['확인 · 카운트다운 1회', 'countdown'],
   ['확인 · 앱 켜짐', 'launched'],
 ];
+
+/** 서버 없이 07-4 수신 확인: SSE·FCM이 넘겨줄 IncomingMessage와 같은 모양 */
+function simulateIncoming(kind: 'normal' | 'emergency' | 'custom') {
+  const base = {
+    id: `dev-${Date.now()}`,
+    kind: 'SIGNAL',
+    guardianName: '이영희',
+    waitUntil: null,
+    sentAt: new Date().toISOString(),
+  } as const;
+  const messages: Record<typeof kind, IncomingMessage> = {
+    normal: {
+      ...base,
+      isEmergency: false,
+      signal: { name: '누가 왔어', rhythm: null, pulses: [...tactilePulses.visitor], durationMs: 2250 },
+      playbackPolicy: { repeatIntervalSec: null, maxDurationSec: null, bypassDnd: false },
+    },
+    emergency: {
+      ...base,
+      isEmergency: true,
+      signal: { name: '위험해', rhythm: null, pulses: [...tactilePulses.danger], durationMs: 7450 },
+      playbackPolicy: { repeatIntervalSec: 10, maxDurationSec: 60, bypassDnd: true },
+    },
+    // pulses 없이 박자만 오는 경우 (백엔드가 pulses를 추가하기 전)
+    custom: {
+      ...base,
+      isEmergency: false,
+      signal: { name: '약 먹을 시간', rhythm: ['LONG', 'SHORT', 'SHORT'], durationMs: 1600 },
+      playbackPolicy: { repeatIntervalSec: null, maxDurationSec: null, bypassDnd: false },
+    },
+  };
+  handleIncoming(messages[kind]);
+}
 
 // 개발용 화면 목록. 서버 연결 전에는 이어지지 않는 화면(요청 수신, 승인 완료 등)을 여기서 바로 연다.
 // 보호자/당사자 화면은 역할이 맞아야 열리므로 위에서 역할을 먼저 고른다.
@@ -82,6 +118,7 @@ const sections: { title: string; items: Item[] }[] = [
       ['07-3 보냄', '/recipient/sent', 'recipient'],
       ['07-4 신호 수신', '/recipient/incoming', 'recipient'],
       ['07-5 응답 완료', '/recipient/replied', 'recipient'],
+      ['당사자 폰 설정 안내 (B-9)', '/recipient/setup', 'recipient'],
     ],
   },
   {
@@ -187,6 +224,16 @@ export default function DevRoute() {
               <ListRow key={kind} title={label} divider onPress={() => playFeedback(kind)} />
             ))}
             <ListRow title="진동 멈추기" divider onPress={stopRhythm} />
+          </Card>
+        </Stack>
+        <Stack gap={2}>
+          <Text variant="label" color="textSecondary">
+            07-4 신호 수신 시뮬레이션 (당사자 역할에서)
+          </Text>
+          <Card>
+            <ListRow title="'누가 왔어' 받기" onPress={() => simulateIncoming('normal')} />
+            <ListRow title="긴급 '위험해' 받기 · 10초 간격 최대 1분" divider onPress={() => simulateIncoming('emergency')} />
+            <ListRow title="박자만 있는 신호 받기 · 길게 짧게 짧게" divider onPress={() => simulateIncoming('custom')} />
           </Card>
         </Stack>
         <Stack gap={2}>

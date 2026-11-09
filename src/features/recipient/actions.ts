@@ -1,5 +1,5 @@
 import { playFeedback, repeatSignal } from '@/features/vibration';
-import type { Pulses } from '@/theme';
+import type { IncomingSignal } from './incoming';
 
 // 당사자 앱 동작. 진동은 연결됨, 서버는 연결 전 자리.
 // 확인 진동 패턴(features/vibration/feedback.ts)은 기기에서 검증 후 확정.
@@ -45,10 +45,13 @@ export async function replyToSignal(): Promise<boolean> {
 
 let stopIncoming: (() => void) | undefined;
 
-/** 07-4 신호 진동 반복 시작. 신호 진동 배열 + 내 진동 설정(보정값). 간격·횟수는 검증 후 결정 */
-export function startIncomingVibration(pulses: Pulses) {
+/**
+ * 07-4 신호 진동 반복 시작. 신호 진동 배열 + 내 진동 설정(보정값).
+ * 반복 간격·최대 시간은 서버 재생 정책을 따르고, 없으면 앱 기본값 (검증 후 결정)
+ */
+export function startIncomingVibration(signal: Pick<IncomingSignal, 'pulses' | 'repeatGapMs' | 'maxPlayMs'>) {
   stopIncomingVibration();
-  stopIncoming = repeatSignal(pulses);
+  stopIncoming = repeatSignal(signal.pulses, signal.repeatGapMs, signal.maxPlayMs);
 }
 
 export function stopIncomingVibration() {

@@ -8,12 +8,13 @@ import {
   useAddSignal,
 } from '@/features/addSignal';
 import { mockRecipient } from '@/features/link/mock';
-import { playPulses } from '@/features/vibration';
+import { playPulses, useStopVibrationOnBlur } from '@/features/vibration';
 import AddSignalFeelScreen from '@/screens/addSignal/AddSignalFeelScreen';
 
 // 10-6 진동 체험 → '저장하기' → 10-7
 export default function AddSignalFeelRoute() {
   const { draft } = useAddSignal();
+  useStopVibrationOnBlur();
 
   return (
     <AddSignalFeelScreen

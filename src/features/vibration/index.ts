@@ -10,6 +10,7 @@ import { REPEAT_GAP_MS, pulsesWaveform, rhythmWaveform, strengthAmplitude, wavef
 export { getVibrationCapability, stopVibration } from '@/native/vibration';
 export type { FeedbackKind } from './feedback';
 export { pulsesWaveform, rhythmWaveform, waveformMs } from './pattern';
+export { useStopVibrationOnBlur } from './useStopOnBlur';
 
 /** 리듬 재생. 끝날 때까지 걸리는 시간(ms)을 돌려준다 */
 export function playRhythm(beats: readonly Beat[], values: CalibrationValues = getCalibration().saved): number {
@@ -34,12 +35,16 @@ export function playPulses(pulses: Pulses): number {
   return playSignal(pulses, { strength, length: 2, repeat: 1 });
 }
 
-/** 신호를 내 진동 설정대로 계속 반복 (07-4 신호 수신). 돌려준 함수로 멈춘다 */
-export function repeatSignal(pulses: Pulses, gapMs = REPEAT_GAP_MS): () => void {
+/**
+ * 신호를 내 진동 설정대로 계속 반복 (07-4 신호 수신). 돌려준 함수로 멈춘다.
+ * maxMs가 있으면 그 시간이 지난 뒤 새 반복을 시작하지 않는다 (긴급 신호 최대 1분 등).
+ */
+export function repeatSignal(pulses: Pulses, gapMs = REPEAT_GAP_MS, maxMs?: number): () => void {
   let timer: ReturnType<typeof setTimeout> | undefined;
   let stopped = false;
+  const endAt = maxMs != null ? Date.now() + maxMs : Infinity;
   const loop = () => {
-    if (stopped) return;
+    if (stopped || Date.now() >= endAt) return;
     const ms = playSignal(pulses);
     timer = setTimeout(loop, ms + gapMs);
   };

@@ -18,6 +18,7 @@ export {
   ranges,
   resetDraft,
   saveDraft,
+  setSavedCalibration,
   setDraftValue,
   stepDraft,
   useCalibration,
@@ -25,3 +26,4 @@ export {
   type CalibrationValues,
 } from './store';
 export { playPreview, playTestSignal, stopTestSignal, testStepMs, TEST_LEAD_IN_MS } from './test';
+export { persistCalibration, restoreCalibration } from './persist';
