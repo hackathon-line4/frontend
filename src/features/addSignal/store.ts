@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 
 import type { IconName } from '@/components/Icon';
 import { mockSignals, type Signal, type SignalCategory } from '@/features/signals';
-import type { Beat } from '@/theme';
+import { beatsToPulses, type Beat, type Pulses } from '@/theme';
 
 import type { BasicSignalEntry } from './mock';
 
@@ -21,6 +21,8 @@ export type AddSignalDraft = {
   description: string;
   icon: IconName;
   category: SignalCategory;
+  /** 진동 배열. basic은 목록 값 그대로, custom은 박자에서 만든다 (setDraftBeats) */
+  pulses: Pulses;
   beats: readonly Beat[];
 };
 
@@ -42,6 +44,7 @@ const emptyDraft: AddSignalDraft = {
   description: '',
   icon: customSignalIcon,
   category: 'daily',
+  pulses: [],
   beats: [],
 };
 
@@ -50,6 +53,7 @@ const previewDraft: AddSignalDraft = {
   ...emptyDraft,
   name: '약 먹을 시간',
   description: '아침·저녁 약 먹을 시간이라고 알려요',
+  pulses: beatsToPulses(['L', 'S', 'M']),
   beats: ['L', 'S', 'M'],
 };
 
@@ -90,6 +94,11 @@ export function updateDraft(patch: Partial<AddSignalDraft>) {
   emit();
 }
 
+/** 직접 조합한 박자 저장. 진동 배열도 같이 만든다 */
+export function setDraftBeats(beats: readonly Beat[]) {
+  updateDraft({ beats, pulses: beatsToPulses(beats) });
+}
+
 /** 목록에서 기본 신호 고르기: 리듬이 정해져 있어 2단계를 건너뛴다 */
 export function pickBasicSignal(entry: BasicSignalEntry) {
   state = {
@@ -101,6 +110,7 @@ export function pickBasicSignal(entry: BasicSignalEntry) {
       description: entry.meaning,
       icon: entry.icon,
       category: entry.category,
+      pulses: entry.pulses,
       beats: entry.beats,
     },
   };
@@ -124,6 +134,7 @@ export function saveDraft(): Signal {
     icon: draft.icon,
     source: draft.source,
     category: draft.category,
+    pulses: draft.pulses,
     beats: draft.beats,
     untrained: true,
   };
@@ -150,6 +161,7 @@ export function draftAsSignal(draft: AddSignalDraft): Signal {
     icon: draft.icon,
     source: draft.source,
     category: draft.category,
+    pulses: draft.pulses,
     beats: draft.beats,
     untrained: true,
   };

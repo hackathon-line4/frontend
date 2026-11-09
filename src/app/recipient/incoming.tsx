@@ -15,7 +15,7 @@ export default function RecipientIncomingRoute() {
   const replying = useRef(false);
 
   useEffect(() => {
-    startIncomingVibration();
+    startIncomingVibration(mockIncomingSignal.pulses);
     return stopIncomingVibration;
   }, []);
 

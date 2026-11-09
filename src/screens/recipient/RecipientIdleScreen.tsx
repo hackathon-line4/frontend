@@ -7,6 +7,8 @@ type Props = {
   onTap: () => void;
   onSend: () => void;
   onHelp: () => void;
+  /** 도움 요청을 위해 길게 누르는 동안 1초마다 */
+  onHelpTick?: () => void;
   onSettings: () => void;
 };
 
@@ -22,7 +24,7 @@ const actions = [
 
 // 07-1 대기 (design/screens/RecvIdle.dc.html)
 // 한 번 탭: 전송 없음 · 두 번 탭: 07-2 신호 보내기 · 3초 길게: 도움 요청
-export default function RecipientIdleScreen({ guardianName, onTap, onSend, onHelp, onSettings }: Props) {
+export default function RecipientIdleScreen({ guardianName, onTap, onSend, onHelp, onHelpTick, onSettings }: Props) {
   const handleAction = ({ nativeEvent }: AccessibilityActionEvent) => {
     switch (nativeEvent.actionName) {
       case 'activate':
@@ -46,6 +48,7 @@ export default function RecipientIdleScreen({ guardianName, onTap, onSend, onHel
       onPress={onTap}
       onDoubleTap={onSend}
       onLongPress={onHelp}
+      onHoldTick={onHelpTick}
       accessibilityActions={actions}
       onAccessibilityAction={handleAction}
     />

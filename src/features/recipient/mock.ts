@@ -13,4 +13,5 @@ export const outgoingSignalName = '보호자 부르기';
 export const mockIncomingSignal = {
   senderName: mockGuardian.name,
   signalName: findSignal('visitor')?.name ?? '누가 왔어',
+  pulses: findSignal('visitor')?.pulses ?? [],
 } as const;

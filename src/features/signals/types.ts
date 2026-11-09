@@ -1,5 +1,5 @@
 import type { IconName } from '@/components/Icon';
-import type { Beat } from '@/theme';
+import type { Beat, Pulses } from '@/theme';
 
 export type SignalCategory = 'daily' | 'outing' | 'check' | 'emergency';
 
@@ -19,7 +19,12 @@ export type Signal = {
   /** basic: 현장 촉신호 어휘에서 가져온 신호 · custom: 보호자가 만든 신호 */
   source: 'basic' | 'custom';
   category: SignalCategory;
-  /** 신호 사전(Signal registry)의 리듬. 진동 패턴은 이 값에서만 만든다 */
+  /**
+   * 진동 배열 [울림, 쉼, …] ms. 진동 재생·길이 계산은 이 값으로만 한다.
+   * basic: 촉신호 변환 규칙으로 만든 값 · custom: 직접 조합한 박자에서 만든 값
+   */
+  pulses: Pulses;
+  /** 그림·스크린리더용 박자 (울림 하나당 박자 하나). basic은 pulses에서 만든다 */
   beats: readonly Beat[];
   /** 아직 당사자에게 알려 주지 않음 → '연습 전' */
   untrained?: boolean;

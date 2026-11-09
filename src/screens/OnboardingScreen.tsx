@@ -13,7 +13,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, PageDots, Rhythm, Row, Stack, Text } from '@/components';
 import { PhoneMessageIllustration, TouchWaveGlyph, TwoWayIllustration } from '@/components/Illustrations';
-import { colors, radius, screen, space, touch } from '@/theme';
+import { tactilePulses } from '@/features/signals';
+import { beatLabel, colors, describeRhythm, pulsesToBeats, radius, screen, space, touch } from '@/theme';
+
+/** 3장 진동 체험 그림·글: 실제로 울리는 '나 여기 있어' 진동 배열에서 만든다 (짧게 짧게) */
+const demoBeats = pulsesToBeats(tactilePulses.here);
 
 // 02 온보딩 (design/screens/Onboarding1~3.dc.html)
 // 이동: '다음' 또는 좌우 스와이프. 마지막 장 '시작하기' → 로그인. 1·2장 '건너뛰기' → 로그인.
@@ -71,14 +75,14 @@ export default function OnboardingScreen({ onFinish, onTryVibration }: Onboardin
     },
     {
       title: '직접 느껴 보세요',
-      body: "위 버튼을 누르면 '밥 먹었어?'라는 메시지가 진동으로 전해져요.",
+      body: "위 버튼을 누르면 '나 여기 있어'라는 메시지가 진동으로 전해져요.",
       visual: (
         <Stack align="center" gap={5}>
           <View style={styles.tint}>
             <Pressable
               onPress={onTryVibration}
               accessibilityRole="button"
-              accessibilityLabel="진동 체험하기. 누르면 '밥 먹었어?' 메시지를 진동으로 느낄 수 있어요"
+              accessibilityLabel="진동 체험하기. 누르면 '나 여기 있어' 메시지를 진동으로 느낄 수 있어요"
               style={({ pressed }) => [styles.tryButton, pressed && styles.tryPressed]}
             >
               <TouchWaveGlyph />
@@ -87,15 +91,21 @@ export default function OnboardingScreen({ onFinish, onTryVibration }: Onboardin
               </Text>
             </Pressable>
           </View>
-          <Row gap={3} paddingX={4} style={styles.pill} accessible accessibilityLabel="밥 먹었어?, 짧게 짧게 길게">
+          <Row
+            gap={3}
+            paddingX={4}
+            style={styles.pill}
+            accessible
+            accessibilityLabel={`나 여기 있어, ${describeRhythm(demoBeats)}`}
+          >
             <Text variant="caption" weight="extraBold">
-              밥 먹었어?
+              나 여기 있어
             </Text>
             <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
-              <Rhythm beats={['S', 'S', 'L']} />
+              <Rhythm beats={demoBeats} />
             </View>
             <Text variant="caption" weight="medium" color="textSecondary">
-              짧게 · 짧게 · 길게
+              {demoBeats.map((b) => beatLabel[b]).join(' · ')}
             </Text>
           </Row>
         </Stack>

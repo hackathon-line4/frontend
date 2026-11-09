@@ -79,7 +79,7 @@ export function setDraftValue(key: CalibrationKey, value: number) {
   if (state.draft[key] === next) return;
   state = { ...state, draft: { ...state.draft, [key]: next } };
   emit();
-  // TODO: 바꾼 값으로 짧은 미리보기 진동 1회
+  // 미리보기 진동은 06-1 화면(app/calibration/index)에서 playPreview로 울린다
 }
 
 export function stepDraft(key: CalibrationKey, delta: 1 | -1) {

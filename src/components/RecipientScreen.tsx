@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -28,6 +28,8 @@ type RecipientScreenProps = {
   onDoubleTap?: () => void;
   /** idle: 3초 길게 = 도움 요청 */
   onLongPress?: () => void;
+  /** 길게 누르는 동안 1초마다 (1초, 2초). 3초가 되면 onLongPress */
+  onHoldTick?: () => void;
   /** 스크린리더 사용자 지정 동작 */
   accessibilityActions?: readonly AccessibilityActionInfo[];
   onAccessibilityAction?: (event: AccessibilityActionEvent) => void;
@@ -35,6 +37,7 @@ type RecipientScreenProps = {
 
 const DOUBLE_TAP_MS = 350;
 const LONG_PRESS_MS = 3000;
+const HOLD_TICK_MS = 1000;
 
 const backgrounds: Record<RecipientState, string> = {
   idle: colors.rBlack,
@@ -51,10 +54,28 @@ export function RecipientScreen({
   onPress,
   onDoubleTap,
   onLongPress,
+  onHoldTick,
   accessibilityActions,
   onAccessibilityAction,
 }: RecipientScreenProps) {
   const lastTap = useRef(0);
+  const holdTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearHold = () => {
+    holdTimers.current.forEach(clearTimeout);
+    holdTimers.current = [];
+  };
+
+  // 화면을 떠나면 남은 타이머 정리
+  useEffect(() => clearHold, []);
+
+  const handlePressIn = () => {
+    clearHold();
+    if (!onLongPress || !onHoldTick) return;
+    for (let t = HOLD_TICK_MS; t < LONG_PRESS_MS; t += HOLD_TICK_MS) {
+      holdTimers.current.push(setTimeout(onHoldTick, t));
+    }
+  };
   const isStatus = state === 'sent' || state === 'replied';
 
   const handlePress = () => {
@@ -73,6 +94,8 @@ export function RecipientScreen({
   return (
     <Pressable
       onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={clearHold}
       onLongPress={onLongPress}
       delayLongPress={LONG_PRESS_MS}
       accessibilityRole={isStatus ? undefined : 'button'}

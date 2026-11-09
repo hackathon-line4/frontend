@@ -1,7 +1,14 @@
 import { router } from 'expo-router';
 import { useRef } from 'react';
 
-import { backToIdle, connectedGuardian, outgoingSignalName, requestHelp, sendSignal } from '@/features/recipient';
+import {
+  backToIdle,
+  connectedGuardian,
+  outgoingSignalName,
+  playHelpCountdown,
+  requestHelp,
+  sendSignal,
+} from '@/features/recipient';
 import RecipientSendScreen from '@/screens/recipient/RecipientSendScreen';
 
 export default function RecipientSendRoute() {
@@ -22,6 +29,7 @@ export default function RecipientSendRoute() {
       signalName={outgoingSignalName}
       onSend={handleSend}
       onHelp={requestHelp}
+      onHelpTick={playHelpCountdown}
       onTimeout={backToIdle}
     />
   );

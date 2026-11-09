@@ -24,4 +24,4 @@ export {
   type CalibrationKey,
   type CalibrationValues,
 } from './store';
-export { playTestSignal, stopTestSignal, testStepMs, TEST_LEAD_IN_MS } from './test';
+export { playPreview, playTestSignal, stopTestSignal, testStepMs, TEST_LEAD_IN_MS } from './test';

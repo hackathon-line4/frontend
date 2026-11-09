@@ -10,10 +10,10 @@ import {
   formatRhythmLength,
 } from '@/features/addSignal';
 import type { Signal } from '@/features/signals';
-import { colors, describeRhythm, radius, space, type Beat } from '@/theme';
+import { colors, describeRhythm, radius, space, type Pulses } from '@/theme';
 
 type Props = {
-  signal: Pick<Signal, 'name' | 'icon' | 'source' | 'beats'>;
+  signal: Pick<Signal, 'name' | 'icon' | 'source' | 'beats' | 'pulses'>;
   recipientName: string;
   /** 당사자 진동 설정 요약 (예: '세기 강하게 · 반복 2번') */
   recipientVibration: string;
@@ -22,22 +22,22 @@ type Props = {
   /** 직접 만든 신호만. 목록에서 고른 기본 신호는 리듬을 바꾸지 않는다 */
   onChangeRhythm?: () => void;
   /** 보호자 휴대폰에서 진동 재생 */
-  onVibrate: (beats: readonly Beat[]) => void;
+  onVibrate: (pulses: Pulses) => void;
   onSave: () => void;
 };
 
 /** 화면의 리듬 그림을 박자 순서대로 진하게 (진동과 같은 시간표) */
-function usePlayback(beats: readonly Beat[]) {
+function usePlayback(pulses: Pulses) {
   const [run, setRun] = useState(0);
   const [playingIndex, setPlayingIndex] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (run === 0) return;
-    const { starts, end } = beatSchedule(beats);
+    const { starts, end } = beatSchedule(pulses);
     const timers = starts.map((t, i) => setTimeout(() => setPlayingIndex(i), t));
     timers.push(setTimeout(() => setPlayingIndex(undefined), end));
     return () => timers.forEach(clearTimeout);
-  }, [run, beats]);
+  }, [run, pulses]);
 
   return { playingIndex, play: () => setRun((n) => n + 1) };
 }
@@ -53,10 +53,10 @@ export default function AddSignalFeelScreen({
   onVibrate,
   onSave,
 }: Props) {
-  const { playingIndex, play } = usePlayback(signal.beats);
+  const { playingIndex, play } = usePlayback(signal.pulses);
 
   const feel = () => {
-    onVibrate(signal.beats);
+    onVibrate(signal.pulses);
     play();
   };
 
@@ -98,7 +98,7 @@ export default function AddSignalFeelScreen({
               <Icon name="timer" size={18} strokeWidth={2.2} />
               <Text variant="body">
                 {'길이 '}
-                <Text variant="bodyStrong">{formatRhythmLength(signal.beats)}</Text>
+                <Text variant="bodyStrong">{formatRhythmLength(signal.pulses)}</Text>
               </Text>
             </Row>
             <PlayCircleButton accessibilityLabel="리듬 화면에서 다시 보기" onPress={play} />

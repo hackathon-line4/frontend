@@ -1,5 +1,6 @@
 export {
   playConnectionCheck,
+  playHelpCountdown,
   replyToSignal,
   requestHelp,
   sendSignal,
