@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   titleLg: { fontFamily: fontFamily.extraBold },
 
   group: {
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.lineStrong,
     borderRadius: radius.md,
     backgroundColor: colors.surface,
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   groupDivider: { borderTopWidth: 1.5, borderTopColor: colors.line },
 
   switchRow: {
-    minHeight: 64,
+    minHeight: 56,
     paddingVertical: space[2],
     flexDirection: 'row',
     alignItems: 'center',
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   switchText: { fontSize: 14 },
   track: { width: 52, height: 32, borderRadius: 16, justifyContent: 'center' },
   trackOn: { backgroundColor: colors.ink900 },
-  trackOff: { backgroundColor: colors.surface, borderWidth: 2, borderColor: colors.borderInput },
+  trackOff: { backgroundColor: colors.surface, borderWidth: 1.5, borderColor: colors.borderInput },
   thumbOn: {
     position: 'absolute',
     left: 24,

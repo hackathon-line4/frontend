@@ -151,9 +151,9 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     backgroundColor: colors.surface,
   },
-  cardDefault: { borderWidth: 1.5, borderColor: colors.lineStrong },
-  cardNoReply: { borderWidth: 2, borderStyle: 'dashed', borderColor: colors.ink900 },
-  cardStrong: { borderWidth: 2, borderColor: colors.ink900 },
+  cardDefault: { borderWidth: 1, borderColor: colors.lineStrong },
+  cardNoReply: { borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.ink900 },
+  cardStrong: { borderWidth: 1.5, borderColor: colors.ink900 },
   cardHelp: { backgroundColor: colors.yellow100 },
   pressed: { opacity: 0.8 },
 

@@ -35,7 +35,7 @@ export default function HistoryListScreen({ recipientName, records, onOpenRecord
   const isToday = date === today;
 
   return (
-    <Screen gutter="tab" inTabs scroll paddingTop={6} gap={3}>
+    <Screen gutter="tab" inTabs scroll paddingTop={6} gap={5}>
       <ScreenTitle title="신호 기록" description={`${recipientName}과 주고받은 신호`} />
 
       <Stack gap={3} style={styles.controls}>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space[2],
     paddingHorizontal: space[1],
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.lineStrong,
     borderRadius: radius.md,
     backgroundColor: colors.surface,

@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   tag: {
     alignSelf: 'flex-start',
     backgroundColor: 'transparent',
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.ink900,
   },
   map: {

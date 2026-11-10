@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
 });
 
 const toneStyles = StyleSheet.create({
-  default: { borderWidth: 1.5, borderColor: colors.lineStrong },
-  strong: { borderWidth: 2, borderColor: colors.ink900 },
-  dashed: { borderWidth: 2, borderStyle: 'dashed', borderColor: colors.ink900 },
+  default: { borderWidth: 1, borderColor: colors.lineStrong },
+  strong: { borderWidth: 1.5, borderColor: colors.ink900 },
+  dashed: { borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.ink900 },
 });

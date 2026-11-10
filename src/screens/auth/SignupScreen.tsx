@@ -65,7 +65,7 @@ export default function SignupScreen({ onSubmit, onBack, onLogin, busy, error, e
     >
       <ScreenTitle title="회원가입" description="보호자와 당사자 모두 같은 방법으로 가입해요." />
 
-      <Stack gap={5}>
+      <Stack gap={6}>
         {error && !['email', 'name', 'password'].includes(errorField ?? '') && <Text accessibilityRole="alert" color="dangerFg">{error}</Text>}
         <TextField label="이름" value={name} onChangeText={(value) => { setName(value); onFormChange?.(); }} editable={!busy} maxLength={20} autoComplete="name" error={errorField === 'name' ? error : undefined} />
         <TextField

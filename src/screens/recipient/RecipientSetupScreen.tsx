@@ -39,7 +39,7 @@ export default function RecipientSetupScreen({ items, onBack }: Props) {
   const done = checkable.filter((i) => i.status === 'on').length;
 
   return (
-    <Screen scroll gap={5} header={<ScreenHeader onBack={onBack} size={scale.headerSize} />}>
+    <Screen scroll gap={5} gutter="recipient" header={<ScreenHeader onBack={onBack} size={scale.headerSize} />}>
       <ScreenTitle
         title="폰 설정 확인"
         description="손울림이 꺼져 있거나 화면이 잠겨 있어도 신호를 받으려면 아래 설정이 필요해요."

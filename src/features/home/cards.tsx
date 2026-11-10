@@ -109,13 +109,13 @@ export function LocationPreviewCard({ location, onPressDetail }: LocationPreview
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  bold: { fontFamily: fontFamily.extraBold },
+  bold: { fontFamily: fontFamily.bold },
   medium: { fontFamily: fontFamily.medium },
   pressed: { opacity: 0.8 },
 
   caution: {
     backgroundColor: colors.warningBg,
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.warningBorder,
   },
   line: {
