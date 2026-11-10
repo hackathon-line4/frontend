@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-import { api, ApiError, errorMessage, type AuthResult, type Me, type ServerRole, type Tokens } from '@/api';
+import { api, ApiError, errorMessage, type AuthResult, type LinkRequest, type Me, type ServerRole, type Tokens } from '@/api';
 
 import { readStored, writeStored } from './storage';
 import { getInstallationId } from './installation';
@@ -137,10 +137,30 @@ export async function signup(form: { email: string; password: string; name: stri
 
 export async function selectRole(role: Role) {
   const currentRevision = revision;
-  const result = await api.request<{ user: Me['user'] }>('/me/role', {
+  const result = await api.request<Tokens & { user: Me['user'] }>('/me/role', {
     method: 'PUT', body: { role: role === 'guardian' ? 'GUARDIAN' : 'RECIPIENT' },
   });
-  if (currentRevision === revision) update({ user: result.user, role: localRole(result.user.role) });
+  if (currentRevision !== revision) throw new ApiError('SESSION_CHANGED');
+  const tokens = { accessToken: result.accessToken, refreshToken: result.refreshToken };
+  if (!tokens.accessToken || !tokens.refreshToken) throw new ApiError('INVALID_RESPONSE');
+  try { await writeStored(TOKEN_KEY, JSON.stringify(tokens)); }
+  catch { await clearSession(); throw new ApiError('STORAGE_ERROR'); }
+  if (currentRevision !== revision) throw new ApiError('SESSION_CHANGED');
+  revision += 1;
+  update({ tokens, user: result.user, role: localRole(result.user.role) });
+}
+
+// Apply only a server-confirmed result belonging to the current account.
+// /me remains authoritative on the next reload; it must expose real links for restart restoration.
+export function applyLinkRequest(request: LinkRequest) {
+  const userId = state.user?.id;
+  if (state.status !== 'authenticated' || !userId || ![request.guardian.id, request.recipient.id].includes(userId)) return;
+  if (request.status === 'APPROVED' && request.link) {
+    update({ links: [...state.links.filter((link) => link.id !== request.link!.id), request.link], pendingLinkRequest: null });
+  } else if (state.role === 'recipient') {
+    if (request.status === 'PENDING') update({ pendingLinkRequest: { ...request, status: 'PENDING', decidedAt: null, link: null } });
+    else if (state.pendingLinkRequest?.id === request.id) update({ pendingLinkRequest: null });
+  }
 }
 
 export async function logout() {

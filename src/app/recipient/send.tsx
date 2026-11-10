@@ -2,9 +2,12 @@ import { router } from 'expo-router';
 import { useRef } from 'react';
 
 import { backToIdle, connectedGuardian, outgoingSignalName, requestHelp, sendSignal } from '@/features/recipient';
+import { useSession } from '@/features/session';
 import RecipientSendScreen from '@/screens/recipient/RecipientSendScreen';
 
 export default function RecipientSendRoute() {
+  const session = useSession();
+  const link = session.links.find((item) => item.status === 'ACTIVE');
   const sending = useRef(false);
 
   const handleSend = async () => {
@@ -18,7 +21,7 @@ export default function RecipientSendRoute() {
 
   return (
     <RecipientSendScreen
-      guardianName={connectedGuardian.name}
+      guardianName={session.tokens ? link?.guardian.name ?? '연결된 보호자 없음' : connectedGuardian.name}
       signalName={outgoingSignalName}
       onSend={handleSend}
       onHelp={requestHelp}

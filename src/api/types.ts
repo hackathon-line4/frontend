@@ -17,3 +17,8 @@ export type PendingLinkRequest = {
 };
 export type Me = { user: User; links: Link[]; pendingLinkRequest: PendingLinkRequest | null };
 export type AuthResult = Tokens & { user: User; links: Link[] };
+export type LinkRequest = Omit<PendingLinkRequest, 'status' | 'decidedAt' | 'link'> & {
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELED' | 'EXPIRED';
+  decidedAt: string | null;
+  link: Link | null;
+};

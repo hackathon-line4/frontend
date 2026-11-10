@@ -10,10 +10,12 @@ type Props = {
   waiting?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  error?: string;
+  onRetry?: () => void;
 };
 
 // 04-R3 당사자 · 연결 대상 확인 (design/screens/LinkR3.dc.html)
-export default function RecipientConfirmScreen({ guardianName, waiting, onConfirm, onCancel }: Props) {
+export default function RecipientConfirmScreen({ guardianName, waiting, onConfirm, onCancel, error, onRetry }: Props) {
   useEffect(() => {
     AccessibilityInfo.announceForAccessibility(`${guardianName} 보호자와 연결할까요?`);
   }, [guardianName]);
@@ -41,6 +43,10 @@ export default function RecipientConfirmScreen({ guardianName, waiting, onConfir
       }
     >
       <ScreenTitle title={'이 보호자와\n연결할까요?'} size={30} align="center" />
+      {error && <>
+        <Text accessibilityRole="alert" color="dangerFg">{error}</Text>
+        <Button label="다시 확인" variant="secondary" size="lg" onPress={onRetry} />
+      </>}
       <Card variant="emphasis" style={styles.card}>
         <Avatar name={guardianName} size="xl" />
         <Text variant="rTitle">{guardianName}</Text>

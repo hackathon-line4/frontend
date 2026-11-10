@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 
 import { mockFrequentSignalIds, mockLocation, mockRecentActivity, mockRecipientStatus } from '@/features/home';
 import { findSignal, mockSignals, type Signal } from '@/features/signals';
+import { useSession } from '@/features/session';
 import GuardianHomeScreen from '@/screens/guardian/GuardianHomeScreen';
 
 // TODO: 서버 연결 후 당사자 상태 · 최근 활동 · 위치를 실시간으로 받아 온다.
@@ -10,9 +11,12 @@ const frequentSignals = mockFrequentSignalIds.map(findSignal).filter((s): s is S
 const emergencySignals = mockSignals.filter((s) => s.category === 'emergency');
 
 export default function GuardianHomeRoute() {
+  const session = useSession();
+  const link = session.links.find((item) => item.status === 'ACTIVE');
+  const recipient = session.tokens ? { name: link?.recipient.name ?? '연결된 당사자 없음', connected: !!link, waitMinutes: 10 } : mockRecipientStatus;
   return (
     <GuardianHomeScreen
-      recipient={mockRecipientStatus}
+      recipient={recipient}
       frequentSignals={frequentSignals}
       emergencySignals={emergencySignals}
       location={mockLocation}

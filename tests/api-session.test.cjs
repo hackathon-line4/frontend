@@ -221,12 +221,14 @@ test('saving either role sends the server value and opens its home without a lin
       assert.equal(endpoint, '/me/role');
       assert.equal(options.method, 'PUT');
       assert.deepEqual(options.body, { role: serverRole });
-      return { user: me(serverRole).user };
+      return { user: me(serverRole).user, accessToken: 'role-access', refreshToken: 'role-refresh' };
     } });
     await h.session.restoreSession();
     assert.equal(h.session.sessionHref(), '/auth/role');
     await h.session.selectRole(role);
     assert.equal(h.session.sessionHref(), href);
+    assert.equal(h.session.getSession().tokens.accessToken, 'role-access');
+    assert.deepEqual(JSON.parse(h.stored.get('sonullim.tokens')), { accessToken: 'role-access', refreshToken: 'role-refresh' });
   }
 });
 
@@ -331,4 +333,174 @@ test('late login and /me responses cannot undo local logout', async () => {
     assert.equal(h.session.getSession().status, 'anonymous');
     assert.equal(h.session.getSession().tokens, null);
   }
+});
+
+const { createLinkApi } = loader({ '@/api': { ApiError } })('src/features/link/api.ts');
+const codeResponse = { code: '123456', qrPayload: 'sonullim://link?code=123456', createdAt: '2026-11-10T12:00:00+09:00', expiresAt: '2026-11-10T12:10:00+09:00' };
+function linkRequest(status = 'PENDING') {
+  const guardian = { id: 'g1', name: '보호자' };
+  const recipient = { id: 'u1', name: '당사자', role: 'RECIPIENT' };
+  return { id: 'r1', status, guardian, recipient, code: '123456', requestedAt: codeResponse.createdAt, expiresAt: codeResponse.expiresAt,
+    decidedAt: status === 'APPROVED' ? codeResponse.createdAt : null,
+    link: status === 'APPROVED' ? { id: 'l1', status: 'ACTIVE', guardian, recipient, linkedAt: codeResponse.createdAt, connection: { state: 'UNKNOWN', lastConfirmedAt: null } } : null };
+}
+
+test('code lookup handles absence but preserves network and authorization errors', async () => {
+  for (const failure of ['NOT_FOUND', 'NETWORK_ERROR', 'UNAUTHORIZED']) {
+    const api = createLinkApi({ request: async () => { throw new ApiError(failure); } });
+    if (failure === 'NOT_FOUND') assert.equal(await api.currentCode(), null);
+    else await assert.rejects(api.currentCode(), { code: failure });
+  }
+});
+
+test('create and renew code use different keys; a manual retry keeps its original key', async () => {
+  let sequence = 0;
+  const calls = [];
+  const client = createApiClient({ baseUrl: () => 'https://api.example.test/api/v1', createKey: () => 'key-' + ++sequence,
+    fetch: async (url, init) => { calls.push(init); if (calls.length === 1) throw new TypeError('offline'); return success(codeResponse); } });
+  const api = createLinkApi(client);
+  let retryKey;
+  try { await api.createCode(); } catch (error) { retryKey = error.idempotencyKey; }
+  assert.equal((await api.createCode(retryKey)).code, '123456');
+  await api.createCode();
+  assert.equal(calls[0].headers['Idempotency-Key'], calls[1].headers['Idempotency-Key']);
+  assert.notEqual(calls[1].headers['Idempotency-Key'], calls[2].headers['Idempotency-Key']);
+});
+
+test('verification rejects incomplete codes locally and preserves expired and rate-limit feedback', async () => {
+  let calls = 0;
+  const api = createLinkApi({ request: async () => { calls++; throw new ApiError('LINK_CODE_EXPIRED'); } });
+  for (const code of ['123', 'abcdef', '1234567']) await assert.rejects(api.verify(code), { code: 'VALIDATION_FAILED' });
+  assert.equal(calls, 0);
+  await assert.rejects(api.verify('123456'), { code: 'LINK_CODE_EXPIRED' });
+  const limited = createLinkApi({ request: async () => { throw new ApiError('TOO_MANY_ATTEMPTS', { details: { retryAfterSec: 300 } }); } });
+  await assert.rejects(limited.verify('123456'), (error) => error.details.retryAfterSec === 300);
+});
+
+test('code verification does not create a request; approval returns the real link and parties', async () => {
+  const sent = [];
+  let state = linkRequest();
+  const { client } = harness(async (url, init) => {
+    sent.push({ url, init });
+    if (url.endsWith('/link-codes/verify')) return success({ guardian: state.guardian, expiresAt: codeResponse.expiresAt });
+    if (url.endsWith('/link-requests?status=PENDING')) return success({ items: [state] });
+    if (url.endsWith('/approve')) state = linkRequest('APPROVED');
+    return success(state);
+  });
+  const api = createLinkApi(client);
+  assert.equal((await api.verify('123456')).guardian.name, '보호자');
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].init.headers['Idempotency-Key'], undefined);
+  const pending = await api.createRequest('123456');
+  assert.deepEqual(JSON.parse(sent[1].init.body), { code: '123456' });
+  assert.ok(sent[1].init.headers['Idempotency-Key']);
+  assert.equal((await api.receivedRequests())[0].id, pending.id);
+  const approved = await api.decide(pending.id, 'approve');
+  assert.equal(approved.link.recipient.name, '당사자');
+  assert.equal(sent.at(-1).init.headers['Idempotency-Key'], undefined);
+  assert.equal((await api.getRequest(pending.id)).status, 'APPROVED');
+});
+
+test('already-decided requests are reread and keep rejection, cancellation, expiry, and approval distinct', async () => {
+  for (const status of ['APPROVED', 'REJECTED', 'CANCELED', 'EXPIRED']) {
+    const calls = [];
+    const api = createLinkApi({ request: async (path, options) => {
+      calls.push({ path, options });
+      if (options?.method === 'POST') throw new ApiError('LINK_REQUEST_NOT_PENDING', { status: 409 });
+      return linkRequest(status);
+    } });
+    assert.equal((await api.decide('r1', 'cancel')).status, status);
+    assert.equal(calls[1].path, '/link-requests/r1');
+  }
+});
+
+test('malformed approval and invalid countdown data cannot become a successful connection', async () => {
+  const broken = createLinkApi({ request: async () => ({ ...linkRequest('APPROVED'), link: null }) });
+  await assert.rejects(broken.getRequest('r1'), { code: 'INVALID_RESPONSE' });
+  const invalidCode = createLinkApi({ request: async () => ({ ...codeResponse, expiresAt: 'not-a-date' }) });
+  await assert.rejects(invalidCode.createCode(), { code: 'INVALID_RESPONSE' });
+});
+
+test('session only applies its own confirmed connection and clears its pending request on all terminal results', async () => {
+  for (const status of ['APPROVED', 'REJECTED', 'CANCELED', 'EXPIRED']) {
+    const h = sessionHarness({ storedTokens: tokens, me: me('RECIPIENT') });
+    await h.session.restoreSession();
+    h.session.applyLinkRequest(linkRequest());
+    assert.equal(h.session.sessionHref(), '/link/recipient/confirm');
+    h.session.applyLinkRequest(linkRequest(status));
+    assert.equal(h.session.getSession().pendingLinkRequest, null);
+    assert.equal(h.session.getSession().links.length, status === 'APPROVED' ? 1 : 0);
+    h.session.applyLinkRequest({ ...linkRequest('APPROVED'), guardian: { id: 'other' }, recipient: { id: 'other2' } });
+    assert.equal(h.session.getSession().links.length, status === 'APPROVED' ? 1 : 0);
+  }
+});
+
+test('role-token response arriving after logout cannot restore role or credentials', async () => {
+  let release;
+  const gate = new Promise((resolve) => { release = resolve; });
+  const h = sessionHarness({ storedTokens: tokens, request: async (endpoint) => {
+    if (endpoint === '/me') return me(null);
+    await gate;
+    return { ...tokens, user: me('GUARDIAN').user };
+  } });
+  await h.session.restoreSession();
+  const pending = h.session.selectRole('guardian');
+  await h.session.clearSession(); release();
+  await assert.rejects(pending, { code: 'SESSION_CHANGED' });
+  assert.equal(h.session.getSession().tokens, null);
+  assert.equal(h.stored.has('sonullim.tokens'), false);
+});
+
+// Exercise asynchronous focus/AppState boundaries without needing a native renderer.
+function resourceHarness(load, initialState = 'active') {
+  const updates = [];
+  let focus;
+  let onAppState;
+  const appState = { currentState: initialState, addEventListener: (_, listener) => {
+    onAppState = listener;
+    return { remove: () => { onAppState = undefined; } };
+  } };
+  const { useLinkResource } = loader({
+    '@/api': { ApiError, errorMessage: (error) => error.message },
+    'expo-router': { useFocusEffect: (effect) => { focus = effect; } },
+    'react-native': { AppState: appState },
+    react: { useCallback: (fn) => fn, useRef: (current) => ({ current }), useState: (initial) => [initial, (value) => updates.push(value)] },
+  })('src/features/link/useLinkResource.ts');
+  const resource = useLinkResource(load, false);
+  return { resource, updates, focus: () => focus(), changeAppState: (state) => { appState.currentState = state; onAppState?.(state); } };
+}
+
+test('a slow poll cannot overwrite a decision and a blurred screen ignores late mutation results', async () => {
+  let releaseRead;
+  const gate = new Promise((resolve) => { releaseRead = resolve; });
+  const h = resourceHarness(async () => { await gate; return 'stale-pending'; });
+  const cleanup = h.focus();
+  let accepted;
+  await h.resource.run(async () => 'approved', (result) => { accepted = result; });
+  assert.equal(accepted, 'approved');
+  releaseRead();
+  await new Promise(setImmediate);
+  assert.equal(h.updates.includes('stale-pending'), false);
+  let releaseMutation;
+  const mutation = new Promise((resolve) => { releaseMutation = resolve; });
+  const pending = h.resource.run(() => mutation, () => { accepted = 'late'; });
+  cleanup(); releaseMutation(); await pending;
+  assert.equal(accepted, 'approved');
+});
+
+test('background screens make no query, resume queries immediately, and focus cleanup aborts the request', async () => {
+  let calls = 0;
+  let signal;
+  const h = resourceHarness(async (value) => { calls++; signal = value; return 'current'; }, 'background');
+  const cleanup = h.focus();
+  assert.equal(calls, 0);
+  h.changeAppState('active');
+  await new Promise(setImmediate);
+  assert.equal(calls, 1);
+  assert.ok(h.updates.includes('current'));
+  h.changeAppState('background');
+  h.resource.retry();
+  assert.equal(calls, 1);
+  cleanup();
+  assert.equal(signal.aborted, true);
 });
