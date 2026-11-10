@@ -34,7 +34,7 @@ export const ranges: Record<CalibrationKey, { min: number; max: number }> = {
 const defaults: CalibrationValues = { strength: 2, length: 2, repeat: 2 };
 
 let state: CalibrationState = {
-  // TODO: 서버/기기 저장값으로 복원
+  // 앱 시작 때 restoreCalibration(persist.ts)이 기기·서버 저장값으로 바꾼다
   saved: defaults,
   draft: defaults,
 };
@@ -79,7 +79,7 @@ export function setDraftValue(key: CalibrationKey, value: number) {
   if (state.draft[key] === next) return;
   state = { ...state, draft: { ...state.draft, [key]: next } };
   emit();
-  // TODO: 바꾼 값으로 짧은 미리보기 진동 1회
+  // 미리보기 진동은 06-1 화면(app/calibration/index)에서 playPreview로 울린다
 }
 
 export function stepDraft(key: CalibrationKey, delta: 1 | -1) {
@@ -94,8 +94,15 @@ export function resetDraft() {
 }
 
 export function saveDraft() {
-  // TODO: 서버/기기에 저장
   state = { ...state, saved: state.draft };
+  emit();
+  // 기기 · 서버 저장은 06-5 화면에서 persistCalibration (persist.ts)
+}
+
+/** 저장값 복원 (persist.ts). 바꾸는 중인 값이 없으면 draft도 같이 맞춘다 */
+export function setSavedCalibration(values: CalibrationValues) {
+  const draftUntouched = isSame(state.draft, state.saved);
+  state = { saved: values, draft: draftUntouched ? values : state.draft };
   emit();
 }
 

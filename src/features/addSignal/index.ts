@@ -8,6 +8,7 @@ export {
   knownSignals,
   pickBasicSignal,
   saveDraft,
+  setDraftBeats,
   startAddSignal,
   startCustomDraft,
   updateDraft,

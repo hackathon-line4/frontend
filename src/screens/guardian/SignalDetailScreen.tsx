@@ -75,7 +75,7 @@ export default function SignalDetailScreen({ signal, recipientName, onBack, onTe
           </Text>
           <Rhythm beats={signal.beats} size="lg" />
           <Text variant="caption" color="textSecondary">
-            {`약 ${rhythmSeconds(signal.beats)}초`}
+            {`약 ${rhythmSeconds(signal.pulses)}초`}
           </Text>
         </Stack>
       </Card>

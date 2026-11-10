@@ -13,7 +13,7 @@ type Props = {
 
 // 10-7 신호 추가 4 · 저장 완료 (design/screens/Add5Done.dc.html)
 export default function AddSignalDoneScreen({ signal, recipientName, onTeachNow, onLater }: Props) {
-  const length = formatRhythmLength(signal.beats);
+  const length = formatRhythmLength(signal.pulses);
   const category = signalCategoryLabel[signal.category];
 
   return (
