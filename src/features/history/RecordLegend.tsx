@@ -26,5 +26,5 @@ export function RecordLegend() {
 }
 
 const styles = StyleSheet.create({
-  strong: { fontFamily: fontFamily.extraBold },
+  strong: { fontFamily: fontFamily.bold },
 });

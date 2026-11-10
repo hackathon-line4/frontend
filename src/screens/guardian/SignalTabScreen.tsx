@@ -18,7 +18,7 @@ export default function SignalTabScreen({ signals, onOpenSignal, onAddSignal }: 
     .filter((g) => g.items.length > 0);
 
   return (
-    <Screen gutter="tab" inTabs scroll gap={5}>
+    <Screen gutter="tab" inTabs scroll paddingTop={2} gap={7}>
       <Stack gap={3}>
         <Row justify="space-between" style={styles.header}>
           <Text variant="title1" accessibilityRole="header">

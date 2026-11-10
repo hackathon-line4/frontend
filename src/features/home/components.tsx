@@ -212,7 +212,7 @@ export function DeliveryTimeline({ steps }: { steps: readonly DeliveryStep[] }) 
 
 const styles = StyleSheet.create({
   pressed: { opacity: 0.7 },
-  bold: { fontFamily: fontFamily.extraBold },
+  bold: { fontFamily: fontFamily.bold },
   medium: { fontFamily: fontFamily.medium },
 
   link: {
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
 
   dashed: {
     height: 52,
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderStyle: 'dashed',
     borderColor: colors.borderInput,
     borderRadius: radius.sm,

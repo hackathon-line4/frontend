@@ -57,7 +57,7 @@ export default function GuardianHomeScreen({
       gutter="tab"
       inTabs
       scroll
-      gap={4}
+      gap={6}
       footer={
         <Button
           variant="emergency"
@@ -75,7 +75,7 @@ export default function GuardianHomeScreen({
       <RecipientStatusCard status={recipient} onPressNoReply={onOpenNoReply} />
 
       <Card>
-        <Stack gap={3}>
+        <Stack gap={4}>
           <SectionHeader title="자주 쓰는 신호" linkLabel="전체 보기" onPressLink={onOpenSignals} />
           <Grid columns={2} gap={3}>
             {frequentSignals.slice(0, 6).map((signal) => (

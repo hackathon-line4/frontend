@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
   },
-  tabLabelActive: { fontFamily: fontFamily.extraBold, color: colors.textPrimary },
+  tabLabelActive: { fontFamily: fontFamily.bold, color: colors.textPrimary },
   tabLabelIdle: { fontFamily: fontFamily.regular, color: colors.textSecondary },
 
   sticky: {

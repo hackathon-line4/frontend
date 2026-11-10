@@ -129,20 +129,20 @@ const styles = StyleSheet.create({
     padding: screen.cardPadding,
   },
   outline: {
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.line,
   },
   emphasis: {
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.ink900,
-    borderRadius: radius.xl,
-    padding: space[5],
+    borderRadius: radius.lg,
+    padding: space[4],
   },
 
   tile: {
-    minHeight: 116,
+    minHeight: 96,
     padding: space[3],
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.line,
     borderRadius: radius.md,
     backgroundColor: colors.bgIvory,
@@ -155,13 +155,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tileName: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 17,
-    lineHeight: 24,
+    fontFamily: fontFamily.bold,
+    fontSize: 16,
+    lineHeight: 22,
   },
 
   row: {
-    minHeight: 60,
+    minHeight: 54,
     flexDirection: 'row',
     alignItems: 'center',
     gap: space[3],
@@ -180,14 +180,14 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontFamily: fontFamily.regular,
-    fontSize: 14,
-    lineHeight: 22,
+    fontSize: 13,
+    lineHeight: 20,
     color: colors.textPrimary,
   },
 });
 
 const infoTone = StyleSheet.create({
   neutral: { backgroundColor: colors.surfaceMuted },
-  brand: { backgroundColor: colors.yellow100, borderWidth: 2, borderColor: colors.ink900 },
-  caution: { backgroundColor: colors.surface, borderWidth: 2, borderStyle: 'dashed', borderColor: colors.ink900 },
+  brand: { backgroundColor: colors.yellow100 },
+  caution: { backgroundColor: colors.surface, borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.ink900 },
 });

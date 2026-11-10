@@ -10,9 +10,9 @@ import { Text } from './Text';
 /* ---------- Avatar ---------- */
 
 const avatarSizes = {
-  md: { box: 52, border: 2, font: 22 },
-  lg: { box: 64, border: 2, font: 26 },
-  xl: { box: 96, border: 3, font: 40 },
+  md: { box: 44, border: 1.5, font: 18 },
+  lg: { box: 56, border: 1.5, font: 22 },
+  xl: { box: 80, border: 2, font: 32 },
 } as const;
 
 // 이름 첫 글자. 장식이므로 스크린리더에서 숨김 (옆에 이름이 항상 함께 나옴)
@@ -61,7 +61,7 @@ export function Tag({ label, icon, size = 'md', tone = 'brand', bold = true, sty
       {icon && <Icon name={icon} size={isLg ? 18 : 16} color={fg} strokeWidth={2.4} />}
       <Text
         style={{
-          fontFamily: bold ? fontFamily.extraBold : fontFamily.medium,
+          fontFamily: bold ? fontFamily.bold : fontFamily.medium,
           fontSize: isLg ? 17 : 14,
           lineHeight: isLg ? 24 : 20,
           color: fg,
@@ -267,7 +267,7 @@ const NOTE_LINE = 22;
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  bold: { fontFamily: fontFamily.extraBold },
+  bold: { fontFamily: fontFamily.bold },
 
   avatar: {
     backgroundColor: colors.yellow500,
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatarText: {
-    fontFamily: fontFamily.extraBold,
+    fontFamily: fontFamily.bold,
   },
 
   // 정렬은 부모(alignItems)를 따른다. 세로로 늘어나는 목록 안에서는 alignSelf를 직접 준다.
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   stepNumberText: {
-    fontFamily: fontFamily.extraBold,
+    fontFamily: fontFamily.bold,
     fontSize: 15,
     lineHeight: 20,
     color: colors.textOnDark,
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
   choice: {
     minHeight: 232,
     padding: space[6],
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.ink900,
     borderRadius: radius.xl,
     backgroundColor: colors.surface,
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   choiceTitle: {
-    fontFamily: fontFamily.extraBold,
+    fontFamily: fontFamily.bold,
     fontSize: 22,
     lineHeight: 30,
     letterSpacing: 22 * -0.02,

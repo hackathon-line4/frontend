@@ -5,8 +5,8 @@ import { colors, fontFamily, typography, type ColorToken, type TypeVariant } fro
 export type TextProps = RNTextProps & {
   variant?: TypeVariant;
   color?: ColorToken;
-  /** variant의 크기는 두고 굵기만 바꾼다 (400 · 500 · 800) */
-  weight?: 'regular' | 'medium' | 'extraBold';
+  /** variant의 크기는 두고 굵기만 바꾼다 (400 · 500 · 700 · 800) */
+  weight?: 'regular' | 'medium' | 'bold' | 'extraBold';
 };
 
 export function Text({ variant = 'body', color = 'textPrimary', weight, style, ...rest }: TextProps) {

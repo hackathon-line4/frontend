@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, screen, space, touch, type SpaceToken } from '@/theme';
+import { colors, fontFamily, screen, space, touch, type SpaceToken } from '@/theme';
 
 import { IconButton } from './IconButton';
 import { Text } from './Text';
@@ -36,8 +36,8 @@ type ScreenProps = {
    * paddingTop은 그 아래에 더해진다. 헤더 있는 화면과 첫 요소 위치를 맞출 때.
    */
   reserveHeader?: 'md' | 'lg';
-  /** 좌우 여백: default 24 · tab 16 (홈·탭 화면) */
-  gutter?: 'default' | 'tab';
+  /** 좌우 여백: default 20 (보호자) · tab 16 (홈·탭 화면) · recipient 24 (당사자) */
+  gutter?: 'default' | 'tab' | 'recipient';
   /** 탭 화면: 하단 안전영역은 탭바가 맡으므로 하단 여백을 줄인다 */
   inTabs?: boolean;
   /** 본문 정렬 */
@@ -46,7 +46,7 @@ type ScreenProps = {
   contentStyle?: StyleProp<ViewStyle>;
 };
 
-// 모든 화면의 기본 틀. 좌우 여백 24(탭 16), 하단 여백 = 안전영역 + 24.
+// 모든 화면의 기본 틀. 좌우 여백 20(탭 16 · 당사자 24), 하단 여백 = 안전영역 + 24.
 export function Screen({
   children,
   header,
@@ -64,7 +64,7 @@ export function Screen({
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
   const background = tone === 'dark' ? colors.ink900 : colors.bgIvory;
-  const gutterX = gutter === 'tab' ? screen.gutterTab : screen.gutterRecipient;
+  const gutterX = gutter === 'tab' ? screen.gutterTab : gutter === 'recipient' ? screen.gutterRecipient : screen.gutter;
   const bodyLayout: ViewStyle = {
     gap: space[gap],
     paddingTop: space[paddingTop] + (reserveHeader ? headerHeight[reserveHeader] : 0),
@@ -148,11 +148,14 @@ export function ScreenHeader({ title, onBack, onClose, size = 'md', tone = 'ligh
 
 /* ---------- ScreenTitle ---------- */
 
+// 보호자 화면 제목은 한 단계씩 작게. 당사자(30 이상)는 그대로
+const titleSize = { 22: 20, 24: 22, 28: 24, 30: 30, 36: 36 } as const;
+
 type ScreenTitleProps = {
   title: string;
   description?: string;
-  /** 24: 플로우 단계 · 28: 화면 제목 · 30–36: 당사자 / 완료 */
-  size?: 24 | 28 | 30 | 36;
+  /** 22: 플로우 단계 · 24: 화면 제목 · 30–36: 당사자 / 완료. 기존 28은 24로 맞춘다 */
+  size?: 22 | 24 | 28 | 30 | 36;
   /** body 16 · rBody 18 (당사자) */
   descriptionSize?: 16 | 18 | 20;
   align?: 'left' | 'center';
@@ -163,7 +166,7 @@ type ScreenTitleProps = {
 export function ScreenTitle({
   title,
   description,
-  size = 28,
+  size = 24,
   descriptionSize = 16,
   align = 'left',
   tone = 'light',
@@ -176,9 +179,10 @@ export function ScreenTitle({
         variant="title1"
         accessibilityRole="header"
         style={{
-          fontSize: size,
-          lineHeight: Math.round(size * (size >= 30 ? 1.35 : 1.3)),
-          letterSpacing: size * -0.03,
+          fontSize: titleSize[size],
+          lineHeight: Math.round(titleSize[size] * 1.35),
+          letterSpacing: titleSize[size] * (size >= 30 ? -0.03 : -0.02),
+          fontFamily: size >= 30 ? fontFamily.extraBold : fontFamily.bold,
           textAlign: align,
           color: isDark ? colors.textOnDark : colors.textPrimary,
         }}
@@ -190,7 +194,7 @@ export function ScreenTitle({
           variant={descriptionSize === 16 ? 'body' : 'rBody'}
           color={descriptionSize === 20 ? 'textPrimary' : 'textSecondary'}
           style={{
-            fontSize: descriptionSize,
+            fontSize: descriptionSize === 16 ? 15 : descriptionSize,
             lineHeight: Math.round(descriptionSize * (descriptionSize === 20 ? 1.5 : 1.6)),
             textAlign: align,
           }}
@@ -225,6 +229,6 @@ const styles = StyleSheet.create({
     gap: space[1],
   },
   headerTitle: {
-    fontSize: 17,
+    fontSize: 16,
   },
 });
