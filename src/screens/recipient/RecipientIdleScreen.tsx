@@ -3,6 +3,7 @@ import type { AccessibilityActionEvent } from 'react-native';
 import { RecipientScreen } from '@/components';
 
 type Props = {
+  busy?: boolean;
   guardianName: string;
   onTap: () => void;
   onSend: () => void;
@@ -24,8 +25,9 @@ const actions = [
 
 // 07-1 대기 (design/screens/RecvIdle.dc.html)
 // 한 번 탭: 전송 없음 · 두 번 탭: 07-2 신호 보내기 · 3초 길게: 도움 요청
-export default function RecipientIdleScreen({ guardianName, onTap, onSend, onHelp, onHelpTick, onSettings }: Props) {
+export default function RecipientIdleScreen({ guardianName, busy = false, onTap, onSend, onHelp, onHelpTick, onSettings }: Props) {
   const handleAction = ({ nativeEvent }: AccessibilityActionEvent) => {
+    if (busy) return;
     switch (nativeEvent.actionName) {
       case 'activate':
       case 'send':
@@ -44,6 +46,7 @@ export default function RecipientIdleScreen({ guardianName, onTap, onSend, onHel
   return (
     <RecipientScreen
       state="idle"
+      busy={busy}
       accessibilityLabel={`손울림 대기 중. ${guardianName} 보호자와 연결됨. 두 번 탭하면 신호 보내기, 3초 길게 누르면 도움 요청`}
       onPress={onTap}
       onDoubleTap={onSend}

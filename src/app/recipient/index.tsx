@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import { connectedGuardian, playConnectionCheck, playHelpCountdown, requestHelp } from '@/features/recipient';
+import { connectedGuardian, playConnectionCheck, playHelpCountdown, useRecipientSend } from '@/features/recipient';
 import { useSession } from '@/features/session';
 import { Button, Screen, Text } from '@/components';
 import RecipientIdleScreen from '@/screens/recipient/RecipientIdleScreen';
@@ -8,6 +8,7 @@ import RecipientIdleScreen from '@/screens/recipient/RecipientIdleScreen';
 export default function RecipientIdleRoute() {
   const session = useSession();
   const link = session.links.find((item) => item.status === 'ACTIVE');
+  const { busy, sendHelp } = useRecipientSend();
   if (session.tokens && !link) return <Screen gap={6} reserveHeader="lg">
     <Text>보호자와 계정을 연결해 주세요.</Text>
     <Button label="연결 코드 입력" size="lg" onPress={() => router.push('/link/recipient')} />
@@ -18,7 +19,8 @@ export default function RecipientIdleRoute() {
       guardianName={link?.guardian.name ?? connectedGuardian.name}
       onTap={playConnectionCheck}
       onSend={() => router.push('/recipient/send')}
-      onHelp={requestHelp}
+      busy={busy}
+      onHelp={sendHelp}
       onHelpTick={playHelpCountdown}
       onSettings={() => router.push('/recipient/settings')}
     />

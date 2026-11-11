@@ -29,6 +29,7 @@ function update(patch: Partial<SessionState>) {
   listeners.forEach((listener) => listener());
 }
 export function getSession(): SessionState { return state; }
+export function getSessionRevision() { return revision; }
 function localRole(role: ServerRole | null): Role | null {
   return role === 'GUARDIAN' ? 'guardian' : role === 'RECIPIENT' ? 'recipient' : null;
 }

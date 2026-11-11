@@ -3,8 +3,7 @@ import { findSignal } from '@/features/signals';
 
 import type { IncomingSignal } from './incoming';
 
-// 서버 연결 전 화면 확인용 데이터
-// TODO: 연결된 보호자 · 받은 신호는 서버(실시간 수신 / 푸시)에서 받아 온다
+// 로그인하지 않은 개발용 화면 미리보기 데이터. 실제 전송/응답을 성공 처리하지 않는다.
 
 export const connectedGuardian = mockGuardian;
 

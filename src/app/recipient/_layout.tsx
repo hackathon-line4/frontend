@@ -1,12 +1,14 @@
 import { Stack } from 'expo-router';
 
 import { RoleGate } from '@/features/session';
+import { IncomingSync } from '@/features/recipient/IncomingSync';
 import { colors } from '@/theme';
 
 // 당사자 화면 묶음. 탭바·헤더 없이 화면 전체가 하나의 터치 영역인 상태 화면들.
 export default function RecipientLayout() {
   return (
     <RoleGate role="recipient">
+      <IncomingSync />
       <Stack
         screenOptions={{
           headerShown: false,
