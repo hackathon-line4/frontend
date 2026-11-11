@@ -9,6 +9,7 @@ type IconButtonProps = {
   /** 아이콘만 있는 버튼은 레이블 필수 */
   accessibilityLabel: string;
   onPress?: () => void;
+  disabled?: boolean;
   size?: number;
   color?: string;
   strokeWidth?: number;
@@ -21,6 +22,7 @@ export function IconButton({
   icon,
   accessibilityLabel,
   onPress,
+  disabled = false,
   size = 24,
   color = colors.textPrimary,
   strokeWidth = 2.4,
@@ -30,12 +32,15 @@ export function IconButton({
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
+      accessibilityState={{ disabled }}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       style={({ pressed }) => [
         styles.base,
         { width: touchSize, height: touchSize },
         pressed && styles.pressed,
+        disabled && styles.disabled,
         style,
       ]}
     >
@@ -53,4 +58,5 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.6,
   },
+  disabled: { opacity: 0.4 },
 });

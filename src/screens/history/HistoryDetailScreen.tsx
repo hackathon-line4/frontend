@@ -17,6 +17,7 @@ type Props = {
   onBack: () => void;
   onOpenRecord: (id: string) => void;
   onSendAgain: () => void;
+  busy?: boolean; error?: string; canResend?: boolean;
 };
 
 // 08-2 신호 기록 상세 (design/screens/LogDetail.dc.html)
@@ -28,12 +29,13 @@ export default function HistoryDetailScreen({
   onBack,
   onOpenRecord,
   onSendAgain,
+  busy, error, canResend = true,
 }: Props) {
   return (
     <Screen
       scroll
       header={<ScreenHeader title="신호 기록" onBack={onBack} />}
-      footer={<Button label="이 신호 다시 보내기" variant="secondary" size="sm" onPress={onSendAgain} />}
+      footer={<>{error && <Text accessibilityRole="alert">{error}</Text>}<Button disabled={busy || !canResend} label={busy ? '전송 중…' : '이 신호 다시 보내기'} variant="secondary" size="sm" onPress={onSendAgain} /></>}
       paddingTop={3}
       gap={5}
     >

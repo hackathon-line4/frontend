@@ -3,8 +3,7 @@ import { AppState } from 'react-native';
 
 import { getSessionRevision, useSession } from '@/features/session/store';
 
-import { recipientApi } from './api';
-import { getCurrentIncoming, handleIncoming, hasHandledIncoming, openNextIncoming } from './incoming';
+import { recoverIncoming } from './recover';
 
 /** Recover missed pushes while the recipient app is open. SSE/FCM use the same deduplicated entry. */
 export function IncomingSync() {
@@ -22,13 +21,7 @@ export function IncomingSync() {
       if (!alive || !foreground() || revision !== getSessionRevision()) return;
       const request = new AbortController(); controller = request;
       try {
-        if (!getCurrentIncoming()) {
-          if (openNextIncoming()) return;
-          const messages = await recipientApi.incoming(request.signal);
-          if (!alive || request.signal.aborted || revision !== getSessionRevision() || getCurrentIncoming()) return;
-          const next = messages.find((item) => !hasHandledIncoming(item.id));
-          if (next) handleIncoming(next);
-        }
+        await recoverIncoming(request.signal);
       } catch {
         // A missed/failed read is retried while foregrounded; it must not fake an incoming signal.
       } finally {

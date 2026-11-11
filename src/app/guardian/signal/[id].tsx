@@ -1,24 +1,23 @@
+import { useSession } from '@/features/session';
+import Preview from '@/features/guardian/preview/signal';
 import { router, useLocalSearchParams } from 'expo-router';
-
-import { mockRecipient } from '@/features/link/mock';
-import { findSignal } from '@/features/signals';
+import { guardianStore } from '@/features/guardian/client';
+import { useGuardianState } from '@/features/guardian/hooks';
+import { GuardianFeedback } from '@/features/guardian/Feedback';
+import { toSignal } from '@/features/guardian/models';
 import SignalDetailScreen from '@/screens/guardian/SignalDetailScreen';
 
 export default function SignalDetailRoute() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const signal = id ? findSignal(id) : undefined;
+  const session = useSession();
+  return __DEV__ && !session.tokens ? <Preview /> : <ConnectedRoute />;
+}
 
-  return (
-    <SignalDetailScreen
-      signal={signal}
-      recipientName={mockRecipient.name}
-      onBack={() => (router.canGoBack() ? router.back() : router.navigate('/guardian/signals'))}
-      onTeach={() => {
-        // TODO: 연습 진동 전송 API (기록 08에는 '연습'으로 따로 남김) · 성공 시 '연습 전' 해제
-      }}
-      onSend={() => {
-        // TODO: 신호 전송 API 호출 + 전송 햅틱
-      }}
-    />
-  );
+function ConnectedRoute() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data, scope } = useGuardianState();
+  if (!scope || !data?.signals) return <GuardianFeedback message={!scope ? '당사자를 먼저 연결해 주세요' : data?.errors.signals || '신호를 불러오는 중이에요'} onRetry={() => { void guardianStore.refresh(); }} />;
+  const signal = data.signals.find(s => s.id === id);
+  return <SignalDetailScreen signal={signal ? toSignal(signal) : undefined}
+    recipientName={data.home?.recipient.name ?? '당사자'} onBack={() => router.back()}
+    onSend={(s, abort) => guardianStore.send(s.id, abort)} />;
 }

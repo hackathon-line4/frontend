@@ -2,6 +2,8 @@ import type { SignalStatus } from '@/components';
 
 /** 홈 상단 당사자 상태 카드 */
 export type RecipientStatus = {
+  state?: 'OK' | 'WAITING' | 'NO_RESPONSE' | 'HELP_REQUESTED';
+  signalName?: string;
   name: string;
   connected: boolean;
   /** 마지막으로 받은 응답 (없으면 undefined) */
