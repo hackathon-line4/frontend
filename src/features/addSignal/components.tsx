@@ -424,7 +424,7 @@ export function SignalIconBox({ icon }: { icon: IconName }) {
 
 const styles = StyleSheet.create({
   flexShrink: { flexShrink: 1 },
-  bold: { fontFamily: fontFamily.extraBold },
+  bold: { fontFamily: fontFamily.bold },
   regular: { fontFamily: fontFamily.regular },
   pressed: { opacity: 0.85 },
 
@@ -449,13 +449,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'flex-start',
   },
-  pillBasic: { borderWidth: 1.5, borderColor: colors.ink900 },
+  pillBasic: { borderWidth: 1, borderColor: colors.ink900 },
   pillCustom: { backgroundColor: colors.ink900 },
   dashedPill: {
     height: 26,
     paddingHorizontal: 8,
     borderRadius: 13,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: colors.textTertiary,
     justifyContent: 'center',
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     ...shadow.card,
   },
   methodSelected: { borderWidth: 2.5, borderColor: colors.ink900 },
-  methodIdle: { borderWidth: 1.5, borderColor: colors.lineStrong },
+  methodIdle: { borderWidth: 1, borderColor: colors.lineStrong },
   methodIcon: {
     width: 48,
     height: 48,
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
   search: {
     height: 52,
     paddingHorizontal: 14,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.borderInput,
     borderRadius: radius.sm,
     backgroundColor: colors.surface,
@@ -519,8 +519,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   presetSelected: { borderWidth: 2.5, borderColor: colors.ink900, backgroundColor: colors.surface, ...shadow.card },
-  presetIdle: { borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.surface, ...shadow.card },
-  presetUsed: { borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.borderInput },
+  presetIdle: { borderWidth: 1, borderColor: colors.lineStrong, backgroundColor: colors.surface, ...shadow.card },
+  presetUsed: { borderWidth: 1, borderStyle: 'dashed', borderColor: colors.borderInput },
   presetTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: 20 },
 
   slot: {
@@ -531,11 +531,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
   },
-  slotLatest: { borderWidth: 2, borderColor: colors.ink900 },
+  slotLatest: { borderWidth: 1.5, borderColor: colors.ink900 },
   slotEmpty: {
     height: 72,
     borderRadius: radius.sm,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: colors.textDisabled,
   },
@@ -543,7 +543,7 @@ const styles = StyleSheet.create({
 
   beatButton: {
     height: 104,
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.ink900,
     borderRadius: 18,
     backgroundColor: colors.surface,
@@ -561,7 +561,7 @@ const styles = StyleSheet.create({
   actionBox: {
     flex: 1,
     height: 48,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.borderInput,
     borderRadius: radius.sm,
     flexDirection: 'row',
@@ -572,7 +572,7 @@ const styles = StyleSheet.create({
   actionPill: {
     height: 40,
     paddingHorizontal: 12,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.ink900,
     borderRadius: 20,
     backgroundColor: colors.surface,
@@ -588,7 +588,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: radius.full,
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.ink900,
     backgroundColor: colors.surface,
     alignItems: 'center',

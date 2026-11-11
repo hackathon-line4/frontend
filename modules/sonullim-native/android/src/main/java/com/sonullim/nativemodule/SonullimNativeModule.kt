@@ -59,6 +59,32 @@ class SonullimNativeModule : Module() {
     Function("openOverlaySettings") {
       AppLauncher.openOverlaySettings(context)
     }
+
+    // ── 당사자 폰 설정 안내 (B-9) ──
+
+    Function("isIgnoringBatteryOptimizations") {
+      DeviceSettings.isIgnoringBatteryOptimizations(context)
+    }
+
+    Function("requestIgnoreBatteryOptimizations") {
+      DeviceSettings.requestIgnoreBatteryOptimizations(context)
+    }
+
+    Function("areNotificationsEnabled") {
+      DeviceSettings.areNotificationsEnabled(context)
+    }
+
+    Function("openNotificationSettings") {
+      DeviceSettings.openNotificationSettings(context)
+    }
+
+    Function("openAppDetails") {
+      DeviceSettings.openAppDetails(context)
+    }
+
+    Function("isSamsung") {
+      DeviceSettings.isSamsung
+    }
   }
 
   private val context: Context

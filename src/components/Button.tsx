@@ -8,7 +8,7 @@ import { Text } from './Text';
 /** light: 어두운 화면 위 밝은 버튼 (QR 인식 등) */
 export type ButtonVariant = 'primary' | 'secondary' | 'dark' | 'light' | 'text' | 'emergency';
 
-/** sm: 56 · 16 (나란한 보조 버튼) · md: 60 · 18 (보호자 앱) · lg: 80 · 22 (당사자 앱) */
+/** sm: 46 · 14 (나란한 보조 버튼) · md: 52 · 15 (보호자 앱) · lg: 80 · 22 (당사자 앱) */
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 type ButtonProps = {
@@ -92,7 +92,7 @@ const foreground: Record<ButtonVariant, string> = {
   emergency: colors.surface,
 };
 
-const iconSizes: Record<ButtonSize, number> = { sm: 20, md: 20, lg: 28 };
+const iconSizes: Record<ButtonSize, number> = { sm: 18, md: 18, lg: 28 };
 
 const styles = StyleSheet.create({
   base: {
@@ -129,26 +129,26 @@ const styles = StyleSheet.create({
 });
 
 const sizeStyles = StyleSheet.create({
-  sm: { minHeight: 56, borderRadius: radius.md },
-  md: { minHeight: 60, borderRadius: radius.md },
+  sm: { minHeight: 46, borderRadius: radius.sm },
+  md: { minHeight: 52, borderRadius: radius.sm },
   lg: { minHeight: touch.recipientPrimary, borderRadius: radius.lg, gap: space[3] },
 });
 
 const labelStyles = StyleSheet.create({
-  sm: typography.bodyStrong,
-  md: typography.heading,
+  sm: typography.label,
+  md: typography.bodyStrong,
   lg: typography.rButton,
 });
 
 const variantStyles = StyleSheet.create({
   primary: { backgroundColor: colors.yellow500 },
-  secondary: { backgroundColor: 'transparent', borderWidth: 2, borderColor: colors.ink900 },
+  secondary: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.lineStrong },
   dark: { backgroundColor: colors.ink900 },
   light: { backgroundColor: colors.bgIvory },
   text: { backgroundColor: 'transparent', minHeight: touch.guardianMin, alignSelf: 'center' },
   emergency: {
     backgroundColor: colors.ink950,
-    minHeight: 60,
+    minHeight: 56,
     justifyContent: 'flex-start',
     paddingHorizontal: space[4],
     gap: space[3],

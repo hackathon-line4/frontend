@@ -69,7 +69,7 @@ export default function GuardianSettingsScreen({
   const notificationsOn = notificationPermission === 'granted';
 
   return (
-    <Screen gutter="tab" inTabs scroll paddingTop={6} gap={7}>
+    <Screen gutter="tab" inTabs scroll paddingTop={6} gap={8}>
       <ScreenTitle title="설정" />
 
       <Section title="연결 관리">

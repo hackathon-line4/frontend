@@ -90,12 +90,12 @@ const styles = StyleSheet.create({
     gap: space[1],
     alignSelf: 'flex-start',
   },
-  basic: { borderWidth: 1.5, borderColor: colors.ink900 },
+  basic: { borderWidth: 1, borderColor: colors.ink900 },
   custom: { backgroundColor: colors.ink900 },
   untrained: {
     height: 26,
     borderRadius: radius.full,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: colors.textTertiary,
   },
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   noReply: {
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderStyle: 'dashed',
     borderColor: colors.ink900,
   },

@@ -27,7 +27,9 @@ export function TextField({ label, helper, error, success, password, onFocus, on
 
   return (
     <View style={styles.root}>
-      <Text variant="label">{label}</Text>
+      <Text variant="label" weight="medium">
+        {label}
+      </Text>
       <View style={[styles.box, boxStyles[state]]}>
         <TextInput
           {...rest}
@@ -51,6 +53,8 @@ export function TextField({ label, helper, error, success, password, onFocus, on
             icon={hidden ? 'eye' : 'eye-off'}
             accessibilityLabel={hidden ? '비밀번호 보기' : '비밀번호 숨기기'}
             onPress={() => setHidden((v) => !v)}
+            size={20}
+            touchSize={42}
             strokeWidth={2}
             color={colors.textSecondary}
           />
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
     gap: space[2],
   },
   box: {
-    minHeight: 56,
+    minHeight: 46,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: radius.sm,
@@ -107,8 +111,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'stretch',
     paddingHorizontal: space[4],
+    paddingVertical: 0,
     fontFamily: fontFamily.regular,
-    fontSize: 17,
+    fontSize: 15,
     color: colors.textPrimary,
   },
   message: {
@@ -123,7 +128,7 @@ const styles = StyleSheet.create({
 });
 
 const boxStyles = StyleSheet.create({
-  default: { borderWidth: 1.5, borderColor: colors.borderInput },
-  focus: { borderWidth: 2, borderColor: colors.ink900 },
-  error: { borderWidth: 2, borderColor: colors.dangerFg },
+  default: { borderWidth: 1, borderColor: colors.borderInput },
+  focus: { borderWidth: 1.5, borderColor: colors.ink900 },
+  error: { borderWidth: 1.5, borderColor: colors.dangerFg },
 });

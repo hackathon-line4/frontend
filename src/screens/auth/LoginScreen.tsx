@@ -38,7 +38,7 @@ export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error
       <Logo size="sm" />
       <ScreenTitle title="다시 만나서 반가워요" description="이메일로 로그인해 주세요." />
 
-      <Stack gap={5}>
+      <Stack gap={6}>
         {error && errorField !== 'password' && <Text accessibilityRole="alert" color="dangerFg">{error}</Text>}
         <TextField
           label="이메일"

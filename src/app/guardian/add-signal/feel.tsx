@@ -8,11 +8,13 @@ import {
   useAddSignal,
 } from '@/features/addSignal';
 import { mockRecipient } from '@/features/link/mock';
+import { playPulses, useStopVibrationOnBlur } from '@/features/vibration';
 import AddSignalFeelScreen from '@/screens/addSignal/AddSignalFeelScreen';
 
 // 10-6 진동 체험 → '저장하기' → 10-7
 export default function AddSignalFeelRoute() {
   const { draft } = useAddSignal();
+  useStopVibrationOnBlur();
 
   return (
     <AddSignalFeelScreen
@@ -24,9 +26,8 @@ export default function AddSignalFeelRoute() {
       onClose={exitAddSignal}
       // 목록에서 고른 기본 신호는 현장 어휘와 맞추기 위해 리듬을 바꾸지 않는다
       onChangeRhythm={draft.source === 'custom' ? backInAddSignal : undefined}
-      onVibrate={() => {
-        // TODO: 진동 재생 (보호자 휴대폰, beatMs 시간표). 화면 표시는 AddSignalFeelScreen이 같은 시간표로 맞춘다
-      }}
+      // 보호자 휴대폰에서 진동 배열 그대로 재생. 화면 표시는 AddSignalFeelScreen이 같은 배열로 맞춘다
+      onVibrate={playPulses}
       onSave={() => {
         saveDraft();
         router.replace('/guardian/add-signal/done');

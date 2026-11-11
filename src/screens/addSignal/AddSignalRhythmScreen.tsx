@@ -13,11 +13,11 @@ import {
   RhythmCheckMessage,
   StepIntro,
   beatAddedAnnouncement,
-  formatRhythmLength,
+  formatBeatsLength,
   sameBeats,
 } from '@/features/addSignal';
 import type { Signal } from '@/features/signals';
-import { beatLabel, type Beat } from '@/theme';
+import { beatLabel, beatsToPulses, samePulses, type Beat } from '@/theme';
 
 type RhythmMode = 'preset' | 'tap';
 
@@ -53,7 +53,8 @@ export default function AddSignalRhythmScreen({
   onPlay,
   onNext,
 }: Props) {
-  const usedBy = (beats: readonly Beat[]) => signals.find((s) => sameBeats(s.beats, beats))?.name;
+  // 진동이 완전히 같은 신호 (기본 신호와도 진동 배열로 비교)
+  const usedBy = (beats: readonly Beat[]) => signals.find((s) => samePulses(s.pulses, beatsToPulses(beats)))?.name;
 
   // 돌아왔을 때 고른 리듬을 그대로 보여 준다 (프리셋이면 프리셋 탭, 아니면 직접 조합 탭)
   const initialIsPreset = initialBeats.length === 0 || presets.some((p) => sameBeats(p, initialBeats));
@@ -82,7 +83,7 @@ export default function AddSignalRhythmScreen({
     const next = tapBeats.slice(0, -1);
     setTapBeats(next);
     AccessibilityInfo.announceForAccessibility(
-      next.length > 0 ? `하나 지움, ${next.length}박자, ${formatRhythmLength(next)}` : '모두 지움',
+      next.length > 0 ? `하나 지움, ${next.length}박자, ${formatBeatsLength(next)}` : '모두 지움',
     );
   };
 
@@ -128,7 +129,7 @@ export default function AddSignalRhythmScreen({
               <PresetCard
                 key={key}
                 beats={beats}
-                length={formatRhythmLength(beats)}
+                length={formatBeatsLength(beats)}
                 usedBy={usedBy(beats)}
                 selected={preset !== undefined && sameBeats(preset, beats)}
                 onPress={() => {
@@ -148,7 +149,7 @@ export default function AddSignalRhythmScreen({
                   만든 리듬
                 </Text>
                 <Text variant="small" color="textSecondary">
-                  {`${tapBeats.length} / 최대 ${MAX_BEATS}박자 · ${formatRhythmLength(tapBeats)}`}
+                  {`${tapBeats.length} / 최대 ${MAX_BEATS}박자 · ${formatBeatsLength(tapBeats)}`}
                 </Text>
               </Row>
               <View
