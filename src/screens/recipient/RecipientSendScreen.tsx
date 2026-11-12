@@ -4,6 +4,7 @@ import { RecipientScreen } from '@/components';
 import { SEND_IDLE_TIMEOUT_MS, useTimeout } from '@/features/recipient';
 
 type Props = {
+  busy?: boolean;
   guardianName: string;
   signalName: string;
   onSend: () => void;
@@ -16,11 +17,12 @@ type Props = {
 
 const actions = [{ name: 'activate' }, { name: 'longpress' }, { name: 'help', label: '도움 요청' }] as const;
 
-// 07-2 신호 보내기 (design/screens/RecvSend.dc.html). 화면 어디를 눌러도 똑같이 전송
-export default function RecipientSendScreen({ guardianName, signalName, onSend, onHelp, onHelpTick, onTimeout }: Props) {
-  useTimeout(onTimeout, SEND_IDLE_TIMEOUT_MS);
+// 07-2 신호 보내기. 화면 어디든 두 번 탭하면 전송한다.
+export default function RecipientSendScreen({ guardianName, signalName, busy = false, onSend, onHelp, onHelpTick, onTimeout }: Props) {
+  useTimeout(onTimeout, busy ? null : SEND_IDLE_TIMEOUT_MS);
 
   const handleAction = ({ nativeEvent }: AccessibilityActionEvent) => {
+    if (busy) return;
     if (nativeEvent.actionName === 'activate') onSend();
     else onHelp();
   };
@@ -28,9 +30,10 @@ export default function RecipientSendScreen({ guardianName, signalName, onSend, 
   return (
     <RecipientScreen
       state="compose"
+      busy={busy}
       signalName={signalName}
-      accessibilityLabel={`${signalName} 보내기. 화면 어디든 누르면 ${guardianName} 보호자에게 보내요`}
-      onPress={onSend}
+      accessibilityLabel={`${signalName} 보내기. 화면 어디든 두 번 탭하면 ${guardianName} 보호자에게 보내요`}
+      onDoubleTap={onSend}
       onLongPress={onHelp}
       onHoldTick={onHelpTick}
       accessibilityActions={actions}

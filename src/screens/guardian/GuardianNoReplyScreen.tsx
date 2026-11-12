@@ -6,11 +6,12 @@ type Props = {
   onBack: () => void;
   onResend: () => void;
   onKeepWaiting: () => void;
+  busy?: boolean; error?: string; canResend?: boolean; canExtendWait?: boolean;
 };
 
 // 05-5 보호자 · 응답 없음 (design/screens/GuardianNoReply.dc.html)
 // 화면 터치가 확인되지 않았다는 사실만 보여 준다. 위험으로 단정하지 않음.
-export default function GuardianNoReplyScreen({ record, onBack, onResend, onKeepWaiting }: Props) {
+export default function GuardianNoReplyScreen({ record, onBack, onResend, onKeepWaiting, busy, error, canResend = true, canExtendWait = true }: Props) {
   return (
     <Screen
       header={<ScreenHeader title="신호 기록" onBack={onBack} />}
@@ -19,8 +20,9 @@ export default function GuardianNoReplyScreen({ record, onBack, onResend, onKeep
       gap={6}
       footer={
         <>
-          <Button label="다시 보내기" icon="retry" onPress={onResend} />
-          <Button label="더 기다리기" variant="secondary" size="sm" onPress={onKeepWaiting} />
+          {error && <Text accessibilityRole="alert">{error}</Text>}
+          <Button label={busy ? '처리 중…' : '다시 보내기'} disabled={busy || !canResend} icon="retry" onPress={onResend} />
+          {canExtendWait && <Button disabled={busy} label="더 기다리기" variant="secondary" size="sm" onPress={onKeepWaiting} />}
         </>
       }
     >

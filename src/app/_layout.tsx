@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { CalibrationSync } from '@/features/calibration/CalibrationSync';
 import DevShortcut from '@/features/dev/DevShortcut';
 import { SessionBoundary } from '@/features/session/SessionBoundary';
+import { RealtimeSync } from '@/realtime/RealtimeSync';
 import { colors, useAppFonts } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -37,6 +38,7 @@ export default function RootLayout() {
       </Stack>
       <DevShortcut />
       <SessionBoundary />
+      <RealtimeSync />
       <CalibrationSync />
       <StatusBar style="dark" />
     </SafeAreaProvider>

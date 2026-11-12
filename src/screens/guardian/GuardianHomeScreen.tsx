@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Button, Card, Grid, IconButton, ListRow, Logo, Row, Screen, SignalTile, Stack, StatusChip } from '@/components';
+import { Button, Card, Grid, IconButton, ListRow, Logo, Row, Screen, SignalTile, Stack, StatusChip, Text } from '@/components';
 import {
   DashedButton,
   LocationPreviewCard,
@@ -13,6 +13,7 @@ import {
   type RecipientStatus,
 } from '@/features/home';
 import type { Signal } from '@/features/signals';
+import type { GuardianMessage } from '@/features/guardian/types';
 
 type Props = {
   recipient: RecipientStatus;
@@ -22,14 +23,15 @@ type Props = {
   emergencySignals: readonly Signal[];
   location: RecipientLocation;
   recentActivity: readonly Activity[];
-  onSendSignal: (signal: Signal) => void;
+  onSendSignal: (signal: Signal, abort?: AbortSignal) => Promise<GuardianMessage>;
   onOpenNotifications: () => void;
   onOpenSignals: () => void;
   onAddSignal: () => void;
   onOpenLocation: () => void;
   onOpenHistory: () => void;
   onOpenRecord: (id: string) => void;
-  onOpenNoReply: () => void;
+  onOpenNoReply: (id?: string) => void;
+  refreshError?: string;
 };
 
 type SheetState = { candidates: readonly Signal[]; emergency?: boolean } | null;
@@ -49,6 +51,7 @@ export default function GuardianHomeScreen({
   onOpenHistory,
   onOpenRecord,
   onOpenNoReply,
+  refreshError,
 }: Props) {
   const [sheet, setSheet] = useState<SheetState>(null);
 
@@ -72,7 +75,8 @@ export default function GuardianHomeScreen({
         <IconButton icon="bell" accessibilityLabel="알림" onPress={onOpenNotifications} />
       </Row>
 
-      <RecipientStatusCard status={recipient} onPressNoReply={onOpenNoReply} />
+      <RecipientStatusCard status={recipient} onPressNoReply={() => onOpenNoReply()} />
+      {refreshError && <Text accessibilityRole="alert">{`${refreshError} 마지막으로 확인한 상태를 표시하고 있어요.`}</Text>}
 
       <Card>
         <Stack gap={4}>
@@ -90,6 +94,7 @@ export default function GuardianHomeScreen({
               />
             ))}
           </Grid>
+          {!frequentSignals.length && <Text>아직 자주 쓰는 신호가 없어요. 전체 보기에서 신호를 골라 주세요.</Text>}
           <DashedButton icon="plus" label="신호 추가하기" onPress={onAddSignal} />
         </Stack>
       </Card>
@@ -99,6 +104,7 @@ export default function GuardianHomeScreen({
       <Card>
         <SectionHeader title="최근 활동" linkLabel="전체 기록" onPressLink={onOpenHistory} />
         <View>
+          {!recentActivity.length && <Text>아직 주고받은 신호가 없어요.</Text>}
           {recentActivity.slice(0, 3).map((item) => (
             <ListRow
               key={item.id}
@@ -106,7 +112,7 @@ export default function GuardianHomeScreen({
               subtitle={`${item.sentAt} 보냄`}
               divider
               trailing={<StatusChip status={item.status} />}
-              onPress={() => (item.status === 'noReply' ? onOpenNoReply() : onOpenRecord(item.id))}
+              onPress={() => (item.status === 'noReply' ? onOpenNoReply(item.id) : onOpenRecord(item.id))}
             />
           ))}
         </View>

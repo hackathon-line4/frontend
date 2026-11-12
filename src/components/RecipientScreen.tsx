@@ -1,5 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef } from 'react';
 import {
+  AppState,
   Pressable,
   StyleSheet,
   View,
@@ -19,6 +21,7 @@ export type RecipientState = 'idle' | 'compose' | 'sent' | 'incoming' | 'replied
 
 type RecipientScreenProps = {
   state: RecipientState;
+  busy?: boolean;
   /** 보낸 사람·신호 이름·할 수 있는 동작 포함 */
   accessibilityLabel: string;
   /** incoming: 신호 이름 · compose: 보낼 신호 이름 */
@@ -49,6 +52,7 @@ const backgrounds: Record<RecipientState, string> = {
 
 export function RecipientScreen({
   state,
+  busy = false,
   accessibilityLabel,
   signalName,
   onPress,
@@ -61,13 +65,17 @@ export function RecipientScreen({
   const lastTap = useRef(0);
   const holdTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  const clearHold = () => {
+  const clearHold = useCallback(() => {
     holdTimers.current.forEach(clearTimeout);
     holdTimers.current = [];
-  };
+  }, []);
 
   // 화면을 떠나면 남은 타이머 정리
-  useEffect(() => clearHold, []);
+  useFocusEffect(useCallback(() => {
+    const subscription = AppState.addEventListener('change', clearHold);
+    return () => { clearHold(); subscription.remove(); };
+  }, [clearHold]));
+  useEffect(() => { if (busy) clearHold(); }, [busy, clearHold]);
 
   const handlePressIn = () => {
     clearHold();
@@ -93,6 +101,8 @@ export function RecipientScreen({
 
   return (
     <Pressable
+      disabled={busy}
+      accessibilityState={{ busy, disabled: busy }}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={clearHold}

@@ -1,34 +1,43 @@
+import { useSession } from '@/features/session';
+import Preview from '@/features/guardian/preview/home';
 import { router } from 'expo-router';
-
-import { mockFrequentSignalIds, mockLocation, mockRecentActivity, mockRecipientStatus } from '@/features/home';
-import { findSignal, mockSignals, type Signal } from '@/features/signals';
+import { useGuardianState } from '@/features/guardian/hooks';
+import { guardianStore } from '@/features/guardian/client';
+import { GuardianFeedback } from '@/features/guardian/Feedback';
+import { homeActivities, homeRecipient, toSignal } from '@/features/guardian/models';
 import GuardianHomeScreen from '@/screens/guardian/GuardianHomeScreen';
 
-// TODO: 서버 연결 후 당사자 상태 · 최근 활동 · 위치를 실시간으로 받아 온다.
-// 응답 대기 시간을 넘긴 주의 카드는 mockRecipientStatusNoReply 로 확인할 수 있다.
-const frequentSignals = mockFrequentSignalIds.map(findSignal).filter((s): s is Signal => s !== undefined);
-const emergencySignals = mockSignals.filter((s) => s.category === 'emergency');
-
 export default function GuardianHomeRoute() {
-  return (
-    <GuardianHomeScreen
-      recipient={mockRecipientStatus}
-      frequentSignals={frequentSignals}
-      emergencySignals={emergencySignals}
-      location={mockLocation}
-      recentActivity={mockRecentActivity}
-      onSendSignal={() => {
-        // TODO: 신호 전송 API 호출 + 전송 햅틱
-      }}
-      onOpenNotifications={() => {
-        // TODO: 알림 화면 (설계 필요)
-      }}
-      onOpenSignals={() => router.navigate('/guardian/signals')}
-      onAddSignal={() => router.push('/guardian/add-signal')}
-      onOpenLocation={() => router.navigate('/guardian/location')}
-      onOpenHistory={() => router.navigate('/guardian/history')}
-      onOpenRecord={(id) => router.push(`/guardian/record/${id}`)}
-      onOpenNoReply={() => router.push('/guardian/no-reply')}
-    />
-  );
+  const session = useSession();
+  return __DEV__ && !session.tokens ? <Preview /> : <ConnectedRoute />;
+}
+
+function ConnectedRoute() {
+  const { data, scope } = useGuardianState();
+  if (!scope) return <GuardianFeedback message="연결된 당사자가 없어요" onLink={() => router.push('/link/guardian')} />;
+  if (!data?.home) return <GuardianFeedback message={data?.errors.home || '당사자 상태를 불러오는 중이에요'} onRetry={() => { void guardianStore.refresh(); }} />;
+  const home = data.home;
+  const signals = (data.signals ?? home.favoriteSignals).map(toSignal);
+  const openRecord = (id: string) => {
+    const kind = home.recentActivities.find(item => item.id === id)?.kind;
+    router.push({ pathname: '/guardian/record/[id]', params: { id, ...(kind ? { kind } : {}) } });
+  };
+  return <GuardianHomeScreen
+    refreshError={data.errors.home}
+    recipient={homeRecipient(home)} frequentSignals={home.favoriteSignals.map(toSignal)}
+    emergencySignals={signals.filter(s => s.category === 'emergency')}
+    location={{ sharing: false, updatedAt: '', minutesAgo: 0, address: '', addressSummary: '', accuracyMeters: 0 }}
+    recentActivity={homeActivities(home)} onSendSignal={(signal, abort) => guardianStore.send(signal.id, abort)}
+    onOpenNotifications={() => router.navigate('/guardian/history')}
+    onOpenSignals={() => router.navigate('/guardian/signals')}
+    onAddSignal={() => router.push('/guardian/add-signal')}
+    onOpenLocation={() => router.navigate('/guardian/location')}
+    onOpenHistory={() => router.navigate('/guardian/history')}
+    onOpenRecord={openRecord}
+    onOpenNoReply={id => {
+      const next = id ?? home.recipient.status.messageId;
+      if (!next) return;
+      if (home.recipient.status.type === 'HELP_REQUESTED' && !id) router.push({ pathname: '/guardian/record/[id]', params: { id: next, kind: 'HELP_REQUEST' } });
+      else router.push({ pathname: '/guardian/no-reply', params: { id: next } });
+    }} />;
 }

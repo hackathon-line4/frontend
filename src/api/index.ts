@@ -1,4 +1,5 @@
 import { randomUUID } from 'expo-crypto';
+import { fetch as streamFetch } from 'expo/fetch';
 
 import { createApiClient } from './client';
 
@@ -8,6 +9,7 @@ export const api = createApiClient({
     return host ? `${host.replace(/\/api\/v1$/, '')}/api/v1` : '';
   },
   createKey: randomUUID,
+  streamFetch,
 });
 export { ApiError, errorMessage } from './errors';
 export type * from './types';

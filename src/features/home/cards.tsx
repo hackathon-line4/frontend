@@ -18,7 +18,8 @@ type RecipientStatusCardProps = {
 
 // 홈 05-1 당사자 상태. 응답 대기 시간을 넘기면 주의 색 + 경고 아이콘 + '응답 없음 · N분째'
 export function RecipientStatusCard({ status, onPressNoReply }: RecipientStatusCardProps) {
-  const overdue = isOverdue(status.pendingMinutes, status.waitMinutes);
+  const overdue = status.state ? status.state === 'NO_RESPONSE' : isOverdue(status.pendingMinutes, status.waitMinutes);
+  const help = status.state === 'HELP_REQUESTED';
 
   return (
     <Card style={overdue && styles.caution}>
@@ -28,24 +29,24 @@ export function RecipientStatusCard({ status, onPressNoReply }: RecipientStatusC
           <Text variant="heading" style={styles.flex}>
             {status.name}
           </Text>
-          {status.connected && <StatusChip status="connected" />}
+          {status.connected ? <StatusChip status="connected" /> : <Text variant="caption">기기 연결 미확인</Text>}
         </Row>
 
-        {overdue ? (
+        {overdue || help ? (
           <Pressable
             onPress={onPressNoReply}
             accessibilityRole="button"
-            accessibilityLabel={`응답 없음 · ${status.pendingMinutes}분째`}
+            accessibilityLabel={help ? '도움 요청 확인하기' : `응답 없음 · ${status.pendingMinutes ?? 0}분째`}
             accessibilityLiveRegion="polite"
             style={({ pressed }) => [styles.line, styles.cautionLine, pressed && styles.pressed]}
           >
             <Icon name="warning" size={18} color={colors.warningFg} strokeWidth={2.4} />
             <Text variant="label" style={[styles.flex, { color: colors.warningFg }]}>
-              {`응답 없음 · ${status.pendingMinutes}분째`}
+              {help ? '도움 요청이 왔어요' : `응답 없음 · ${status.pendingMinutes ?? 0}분째`}
             </Text>
             <Icon name="chevron-right" size={18} color={colors.warningFg} strokeWidth={2.4} />
           </Pressable>
-        ) : (
+        ) : status.state === 'WAITING' ? <Text accessibilityLiveRegion="polite">{`'${status.signalName ?? '신호'}' 응답 대기 중 · ${status.pendingMinutes ?? 0}분째`}</Text> : (
           status.lastReply && (
             <View style={styles.line}>
               <Icon name="reply" size={18} strokeWidth={2.2} />

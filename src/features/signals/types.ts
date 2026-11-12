@@ -15,6 +15,7 @@ export const signalCategories: readonly SignalCategory[] = ['daily', 'outing', '
 export type Signal = {
   id: string;
   name: string;
+  description?: string;
   icon: IconName;
   /** basic: 현장 촉신호 어휘에서 가져온 신호 · custom: 보호자가 만든 신호 */
   source: 'basic' | 'custom';

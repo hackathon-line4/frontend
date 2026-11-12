@@ -1,5 +1,5 @@
 import { getCalibration, type CalibrationValues } from '@/features/calibration/store';
-import { playWaveform, stopVibration } from '@/native/vibration';
+import { getVibrationCapability, playWaveform, stopVibration } from '@/native/vibration';
 import type { Beat, Pulses } from '@/theme';
 
 import { feedbackWaveform, type FeedbackKind } from './feedback';
@@ -39,21 +39,25 @@ export function playPulses(pulses: Pulses): number {
  * 신호를 내 진동 설정대로 계속 반복 (07-4 신호 수신). 돌려준 함수로 멈춘다.
  * maxMs가 있으면 그 시간이 지난 뒤 새 반복을 시작하지 않는다 (긴급 신호 최대 1분 등).
  */
-export function repeatSignal(pulses: Pulses, gapMs = REPEAT_GAP_MS, maxMs?: number): () => void {
+export function repeatSignal(pulses: Pulses, gapMs = REPEAT_GAP_MS, maxMs?: number, onPlay?: () => void): () => void {
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let limit: ReturnType<typeof setTimeout> | undefined;
   let stopped = false;
   const endAt = maxMs != null ? Date.now() + maxMs : Infinity;
+  const stop = () => {
+    stopped = true;
+    clearTimeout(timer); clearTimeout(limit);
+    stopVibration();
+  };
   const loop = () => {
     if (stopped || Date.now() >= endAt) return;
     const ms = playSignal(pulses);
+    if (getVibrationCapability().available && pulses.some((value) => value > 0)) onPlay?.();
     timer = setTimeout(loop, ms + gapMs);
   };
   loop();
-  return () => {
-    stopped = true;
-    if (timer) clearTimeout(timer);
-    stopVibration();
-  };
+  if (maxMs != null && maxMs > 0) limit = setTimeout(stop, maxMs);
+  return stop;
 }
 
 export function playFeedback(kind: FeedbackKind) {

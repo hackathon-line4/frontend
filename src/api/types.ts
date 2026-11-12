@@ -17,6 +17,11 @@ export type PendingLinkRequest = {
 };
 export type Me = { user: User; links: Link[]; pendingLinkRequest: PendingLinkRequest | null };
 export type AuthResult = Tokens & { user: User; links: Link[] };
+export type LinkRequest = Omit<PendingLinkRequest, 'status' | 'decidedAt' | 'link'> & {
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELED' | 'EXPIRED';
+  decidedAt: string | null;
+  link: Link | null;
+};
 
 /** 박자 (공통 데이터 형식 Signal.rhythm) */
 export type ServerBeat = 'SHORT' | 'MEDIUM' | 'LONG';

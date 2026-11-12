@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
-import { BottomSheet, Button, Icon, ListRow, Row, Rhythm, Stack, StatusChip, StatusMessage, Text } from '@/components';
+import { BottomSheet, Button, Icon, ListRow, Row, Rhythm, Stack, StatusMessage, Text } from '@/components';
+import { useGuardianMessage, useGuardianMutation } from '@/features/guardian/hooks';
+import { MessageStatus } from '@/features/guardian/MessageStatus';
+import type { GuardianMessage } from '@/features/guardian/types';
 import type { Signal } from '@/features/signals';
 import { colors, describeRhythm, radius, space } from '@/theme';
 
@@ -14,13 +17,17 @@ type SendSignalSheetProps = {
   pickTitle?: string;
   /** 신호가 1개여도 고르기 단계를 보여 준다 (긴급 신호) */
   alwaysPick?: boolean;
-  /** 실제 전송. TODO: 서버 전송 API 연결 */
-  onSend: (signal: Signal) => void;
+  /** 서버가 접수한 실제 메시지를 반환한다. */
+  onSend: (signal: Signal, abort?: AbortSignal) => Promise<GuardianMessage>;
   onClose: () => void;
 };
 
 // 신호 보내기 확인 시트: (고르기) → 확인 → 보냄(응답 대기)
-export function SendSignalSheet({
+export function SendSignalSheet(props: SendSignalSheetProps) {
+  return props.visible ? <SendSignalSheetContent {...props} /> : null;
+}
+
+function SendSignalSheetContent({
   visible,
   recipientName,
   candidates,
@@ -30,19 +37,29 @@ export function SendSignalSheet({
   onClose,
 }: SendSignalSheetProps) {
   const [picked, setPicked] = useState<Signal | null>(null);
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState<GuardianMessage | null>(null);
+  const mutation = useGuardianMutation();
+  const live = useGuardianMessage(visible ? sent?.id : undefined);
+  const request = useRef<AbortController | null>(null);
+  useEffect(() => () => request.current?.abort(), []);
   const signal = picked ?? (!alwaysPick && candidates.length === 1 ? candidates[0] : null);
 
   const close = () => {
     setPicked(null);
-    setSent(false);
+    request.current?.abort();
+    setSent(null);
     onClose();
   };
 
-  const send = () => {
+  const send = async () => {
     if (!signal) return;
-    onSend(signal);
-    setSent(true);
+    const controller = new AbortController(); request.current = controller;
+    const result = await mutation.run(async abort => {
+      const cancel = () => controller.abort(); abort.addEventListener('abort', cancel, { once: true });
+      try { return await onSend(signal, controller.signal); }
+      finally { abort.removeEventListener('abort', cancel); }
+    });
+    if (result && !controller.signal.aborted) setSent(result);
   };
 
   return (
@@ -57,6 +74,7 @@ export function SendSignalSheet({
                   {pickTitle}
                 </Text>
                 <View>
+                  {candidates.length === 0 && <Text>보낼 수 있는 신호가 없어요. 신호 목록을 확인해 주세요.</Text>}
                   {candidates.map((s, i) => (
                     <ListRow
                       key={s.id}
@@ -73,8 +91,8 @@ export function SendSignalSheet({
               </>
             ) : sent ? (
               <>
-                <StatusMessage icon="send">{`'${signal.name}' 신호를 보냈어요`}</StatusMessage>
-                <StatusChip status="waiting" />
+                <StatusMessage icon={sent.delivery.status === 'FAILED' ? 'warning' : 'send'}>{sent.delivery.status === 'FAILED' ? '신호를 전달하지 못했어요' : `'${signal.name}' 전송 요청을 보냈어요`}</StatusMessage>
+                <MessageStatus message={live ?? sent} />
                 <Button label="확인" onPress={close} />
               </>
             ) : (
@@ -93,7 +111,8 @@ export function SendSignalSheet({
                   {`${recipientName}의 휴대폰에 이 진동이 울려요.`}
                 </Text>
                 <Stack gap={2}>
-                  <Button label="보내기" icon="send" onPress={send} />
+                  {mutation.error && <Text accessibilityRole="alert">{mutation.error}</Text>}
+                  <Button label={mutation.busy ? '전송 중…' : '보내기'} disabled={mutation.busy} icon="send" onPress={() => { void send(); }} />
                   <Button label="취소" variant="text" underline={false} onPress={close} />
                 </Stack>
               </>

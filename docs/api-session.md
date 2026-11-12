@@ -3,6 +3,7 @@
 ## 실행 설정
 
 `.env.example`을 참고해 프로젝트 루트에 `.env.local`을 만들고 백엔드 주소를 입력합니다.
+팀의 Docker 백엔드로 실행할 때는 [로컬 Docker 백엔드 연결](backend-local.md)을 참고합니다.
 
 ```dotenv
 EXPO_PUBLIC_API_URL=https://실제-백엔드-호스트
@@ -67,8 +68,8 @@ await api.request(`/links/${linkId}/messages`, {
 당사자의 기존 승인 대기 상태는 승인 대기 화면으로 복원합니다.
 
 승인 대기 화면은 복원한 상대 이름을 표시하고, 화면이 열린 동안 5초마다 `/me`를 확인합니다.
-향후 SSE 연동 시 이 확인 부분을 이벤트로 대체할 수 있습니다.
-기존의 연결 코드 입력·요청 생성 흐름은 이번 작업의 API 연동 범위에 포함하지 않습니다.
+SSE 연동 시 이 확인 부분을 이벤트로 대체할 수 있습니다.
+연결 코드 입력·요청 생성·승인·거절 흐름은 `docs/account-link.md`를 참고합니다.
 
 `TOKEN_EXPIRED`일 때만 refresh를 실행합니다. 동시 요청은 갱신 요청 한 번을 공유하고 원래 요청을 한 번 재시도합니다.
 새 refresh 토큰도 함께 저장합니다. `UNAUTHORIZED`와 `INVALID_REFRESH_TOKEN`은 세션을 지웁니다.
@@ -77,7 +78,9 @@ await api.request(`/links/${linkId}/messages`, {
 
 보호자 설정의 로그아웃은 서버 응답과 관계없이 로컬 세션을 지웁니다.
 기기 등록을 구현할 때 `getInstallationId()`를 재사용해야 로그아웃 시 동일한 기기 등록을 해제할 수 있습니다.
-푸시 토큰 등록, SSE, 연결 생성 및 나머지 화면의 mock 데이터 교체는 후속 작업입니다.
+푸시 토큰 등록, SSE 및 나머지 화면의 mock 데이터 교체는 후속 작업입니다.
+역할 저장 응답의 access/refresh 토큰은 즉시 저장합니다.
+백엔드 최신 `dev`(`2247547`)의 `/me`는 실제 `links`·`pendingLinkRequest`를 반환하므로 연결·대기 상태의 재실행 복원에 사용할 수 있습니다.
 개발용 `/dev` 화면 목록은 서버 없이 화면을 미리 볼 수 있도록 역할 미리보기를 유지합니다.
 
 ## 검증

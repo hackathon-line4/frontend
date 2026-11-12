@@ -16,6 +16,7 @@ type CodeInputProps = {
   /** md: 보호자 56 · lg: 당사자 72 */
   size?: 'md' | 'lg';
   autoFocus?: boolean;
+  editable?: boolean;
 };
 
 // 연결 코드 입력. 실제 입력창은 숫자 입력창 1개 (스크린리더·점자 디스플레이 호환), 칸은 시각 표시용.
@@ -28,6 +29,7 @@ export function CodeInput({
   length = 6,
   size = 'md',
   autoFocus,
+  editable = true,
 }: CodeInputProps) {
   const inputRef = useRef<TextInputInstance>(null);
   const [focused, setFocused] = useState(false);
@@ -64,6 +66,7 @@ export function CodeInput({
           })}
         </View>
         <TextInput
+          editable={editable}
           ref={inputRef}
           value={value}
           onChangeText={(text) => onChangeText(text.replace(/\D/g, '').slice(0, length))}

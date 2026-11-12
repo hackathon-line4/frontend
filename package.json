@@ -34,6 +34,10 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
+    "backend:up": "docker compose --project-directory ../backend up -d --build",
+    "backend:status": "docker compose --project-directory ../backend ps",
+    "backend:logs": "docker compose --project-directory ../backend logs --tail 100 app",
+    "backend:down": "docker compose --project-directory ../backend down",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
     "test": "node --test tests/*.test.cjs"

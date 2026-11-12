@@ -24,6 +24,7 @@ export function createApiClient(config: {
   baseUrl: () => string;
   createKey: () => string;
   fetch?: typeof fetch;
+  streamFetch?: typeof fetch;
 }) {
   let auth: AuthAdapter | undefined;
   let refreshFlight: { token: string; promise: Promise<void> } | undefined;
@@ -98,16 +99,10 @@ export function createApiClient(config: {
     finally { if (refreshFlight === flight) refreshFlight = undefined; }
   }
 
-  async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-    const prepared = {
-      ...options,
-      serializedBody: options.body === undefined ? undefined : JSON.stringify(options.body),
-      idempotencyKey: options.idempotencyKey ?? (options.creation ? config.createKey() : undefined),
-    };
+  async function authorized<T>(operation: (tokens: Tokens | null) => Promise<T>, options: RequestOptions): Promise<T> {
     const previous = options.auth === false ? null : auth?.getTokens() ?? null;
     const revision = auth?.getRevision();
-    try {
-      try { return await send<T>(path, prepared, previous); }
+      try { return await operation(previous); }
       catch (error) {
         if (!(error instanceof ApiError) || options.auth === false) throw error;
         if (error.code === 'TOKEN_EXPIRED' && options.retryExpiredToken !== false && previous && auth) {
@@ -116,7 +111,7 @@ export function createApiClient(config: {
           if (options.signal?.aborted) throw new ApiError('ABORTED');
           const retryTokens = auth.getTokens();
           if (!retryTokens) throw new ApiError('SESSION_CHANGED');
-          try { return await send<T>(path, prepared, retryTokens); }
+          try { return await operation(retryTokens); }
           catch (retryError) {
             if (retryError instanceof ApiError && ['UNAUTHORIZED', 'TOKEN_EXPIRED'].includes(retryError.code)) {
               await auth.invalidate(retryTokens);
@@ -129,6 +124,16 @@ export function createApiClient(config: {
         if (error.code === 'ROLE_REQUIRED' && previous && auth) auth.roleRequired?.(previous);
         throw error;
       }
+  }
+
+  async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+    const prepared = {
+      ...options,
+      serializedBody: options.body === undefined ? undefined : JSON.stringify(options.body),
+      idempotencyKey: options.idempotencyKey ?? (options.creation ? config.createKey() : undefined),
+    };
+    try {
+      return await authorized<T>((tokens) => send<T>(path, prepared, tokens), options);
     } catch (error) {
       if (error instanceof ApiError && prepared.idempotencyKey) {
         throw new ApiError(error.code, { ...error, message: error.message, idempotencyKey: prepared.idempotencyKey });
@@ -136,5 +141,28 @@ export function createApiClient(config: {
       throw error;
     }
   }
-  return { request, setAuth(adapter: AuthAdapter) { auth = adapter; } };
+  async function openStream(path: string, signal: AbortSignal, lastEventId?: string): Promise<Response> {
+    const revision = auth?.getRevision();
+    return authorized(async (tokens) => {
+      const base = config.baseUrl().trim().replace(/\/+$/, '');
+      if (!/^https?:\/\//.test(base) || !path.startsWith('/') || path.startsWith('//') || path.includes('..')) throw new ApiError('CONFIGURATION_ERROR');
+      if (!tokens) throw new ApiError('UNAUTHORIZED');
+      const response = await (config.streamFetch ?? transport)(`${base}${path}`, {
+        headers: { Accept: 'text/event-stream', Authorization: `Bearer ${tokens.accessToken}`,
+          ...(lastEventId ? { 'Last-Event-ID': lastEventId } : {}) }, signal,
+      });
+      if (signal.aborted || auth?.getRevision() !== revision) {
+        await response.body?.cancel(); throw new ApiError('SESSION_CHANGED');
+      }
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new ApiError(body?.error?.code ?? 'INVALID_RESPONSE', { status: response.status });
+      }
+      if (!response.headers.get('content-type')?.includes('text/event-stream') || !response.body) {
+        await response.body?.cancel(); throw new ApiError('INVALID_RESPONSE');
+      }
+      return response;
+    }, { signal });
+  }
+  return { request, openStream, setAuth(adapter: AuthAdapter) { auth = adapter; } };
 }
