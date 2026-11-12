@@ -27,6 +27,10 @@ export function requestIgnoreBatteryOptimizations() {
 export function areNotificationsEnabled(): boolean {
   return native?.areNotificationsEnabled() ?? false;
 }
+/** null means this runtime cannot inspect the OS permission. */
+export function getNotificationPermission(): boolean | null {
+  return native?.areNotificationsEnabled() ?? null;
+}
 
 /**
  * 알림 켜기. Android 13+는 먼저 권한 창을 띄우고, 이미 거절해서 창이 안 뜨면 앱 알림 설정 화면을 연다

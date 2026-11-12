@@ -1,6 +1,6 @@
 import { ApiError } from '@/api/errors';
 import type { createApiClient } from '@/api/client';
-import type { GuardianHome, GuardianMessage, HelpDetail, HistoryItem, MessageDetail, ServerSignal } from './types';
+import type { GuardianHome, GuardianMessage, HelpDetail, HistoryCalendar, HistoryItem, MessageDetail, ServerSignal } from './types';
 
 export function isGuardianMessage(value: unknown): value is GuardianMessage {
   const m = value as GuardianMessage | null;
@@ -12,8 +12,15 @@ export function createGuardianApi(client: Pick<ReturnType<typeof createApiClient
   const message = (id: string) => `/messages/${encodeURIComponent(id)}`;
   const check = (m: GuardianMessage) => { if (!isGuardianMessage(m)) throw new ApiError('INVALID_RESPONSE'); return m; };
   return {
+    async calendar(id: string, month: string, signal?: AbortSignal) {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const data = await client.request<HistoryCalendar>(`${link(id)}/history/calendar?month=${encodeURIComponent(month)}&tz=${encodeURIComponent(tz)}`, { signal });
+      if (data?.month !== month || !Array.isArray(data.days)) throw new ApiError('INVALID_RESPONSE');
+      return data;
+    },
     async history(id: string, date: string, signal?: AbortSignal) {
-      const data = await client.request<{ items: HistoryItem[] }>(`${link(id)}/history?date=${encodeURIComponent(date)}`, { signal });
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const data = await client.request<{ items: HistoryItem[] }>(`${link(id)}/history?date=${encodeURIComponent(date)}&tz=${encodeURIComponent(tz)}`, { signal });
       if (!Array.isArray(data?.items)) throw new ApiError('INVALID_RESPONSE');
       return data.items;
     },

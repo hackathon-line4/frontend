@@ -5,6 +5,7 @@ import { guardianStore } from '@/features/guardian/client';
 import { handleIncoming } from '@/features/recipient/incoming';
 import { recoverIncoming } from '@/features/recipient/recover';
 import { getSession, getSessionRevision, reloadMe, useSession } from '@/features/session/store';
+import { acknowledgeConnectionChecks, queueConnectionCheck, serverSettings } from '@/features/settings/client';
 import { createRealtimeClient } from './client';
 import { createEventDispatcher } from './dispatch';
 
@@ -15,6 +16,7 @@ export function RealtimeSync() {
   const owner = session.status === 'authenticated' && session.tokens && session.role && session.user ? `${session.user.id}:${revision}` : null;
   useEffect(() => {
     guardianStore.bind();
+    serverSettings.bind();
     if (!owner) return;
     const valid = () => getSessionRevision() === revision && getSession().status === 'authenticated';
     let foreground: AbortController | undefined;
@@ -23,11 +25,14 @@ export function RealtimeSync() {
     const refresh = () => {
       if (!valid() || !foreground || foreground.signal.aborted) return;
       void guardianStore.refresh();
+      void acknowledgeConnectionChecks(foreground.signal);
       if (getSession().role === 'guardian' && Date.now() - signalReadAt > 30000) { signalReadAt = Date.now(); void guardianStore.loadSignals(); }
     };
     const dispatcher = createEventDispatcher({ valid, role: () => getSession().role,
       onMessage: message => guardianStore.ingest(message), onIncoming: handleIncoming,
-      onSession: () => { void reloadMe().catch(() => {}); }, onRefresh: () => guardianStore.scheduleRefresh() });
+      onSession: () => { void reloadMe().catch(() => {}); }, onRefresh: () => guardianStore.scheduleRefresh(),
+      onConnectionCheck: id => { queueConnectionCheck(id); void acknowledgeConnectionChecks(foreground?.signal); },
+      onSettings: () => { void serverSettings.load(); void serverSettings.pollCheck(); } });
     const stream = createRealtimeClient({ valid, open: (signal, cursor) => api.openStream('/events', signal, cursor),
       onEvent: dispatcher,
       onConnected: () => {
@@ -35,7 +40,7 @@ export function RealtimeSync() {
         void recoverIncoming(foreground?.signal).catch(() => {});
       } });
     const pause = () => {
-      foreground?.abort(); foreground = undefined; clearInterval(fallback); stream.stop(); guardianStore.stop();
+      foreground?.abort(); foreground = undefined; clearInterval(fallback); stream.stop(); guardianStore.stop(); serverSettings.stop();
     };
     const resume = () => {
       if (foreground || !valid()) return;

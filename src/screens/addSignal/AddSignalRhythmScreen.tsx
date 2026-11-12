@@ -40,6 +40,8 @@ type Props = {
   /** 박자 하나 · 리듬 전체를 보호자 휴대폰에서 울리기 */
   onPlay: (beats: readonly Beat[]) => void;
   onNext: (beats: readonly Beat[]) => void;
+  busy?: boolean; error?: string;
+  presetConflicts?: Record<string, string>;
 };
 
 // 10-4 리듬 프리셋 · 10-5 직접 조합하기 (design/screens/Add2Preset.dc.html · Add2Tap.dc.html)
@@ -52,9 +54,11 @@ export default function AddSignalRhythmScreen({
   onClose,
   onPlay,
   onNext,
+  busy, error,
+  presetConflicts = {},
 }: Props) {
   // 진동이 완전히 같은 신호 (기본 신호와도 진동 배열로 비교)
-  const usedBy = (beats: readonly Beat[]) => signals.find((s) => samePulses(s.pulses, beatsToPulses(beats)))?.name;
+  const usedBy = (beats: readonly Beat[]) => presetConflicts[beats.join('')] ?? signals.find((s) => samePulses(s.pulses, beatsToPulses(beats)))?.name;
 
   // 돌아왔을 때 고른 리듬을 그대로 보여 준다 (프리셋이면 프리셋 탭, 아니면 직접 조합 탭)
   const initialIsPreset = initialBeats.length === 0 || presets.some((p) => sameBeats(p, initialBeats));
@@ -99,8 +103,8 @@ export default function AddSignalRhythmScreen({
       header={<AddSignalHeader onBack={onBack} onClose={onClose} />}
       footer={
         <Button
-          label="다음 · 느껴 보기"
-          disabled={!canNext}
+          label={busy ? '리듬 확인 중…' : '다음 · 느껴 보기'}
+          disabled={!canNext || busy}
           accessibilityHint={
             canNext
               ? undefined
@@ -119,6 +123,7 @@ export default function AddSignalRhythmScreen({
         eyebrow="2단계 · 진동 리듬 만들기"
         title={mode === 'preset' ? `'${name}'의 리듬` : undefined}
       />
+      {error && <Text accessibilityRole="alert">{error}</Text>}
       <SegmentedTabs options={modeOptions} value={mode} onChange={setMode} />
 
       {mode === 'preset' ? (

@@ -55,6 +55,7 @@ export function ListGroup({ children }: { children: ReactNode }) {
 /* ---------- SwitchListRow ---------- */
 
 type SwitchListRowProps = {
+  disabled?: boolean;
   label: string;
   description?: string;
   value: boolean;
@@ -62,13 +63,14 @@ type SwitchListRowProps = {
 };
 
 /** ListGroup 안에서 쓰는 테두리 없는 스위치 행. 옆에 '켜짐/꺼짐' 글자를 함께 둔다 */
-export function SwitchListRow({ label, description, value, onValueChange }: SwitchListRowProps) {
+export function SwitchListRow({ label, description, value, onValueChange, disabled = false }: SwitchListRowProps) {
   return (
     <Pressable
       onPress={() => onValueChange(!value)}
+      disabled={disabled}
       accessibilityRole="switch"
       accessibilityLabel={description ? `${label}, ${description}` : label}
-      accessibilityState={{ checked: value }}
+      accessibilityState={{ checked: value, disabled }}
       style={styles.switchRow}
     >
       <View style={styles.flex}>

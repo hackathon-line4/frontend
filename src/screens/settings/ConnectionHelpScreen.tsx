@@ -12,11 +12,12 @@ type Props = {
   onBack: () => void;
   onRecheck: () => void;
   onRelink: () => void;
+  error?: string;
 };
 
 // 09-2 연결이 안 될 때 (design/screens/SettingsConnIssue.dc.html)
 // 연결이 확인되지 않는다는 것만으로 문제가 생겼다고 단정하지 않는다.
-export default function ConnectionHelpScreen({ recipientName, connection, checking, onBack, onRecheck, onRelink }: Props) {
+export default function ConnectionHelpScreen({ recipientName, connection, checking, onBack, onRecheck, onRelink, error }: Props) {
   const causes = [
     `${recipientName}의 휴대폰이 꺼져 있거나 인터넷에 연결되어 있지 않아요.`,
     `${recipientName}의 휴대폰에서 손울림 알림이 꺼져 있어요.`,
@@ -41,6 +42,7 @@ export default function ConnectionHelpScreen({ recipientName, connection, checki
         size={24}
       />
       <ConnectionStatusBox connection={connection} name={recipientName} />
+      {error && <Text accessibilityRole="alert">{error}</Text>}
 
       <Stack gap={3} style={styles.causes}>
         <Text variant="bodyStrong" accessibilityRole="header">
