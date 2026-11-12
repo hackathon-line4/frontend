@@ -1,6 +1,10 @@
 package com.sonullim.nativemodule
 
 import android.content.Context
+import android.util.Log
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
+import expo.modules.kotlin.Promise
 import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
@@ -84,6 +88,36 @@ class SonullimNativeModule : Module() {
 
     Function("isSamsung") {
       DeviceSettings.isSamsung
+    }
+
+    // ── FCM 푸시 (B-8) ──
+
+    /** google-services.json이 들어간 빌드인지. false면 푸시를 받을 수 없다 */
+    Function("isPushConfigured") {
+      FirebaseApp.getApps(context).isNotEmpty()
+    }
+
+    /** 이 기기의 FCM 토큰. 서버 PUT /me/devices에 등록한다. 설정이 없거나 실패하면 null */
+    AsyncFunction("getPushToken") { promise: Promise ->
+      val ctx = context
+      if (FirebaseApp.getApps(ctx).isEmpty()) {
+        promise.resolve(null)
+        return@AsyncFunction
+      }
+      try {
+        FirebaseMessaging.getInstance().token
+          .addOnSuccessListener { token ->
+            SonullimMessagingService.savedToken(ctx, token)
+            promise.resolve(token)
+          }
+          .addOnFailureListener { e ->
+            Log.w("Sonullim", "FCM 토큰 받기 실패", e)
+            promise.resolve(SonullimMessagingService.savedToken(ctx))
+          }
+      } catch (e: Exception) {
+        Log.w("Sonullim", "FCM 토큰 받기 실패", e)
+        promise.resolve(null)
+      }
     }
   }
 

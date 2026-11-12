@@ -1,3 +1,4 @@
+import * as Clipboard from 'expo-clipboard';
 import { router, type Href } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
@@ -16,6 +17,7 @@ import {
 } from '@/features/vibration';
 import { getBackgroundServiceState, startBackgroundService, stopBackgroundService } from '@/native/background';
 import { canDrawOverlays, openOverlaySettings } from '@/native/launch';
+import { getPushToken, isPushConfigured } from '@/native/push';
 import type { Beat } from '@/theme';
 
 // 진동 엔진 확인용. 보정값(세기·길이·반복)은 06 진동 설정의 저장값을 쓴다
@@ -262,6 +264,16 @@ export default function DevRoute() {
               title={`다른 앱 위에 표시: ${overlay ? '허용됨' : '꺼짐 → 설정 열기'}`}
               divider
               onPress={openOverlaySettings}
+            />
+            <ListRow
+              title={isPushConfigured() ? 'FCM 토큰 복사 (콘솔 테스트용)' : 'FCM 꺼짐 · google-services.json 없음'}
+              divider
+              onPress={async () => {
+                const token = await getPushToken();
+                if (!token) return;
+                await Clipboard.setStringAsync(token);
+                console.log('[push] FCM 토큰', token);
+              }}
             />
           </Card>
         </Stack>

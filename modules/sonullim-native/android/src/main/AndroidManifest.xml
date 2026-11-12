@@ -23,6 +23,15 @@
           android:value="시청각장애인 당사자가 화면 없이 전원 버튼으로 앱을 켜고, 보호자의 진동 신호를 앱이 꺼져 있어도 받기 위한 상시 대기" />
     </service>
 
+    <!-- B-8 앱이 꺼져 있을 때 신호 푸시 (FCM) -->
+    <service
+        android:name="com.sonullim.nativemodule.SonullimMessagingService"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+    </service>
+
     <receiver
         android:name="com.sonullim.nativemodule.BootReceiver"
         android:exported="true">

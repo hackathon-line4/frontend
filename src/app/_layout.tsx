@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { CalibrationSync } from '@/features/calibration/CalibrationSync';
 import DevShortcut from '@/features/dev/DevShortcut';
 import { SessionBoundary } from '@/features/session/SessionBoundary';
+import { PushRegistration } from '@/features/push';
 import { RealtimeSync } from '@/realtime/RealtimeSync';
 import { colors, useAppFonts } from '@/theme';
 
@@ -39,6 +40,7 @@ export default function RootLayout() {
       <DevShortcut />
       <SessionBoundary />
       <RealtimeSync />
+      <PushRegistration />
       <CalibrationSync />
       <StatusBar style="dark" />
     </SafeAreaProvider>
