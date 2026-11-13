@@ -1,21 +1,25 @@
 import { router } from 'expo-router';
 
-import { getCalibration, persistCalibration, restartTest, saveDraft, settingsHref, useCalibration } from '@/features/calibration';
+import { persistCalibration, restartTest, settingsHref, useCalibration } from '@/features/calibration';
+import { useGuardianMutation } from '@/features/guardian/hooks';
 import { useRole } from '@/features/session';
 import CalibrationSaveScreen from '@/screens/calibration/CalibrationSaveScreen';
 
 export default function CalibrationSaveRoute() {
   const role = useRole();
   const { draft } = useCalibration();
+  const mutation = useGuardianMutation();
 
   return (
     <CalibrationSaveScreen
       values={draft}
+      busy={mutation.busy}
+      error={mutation.error}
       onSave={() => {
-        saveDraft();
-        // 기기에 저장 + 로그인 상태면 서버에도 (실패해도 기기 값 유지)
-        void persistCalibration(getCalibration().saved);
-        router.dismissTo(settingsHref(role));
+        void mutation.run(async signal => {
+          await persistCalibration(draft, signal);
+          if (!signal.aborted) router.dismissTo(settingsHref(role));
+        });
       }}
       onRetest={restartTest}
     />
