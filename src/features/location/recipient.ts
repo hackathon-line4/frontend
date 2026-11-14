@@ -1,71 +1,15 @@
-import { useEffect, useSyncExternalStore } from 'react';
-import { AppState } from 'react-native';
-
 import { getSession } from '@/features/session/store';
-import type { LocationPermission } from '@/features/settings/types';
 import { locationApi } from './api';
-import { askPermission, captureOnce, lastPermission, readPermission } from './device';
+import { captureOnce, lastPermission, readPermission } from './device';
 
-// 당사자 쪽 위치 공유.
-// - 공유 켜기/끄기는 서버 값(/me/location-sharing)이다. 서버 기본값은 꺼짐.
-// - 위치는 두 경우에만 한 번씩 잰다: 도움 요청을 보낼 때, 보호자가 위치를 확인할 때(앱이 켜져 있을 때).
-// - 앱이 꺼져 있을 때도 답하려면 '항상 허용'이 필요하다. 공유를 켤 때 함께 묻는다.
-
-type SharingState = { enabled: boolean | null; permission: LocationPermission; saving: boolean };
-
-let state: SharingState = { enabled: null, permission: 'denied', saving: false };
-const listeners = new Set<() => void>();
-
-function set(next: Partial<SharingState>) {
-  state = { ...state, ...next };
-  listeners.forEach((l) => l());
-}
+// 당사자 쪽 위치 보내기. 공유 켜기/끄기와 권한 요청은 설정(features/settings)에서 한다. 서버 기본값은 꺼짐.
+// 위치는 두 경우에만 한 번씩 잰다: 도움 요청을 보낼 때, 보호자가 위치를 확인할 때.
+// 앱이 꺼져 있을 때도 답하려면 위치 권한이 '항상 허용'이어야 한다.
 
 const isRecipient = () => {
   const s = getSession();
   return s.status === 'authenticated' && s.role === 'recipient' && !!s.tokens;
 };
-
-/** 서버 공유 값과 휴대폰 권한을 다시 읽는다 */
-export async function loadLocationSharing() {
-  set({ permission: await readPermission() });
-  if (!isRecipient()) return;
-  try {
-    set({ enabled: await locationApi.sharing() });
-  } catch {
-    // 화면은 마지막 값을 유지
-  }
-}
-
-/** 설정의 '도움 요청에 위치 보내기'. 켤 때 권한이 없으면 먼저 묻는다 */
-export async function setLocationSharing(enabled: boolean) {
-  if (state.saving) return;
-  const previous = state.enabled;
-  set({ enabled, saving: true });
-  try {
-    if (enabled && lastPermission() !== 'granted') set({ permission: await askPermission() });
-    set({ enabled: await locationApi.setSharing(enabled) });
-  } catch {
-    set({ enabled: previous });
-  } finally {
-    set({ saving: false });
-  }
-}
-
-export function useLocationSharing(): SharingState {
-  const snapshot = useSyncExternalStore(
-    (l) => { listeners.add(l); return () => { listeners.delete(l); }; },
-    () => state,
-    () => state,
-  );
-  // 앱이 앞으로 올 때마다 권한을 다시 확인 (휴대폰 설정에서 바꾸고 돌아온 경우)
-  useEffect(() => {
-    void loadLocationSharing();
-    const sub = AppState.addEventListener('change', (s) => { if (s === 'active') void loadLocationSharing(); });
-    return () => sub.remove();
-  }, []);
-  return snapshot;
-}
 
 /**
  * 도움 요청을 만들 때 보낼 위치 상태. 위치를 기다리지 않고 요청을 먼저 보낸다.

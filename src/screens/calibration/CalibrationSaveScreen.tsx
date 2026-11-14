@@ -1,4 +1,4 @@
-import { Button, Screen, ScreenTitle, Stack } from '@/components';
+import { Button, Screen, ScreenTitle, Stack, Text } from '@/components';
 import {
   HintList,
   SummaryList,
@@ -14,10 +14,12 @@ type Props = {
   values: CalibrationValues;
   onSave: () => void;
   onRetest: () => void;
+  busy?: boolean;
+  error?: string;
 };
 
 // 06-5 설정 저장 · 두 역할 공통 (design/screens/Calib5.dc.html)
-export default function CalibrationSaveScreen({ values, onSave, onRetest }: Props) {
+export default function CalibrationSaveScreen({ values, onSave, onRetest, busy = false, error }: Props) {
   const scale = useRoleScale();
   const keys: CalibrationKey[] = device.strengthSupported ? ['strength', 'length', 'repeat'] : ['length', 'repeat'];
 
@@ -28,8 +30,9 @@ export default function CalibrationSaveScreen({ values, onSave, onRetest }: Prop
       paddingTop={10}
       footer={
         <Stack gap={scale.buttonGap}>
-          <Button label="설정 저장하기" icon="save" size={scale.buttonSize} onPress={onSave} />
-          <Button label="다시 테스트하기" icon="retry" variant="secondary" size={scale.buttonSize} onPress={onRetest} />
+          {error && <Text variant={scale.bodyVariant} accessibilityRole="alert" color="dangerFg">{error}</Text>}
+          <Button label={busy ? '저장 중이에요' : error ? '다시 저장하기' : '설정 저장하기'} disabled={busy} icon="save" size={scale.buttonSize} onPress={onSave} />
+          <Button label="다시 테스트하기" disabled={busy} icon="retry" variant="secondary" size={scale.buttonSize} onPress={onRetest} />
         </Stack>
       }
     >

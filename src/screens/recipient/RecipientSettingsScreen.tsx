@@ -25,6 +25,7 @@ type Props = {
   onCalibrationTest: () => void;
   onChangeSettings: (patch: Partial<RecipientSettings>) => void;
   onOpenPhoneSettings: () => void;
+  busy?: boolean; error?: string; onLogout?: () => void;
 };
 
 // 09-3 당사자 설정 (design/screens/SettingsR.dc.html)
@@ -42,6 +43,7 @@ export default function RecipientSettingsScreen({
   onCalibrationTest,
   onChangeSettings,
   onOpenPhoneSettings,
+  busy, error, onLogout,
 }: Props) {
   const scale = useRoleScale();
   const connected = connection.status === 'connected';
@@ -74,6 +76,7 @@ export default function RecipientSettingsScreen({
       <Text variant="rTitle" accessibilityRole="header" style={styles.inset}>
         설정
       </Text>
+      {error && <Text variant="rBody" accessibilityRole="alert">{error}</Text>}
 
       <Section title="연결" size="lg">
         <View style={[styles.bigCard, connected ? styles.solid : styles.dashed]}>
@@ -116,7 +119,7 @@ export default function RecipientSettingsScreen({
           <Row gap={3} accessible accessibilityLiveRegion="polite">
             <Icon name={notificationsOn ? 'check' : 'bell'} size={26} strokeWidth={2.6} />
             <Text variant="rButton" style={styles.flex}>
-              {notificationsOn ? '알림 권한 켜짐 · 신호를 받을 수 있어요' : '알림 권한 꺼짐'}
+              {notificationPermission === 'unknown' ? '알림 권한은 휴대폰 설정에서 확인해 주세요' : notificationsOn ? '알림 권한 켜짐' : '알림 권한 꺼짐'}
             </Text>
           </Row>
         </View>
@@ -163,9 +166,11 @@ export default function RecipientSettingsScreen({
           label="보호자에게 위치 보내기"
           large
           value={settings.shareLocationOnHelp}
+          disabled={busy}
           onValueChange={(shareLocationOnHelp) => onChangeSettings({ shareLocationOnHelp })}
         />
       </Section>
+      {onLogout && <Button label="로그아웃" disabled={busy} variant="text" size={scale.buttonSize} onPress={onLogout} />}
     </Screen>
   );
 }

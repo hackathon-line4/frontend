@@ -1,16 +1,15 @@
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
-import { Button, Screen, ScreenHeader, ScreenTitle, Stack, Text } from '@/components';
-import { locationText, openInMaps } from '@/features/location';
+import { Screen, ScreenHeader, ScreenTitle, Stack, Text } from '@/components';
 import GuardianNoReplyScreen from '@/screens/guardian/GuardianNoReplyScreen';
 import HistoryDetailScreen from '@/screens/history/HistoryDetailScreen';
+import HelpRequestDetailScreen from '@/screens/history/HelpRequestDetailScreen';
+import { openInMaps } from '@/features/location';
 import { guardianApi, guardianStore } from './client';
 import { GuardianFeedback } from './Feedback';
 import { useGuardianMessage, useGuardianMutation, useGuardianState } from './hooks';
-import { localTime, toNoReply, toRecord } from './models';
+import { helpRecords, localTime, toNoReply, toRecord } from './models';
 
-const helpLocationMessage = (status: string) =>
-  status === 'PENDING' ? '위치를 받는 중이에요.' : status === 'NOT_SHARED' ? '당사자가 위치 공유를 꺼 두었어요.' : '이 요청에 공유된 위치가 없어요.';
 const openRecord = (id: string) => router.replace({ pathname: '/guardian/record/[id]', params: { id } });
 export function GuardianMessageDetails({ id }: { id?: string }) {
   const message = useGuardianMessage(id);
@@ -45,18 +44,17 @@ export function GuardianOtherDetails({ id, kind }: { id: string; kind: string })
   if (!scope) return <GuardianFeedback message="당사자를 먼저 연결해 주세요" />;
   const help = data?.helps[id];
   if (kind === 'HELP_REQUEST' && !help) return <GuardianFeedback message={data?.errors[`help:${id}`] || '도움 요청을 불러오는 중이에요'} onRetry={() => { void guardianStore.loadHelp(id, true); }} />;
+  if (help) {
+    const { record, followUps } = helpRecords(help);
+    return <HelpRequestDetailScreen record={record} followUps={followUps} recipientName={help.helpRequest.sender.name} onBack={() => router.back()} onOpenRecord={openRecord}
+      onOpenMap={record.location ? () => { void openInMaps(record.location!, `${help.helpRequest.sender.name}님이 도움을 요청한 곳`); } : undefined} />;
+  }
   const item = data?.home?.recentActivities.find(item => item.id === id) ?? Object.values(data?.histories ?? {}).flat().find(item => item.id === id);
   return <Screen scroll header={<ScreenHeader title="당사자 신호" onBack={() => router.back()} />}>
     <Stack gap={4}>
       <ScreenTitle title={kind === 'HELP_REQUEST' ? '도움 요청' : item?.title ?? '보호자 호출'} />
-      <Text>{help?.helpRequest.sender.name ?? data?.home?.recipient.name}님이 보낸 신호예요.</Text>
-      <Text>{localTime(help?.helpRequest.sentAt ?? item?.occurredAt)}</Text>
-      {help && <>
-        <Text>{help.helpRequest.guardianOpenedAt ? '요청을 열어 봤어요.' : '요청 확인을 기록하고 있어요.'}</Text>
-        <Text>{help.helpRequest.location ? `요청 당시 위치: ${locationText(help.helpRequest.location)}` : helpLocationMessage(help.helpRequest.locationStatus)}</Text>
-        {help.helpRequest.location && <Button label="지도 앱에서 보기" icon="tab-location" onPress={() => { void openInMaps(help.helpRequest.location!, `${help.helpRequest.sender.name}님이 도움을 요청한 곳`); }} />}
-        {help.followingMessages.map(message => <Button key={message.id} variant="secondary" label={message.signalName} onPress={() => openRecord(message.id)} />)}
-      </>}
+      <Text>{data?.home?.recipient.name ?? '당사자'}님이 보낸 신호예요.</Text>
+      <Text>{localTime(item?.occurredAt)}</Text>
     </Stack>
   </Screen>;
 }

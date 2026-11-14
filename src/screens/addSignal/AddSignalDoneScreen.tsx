@@ -9,10 +9,11 @@ type Props = {
   /** 연습 모드(이 신호부터) */
   onTeachNow: () => void;
   onLater: () => void;
+  teachAvailable?: boolean;
 };
 
 // 10-7 신호 추가 4 · 저장 완료 (design/screens/Add5Done.dc.html)
-export default function AddSignalDoneScreen({ signal, recipientName, onTeachNow, onLater }: Props) {
+export default function AddSignalDoneScreen({ signal, recipientName, onTeachNow, onLater, teachAvailable = true }: Props) {
   const length = formatRhythmLength(signal.pulses);
   const category = signalCategoryLabel[signal.category];
 
@@ -23,7 +24,7 @@ export default function AddSignalDoneScreen({ signal, recipientName, onTeachNow,
       gap={5}
       footer={
         <Stack gap={1}>
-          <Button label="지금 알려주기" trailingIcon="arrow-right" onPress={onTeachNow} />
+          <Button label={teachAvailable ? '지금 알려주기' : '신호 확인하기'} trailingIcon="arrow-right" onPress={onTeachNow} />
           <Button label="나중에 할게요" variant="text" underline={false} onPress={onLater} />
         </Stack>
       }
@@ -66,10 +67,10 @@ export default function AddSignalDoneScreen({ signal, recipientName, onTeachNow,
             <Icon name="book" size={26} />
             <Stack flex gap={1}>
               <Text variant="heading" accessibilityRole="header">
-                {`${recipientName}은 이 신호를 아직 몰라요`}
+                {`${recipientName}과 함께 느껴 보며 알려 주세요`}
               </Text>
               <Text variant="caption">
-                {"연습 모드에서 함께 느껴 보며 알려 줘야 실제로 쓸 수 있어요. 익히기 전에는 신호 목록에 '연습 전'으로 표시돼요."}
+                {"'연습 전'은 아직 연습 기록이 없다는 뜻이에요. 당사자와 함께 리듬과 뜻을 확인해 주세요."}
               </Text>
             </Stack>
           </Row>

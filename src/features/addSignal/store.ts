@@ -1,4 +1,10 @@
 import { useSyncExternalStore } from 'react';
+import { ApiError } from '@/api/errors';
+import { getSession } from '@/features/session/store';
+import { getGuardianScope, guardianStore } from '@/features/guardian/client';
+import { toSignal } from '@/features/guardian/models';
+import { saveSignal } from './client';
+import { signalCreation } from './creation';
 
 import type { IconName } from '@/components/Icon';
 import { mockSignals, type Signal, type SignalCategory } from '@/features/signals';
@@ -17,6 +23,7 @@ export type AddSignalDraft = {
   source: Signal['source'];
   /** 목록에서 고른 기본 신호 id */
   basicId?: string;
+  presetId?: string;
   name: string;
   description: string;
   icon: IconName;
@@ -27,6 +34,7 @@ export type AddSignalDraft = {
 };
 
 type AddSignalState = {
+  owner: string | null;
   origin: AddSignalOrigin;
   draft: AddSignalDraft;
   /** 이번 세션에 저장한 신호 (서버 연결 전 임시) */
@@ -58,6 +66,7 @@ const previewDraft: AddSignalDraft = {
 };
 
 let state: AddSignalState = {
+  owner: null,
   origin: 'home',
   draft: previewDraft,
   saved: [],
@@ -85,7 +94,7 @@ export function useAddSignal(): AddSignalState {
 
 /** 1단계 진입: 작성 중 신호를 비운다 */
 export function startAddSignal(origin: AddSignalOrigin) {
-  state = { ...state, origin, draft: emptyDraft, lastSavedId: null };
+  state = { ...state, owner: getGuardianScope()?.key ?? null, origin, draft: emptyDraft, saved: [], lastSavedId: null };
   emit();
 }
 
@@ -125,9 +134,19 @@ export function startCustomDraft() {
 }
 
 /** 4단계 저장. 저장한 신호는 '연습 전' */
-export function saveDraft(): Signal {
+export async function saveDraft(abort?: AbortSignal): Promise<Signal> {
   const { draft } = state;
-  // TODO: 신호 저장 API. 서버가 준 id로 바꾸기
+  const scope = getGuardianScope();
+  if (getSession().tokens) {
+    if (!scope || state.owner !== scope.key) throw new ApiError('SESSION_CHANGED');
+    const server = await saveSignal(signalCreation(draft), abort);
+    if (state.draft !== draft || state.owner !== scope.key || getGuardianScope()?.key !== scope.key || abort?.aborted) throw new ApiError('SESSION_CHANGED');
+    const confirmed = toSignal(server);
+    guardianStore.rememberSignal(server, scope.key);
+    state = { ...state, saved: [confirmed], lastSavedId: confirmed.id }; emit();
+    void guardianStore.loadSignals(true); void guardianStore.loadHome(true);
+    return confirmed;
+  }
   const signal: Signal = {
     id: draft.basicId ?? `custom-${Date.now()}`,
     name: draft.name,

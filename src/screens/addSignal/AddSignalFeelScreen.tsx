@@ -24,6 +24,7 @@ type Props = {
   /** 보호자 휴대폰에서 진동 재생 */
   onVibrate: (pulses: Pulses) => void;
   onSave: () => void;
+  busy?: boolean; error?: string;
 };
 
 /** 화면의 리듬 그림을 박자 순서대로 진하게 (진동과 같은 시간표) */
@@ -52,6 +53,7 @@ export default function AddSignalFeelScreen({
   onChangeRhythm,
   onVibrate,
   onSave,
+  busy, error,
 }: Props) {
   const { playingIndex, play } = usePlayback(signal.pulses);
 
@@ -70,11 +72,12 @@ export default function AddSignalFeelScreen({
           {onChangeRhythm && (
             <Button label="리듬 바꾸기" variant="secondary" size="sm" onPress={onChangeRhythm} style={{ flex: 1 }} />
           )}
-          <Button label="저장하기" variant="dark" size="sm" onPress={onSave} style={{ flex: 1.4 }} />
+          <Button label={busy ? '저장 중…' : '저장하기'} disabled={busy} variant="dark" size="sm" onPress={onSave} style={{ flex: 1.4 }} />
         </Row>
       }
     >
       <StepIntro step={3} eyebrow="3단계 · 진동 체험" title="직접 느껴 보세요" />
+      {error && <Text accessibilityRole="alert">{error}</Text>}
 
       <Card style={{ padding: space[5] }}>
         <Stack gap={5} accessibilityLabel="만든 리듬">

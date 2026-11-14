@@ -9,6 +9,8 @@ export function createEventDispatcher(options: {
   onIncoming: (message: IncomingMessage) => void;
   onSession: () => void;
   onRefresh: () => void;
+  onConnectionCheck?: (id: string) => void;
+  onSettings?: () => void;
   /** 당사자: 보호자가 지금 위치를 요청했다 */
   onLocationRequest?: (requestId: string) => void;
 }) {
@@ -17,6 +19,8 @@ export function createEventDispatcher(options: {
     let data;
     try { data = JSON.parse(event.data); } catch { return; }
     if (!data || typeof data !== 'object') return;
+    if (event.event === 'connection_check.requested' && typeof data.connectionCheck?.id === 'string') options.onConnectionCheck?.(data.connectionCheck.id);
+    if (/^(connection_check|settings)\./.test(event.event)) options.onSettings?.();
     if (event.event === 'message.updated' && options.role() === 'guardian' && isGuardianMessage(data.message)) {
       options.onMessage(data.message);
     } else if (event.event === 'message.created' && options.role() === 'recipient') {

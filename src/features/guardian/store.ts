@@ -1,14 +1,15 @@
 import { ApiError, errorMessage } from '@/api/errors';
 import type { GuardianApi } from './api';
-import type { GuardianHome, GuardianMessage, GuardianScope, HelpDetail, HistoryItem, MessageDetail, ServerSignal } from './types';
+import type { GuardianHome, GuardianMessage, GuardianScope, HelpDetail, HistoryCalendar, HistoryItem, MessageDetail, ServerSignal } from './types';
 
 export type GuardianState = {
   scope: string | null; home: GuardianHome | null; signals: ServerSignal[] | null;
   messages: Record<string, GuardianMessage>; details: Record<string, MessageDetail>; helps: Record<string, HelpDetail>;
   histories: Record<string, HistoryItem[]>;
+  calendars: Record<string, HistoryCalendar>;
   pending: Record<string, boolean>; errors: Record<string, string>;
 };
-const empty = (scope: string | null): GuardianState => ({ scope, home: null, signals: null, messages: {}, details: {}, helps: {}, histories: {}, pending: {}, errors: {} });
+const empty = (scope: string | null): GuardianState => ({ scope, home: null, signals: null, messages: {}, details: {}, helps: {}, histories: {}, calendars: {}, pending: {}, errors: {} });
 const bounded = <T,>(data: Record<string, T>, id: string, value: T): Record<string, T> => Object.fromEntries(Object.entries({ ...data, [id]: value }).slice(-64));
 
 export function createGuardianStore(options: {
@@ -22,6 +23,7 @@ export function createGuardianStore(options: {
   const watched = new Map<string, number>();
   const historyWatches = new Set<string>();
   const helpWatches = new Set<string>();
+  const calendarWatches = new Set<string>();
   const intents = new Map<string, { key: string; flight?: Promise<GuardianMessage> }>();
   let deferredRefresh: ReturnType<typeof setTimeout> | undefined;
   const update = (patch: Partial<GuardianState>) => { state = { ...state, ...patch }; listeners.forEach(fn => fn()); };
@@ -34,7 +36,7 @@ export function createGuardianStore(options: {
   function bind() {
     const scope = options.scope();
     if (state.scope !== (scope?.key ?? null)) {
-      stop(); intents.clear(); watched.clear(); historyWatches.clear(); helpWatches.clear(); versions.clear(); state = empty(scope?.key ?? null); listeners.forEach(fn => fn());
+      stop(); intents.clear(); watched.clear(); historyWatches.clear(); helpWatches.clear(); calendarWatches.clear(); versions.clear(); state = empty(scope?.key ?? null); listeners.forEach(fn => fn());
     }
     return scope;
   }
@@ -57,6 +59,7 @@ export function createGuardianStore(options: {
   const loadHome = (force = false) => read('home', (scope, signal) => options.api.home(scope.linkId, signal), home => update({ home }), force);
   const loadSignals = (force = false) => read('signals', (scope, signal) => options.api.signals(scope.linkId, signal), signals => update({ signals }), force);
   const loadHistory = (date: string, force = false) => read(`history:${date}`, (scope, signal) => options.api.history(scope.linkId, date, signal), items => update({ histories: bounded(state.histories, date, items) }), force);
+  const loadCalendar = (month: string, force = false) => read(`calendar:${month}`, (scope, signal) => options.api.calendar(scope.linkId, month, signal), calendar => update({ calendars: bounded(state.calendars, month, calendar) }), force);
   const loadMessage = (id: string, force = false) => read(`message:${id}`, (_scope, signal) => options.api.detail(id, signal), detail => {
     const scope = options.scope(); if (!scope || detail.message.linkId !== scope.linkId) return;
     update({ details: bounded(state.details, id, detail), messages: bounded(state.messages, id, detail.message) });
@@ -68,11 +71,11 @@ export function createGuardianStore(options: {
   function refresh() {
     if (!bind()) return Promise.resolve();
     return Promise.all([loadHome(), ...(state.signals === null ? [loadSignals()] : []),
-      ...[...watched.keys()].map(id => loadMessage(id)), ...[...historyWatches].map(date => loadHistory(date)), ...[...helpWatches].map(id => loadHelp(id))]).then(() => {});
+      ...[...watched.keys()].map(id => loadMessage(id)), ...[...historyWatches].map(date => loadHistory(date)), ...[...calendarWatches].map(month => loadCalendar(month)), ...[...helpWatches].map(id => loadHelp(id))]).then(() => {});
   }
   function scheduleRefresh() {
     clearTimeout(deferredRefresh);
-    deferredRefresh = setTimeout(() => { void loadHome(true); historyWatches.forEach(date => { void loadHistory(date, true); }); }, 150);
+    deferredRefresh = setTimeout(() => { void loadHome(true); historyWatches.forEach(date => { void loadHistory(date, true); }); calendarWatches.forEach(month => { void loadCalendar(month, true); }); }, 150);
   }
   function ingest(message: GuardianMessage) {
     const scope = bind();
@@ -113,7 +116,12 @@ export function createGuardianStore(options: {
   return {
     getSnapshot: () => state,
     subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
-    bind, stop, refresh, loadHome, loadSignals, loadMessage, loadHelp, loadHistory, ingest, scheduleRefresh,
+    bind, stop, refresh, loadHome, loadSignals, loadMessage, loadHelp, loadHistory, loadCalendar, ingest, scheduleRefresh,
+    rememberSignal(signal: ServerSignal, expectedScope: string) {
+      if (bind()?.key !== expectedScope || !state.signals) return;
+      update({ signals: [...state.signals.filter(item => item.id !== signal.id), signal] });
+    },
+    watchCalendar(month: string) { calendarWatches.add(month); return () => { calendarWatches.delete(month); }; },
     watchHistory(date: string) { historyWatches.add(date); return () => { historyWatches.delete(date); }; },
     watchHelp(id: string) { helpWatches.add(id); return () => { helpWatches.delete(id); }; },
     watchMessage(id: string) { watched.set(id, (watched.get(id) ?? 0) + 1); return () => { const count = (watched.get(id) ?? 1) - 1; if (count) watched.set(id, count); else watched.delete(id); }; },

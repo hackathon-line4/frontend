@@ -1,10 +1,11 @@
 import type { SignalStatus } from '@/components/Badge';
 import type { IconName } from '@/components/Icon';
-import type { SignalRecord } from '@/features/history/types';
+import type { HelpRequestRecord, SignalRecord } from '@/features/history/types';
 import type { Activity, NoReplyRecord, RecipientStatus } from '@/features/home/types';
 import type { Signal, SignalCategory } from '@/features/signals/types';
 import { beatsToPulses, pulsesToBeats } from '@/theme/rhythm';
-import type { GuardianHome, GuardianMessage, MessageDetail, ServerSignal } from './types';
+import type { GuardianHome, GuardianMessage, HelpDetail, MessageDetail, ServerSignal } from './types';
+import { toDateKey } from '@/features/history/date';
 
 export const localTime = (value: string | null | undefined) => {
   if (!value || !Number.isFinite(Date.parse(value))) return '—';
@@ -13,12 +14,12 @@ export const localTime = (value: string | null | undefined) => {
 const elapsed = (at: string, now: number) => Math.max(0, Math.floor((now - Date.parse(at)) / 60000));
 export function toSignal(s: ServerSignal): Signal {
   const category = ({ DAILY: 'daily', OUTING: 'outing', CHECK: 'check', EMERGENCY: 'emergency' } as Record<string, SignalCategory>)[s.category] ?? 'daily';
-  const icons: readonly IconName[] = ['sig-person', 'sig-bowl', 'sig-pill', 'sig-arrow', 'sig-clock', 'sig-door', 'sig-question', 'warning'];
+  const icons: readonly IconName[] = ['sig-person', 'sig-bowl', 'sig-pill', 'sig-arrow', 'sig-clock', 'sig-door', 'sig-question', 'sig-lifebuoy', 'pencil', 'warning'];
   const beats = (s.rhythm ?? []).map(b => ({ SHORT: 'S', MEDIUM: 'M', LONG: 'L' } as const)[b]);
   const pulses = s.pulses?.length ? s.pulses : beatsToPulses(beats);
   return { id: s.id, name: s.name, description: s.description ?? undefined, source: s.source === 'CUSTOM' ? 'custom' : 'basic', category,
     icon: icons.includes(s.icon as IconName) ? s.icon as IconName : category === 'emergency' ? 'warning' : 'sig-person',
-    pulses, beats: s.rhythm?.length ? beats : pulsesToBeats(pulses), untrained: s.source === 'CUSTOM' && !s.practiced };
+    pulses, beats: s.rhythm?.length ? beats : pulsesToBeats(pulses), untrained: !s.practiced };
 }
 export function messageStatus(m: Pick<GuardianMessage, 'delivery' | 'response'>): SignalStatus {
   if (m.delivery.status === 'FAILED') return 'failed';
@@ -59,4 +60,17 @@ export function toNoReply(detail: MessageDetail): NoReplyRecord {
   return { id: m.id, signalId: m.signal.id, signalName: m.signal.name, recipientName: m.receiver.name,
     sentAtLabel: new Date(m.createdAt).toLocaleString(), steps: detail.timeline.map(row => ({ label: labels[row.step] ?? '상태 변경', time: localTime(row.at), done: true,
       detail: row.count ? `${row.count}회 재생 보고` : undefined })) };
+}
+
+export function helpRecords(detail: HelpDetail): { record: HelpRequestRecord; followUps: SignalRecord[] } {
+  const h = detail.helpRequest;
+  return {
+    record: { id: h.id, type: 'help', date: toDateKey(new Date(h.sentAt)), sentAt: localTime(h.sentAt),
+      arrivedAt: h.guardianDeliveredAt ? localTime(h.guardianDeliveredAt) : '확인 안 됨', openedAt: h.guardianOpenedAt ? localTime(h.guardianOpenedAt) : undefined,
+      location: h.location ? { ...h.location, latitude: Number(h.location.latitude), longitude: Number(h.location.longitude), address: h.location.address ?? '', at: new Date(h.location.capturedAt).toLocaleString() } : null,
+      followUpIds: detail.followingMessages.map(m => m.id) },
+    followUps: detail.followingMessages.map(m => ({ id: m.id, type: 'signal', date: toDateKey(new Date(m.sentAt)), signalId: '', name: m.signalName, meaning: '', sentAt: localTime(m.sentAt),
+      delivery: m.deliveredAt ? { kind: 'delivered', at: localTime(m.deliveredAt) } : { kind: 'unknown' },
+      response: m.deliveredAt && m.respondedAt ? { kind: 'replied', at: localTime(m.respondedAt), afterSec: Math.max(0, Math.floor((Date.parse(m.respondedAt) - Date.parse(m.deliveredAt)) / 1000)) } : null })),
+  };
 }

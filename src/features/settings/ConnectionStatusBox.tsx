@@ -19,7 +19,7 @@ export function ConnectionStatusBox({ connection, name }: Props) {
   const title = connected ? '연결됨' : '연결 확인 안 됨';
   const body = connected
     ? `${connection.lastCheckedAt}에 ${name}의 휴대폰과 연결을 확인했어요.`
-    : `${name}의 휴대폰과 마지막으로 연결을 확인한 시각은 ${connection.lastCheckedAt}이에요. 지금 보내는 신호는 전달되지 않을 수 있어요.`;
+    : connection.lastCheckedAt ? `${name}의 휴대폰과 마지막으로 연결을 확인한 시각은 ${connection.lastCheckedAt}이에요. 지금 보내는 신호는 전달되지 않을 수 있어요.` : `${name}의 휴대폰과 아직 연결을 확인하지 못했어요. 휴대폰의 인터넷과 알림 설정을 확인해 주세요.`;
 
   return (
     <View
