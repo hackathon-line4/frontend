@@ -141,12 +141,15 @@ export default function RecipientSettingsScreen({
               </Text>
             </Row>
             <Text variant="rBody">
-              도움 요청을 보낼 때만, 그 순간의 위치를 {guardianLabel}에게 보내요. 평소에는 보내지 않아요.
+              도움 요청을 보낼 때와 {guardianLabel}가 위치를 확인할 때, 그 순간의 위치를 한 번 보내요. 이동 경로는 남지 않아요.
             </Text>
             {locationPermission === 'denied' && (
-              <Text variant="rBody">지금은 권한이 꺼져 있어서 도움 요청만 가고 위치는 가지 않아요.</Text>
+              <Text variant="rBody">지금은 권한이 꺼져 있어서 위치는 가지 않아요.</Text>
             )}
-            {!locationOk && (
+            {locationPermission === 'whileInUse' && (
+              <Text variant="rBody">앱이 꺼져 있을 때도 보내려면 휴대폰 설정에서 위치를 &apos;항상 허용&apos;으로 바꿔 주세요.</Text>
+            )}
+            {(!locationOk || locationPermission === 'whileInUse') && (
               <Button
                 label="휴대폰 설정 열기"
                 trailingIcon="external"
@@ -157,7 +160,7 @@ export default function RecipientSettingsScreen({
           </Stack>
         </View>
         <SwitchRow
-          label="도움 요청에 위치 보내기"
+          label="보호자에게 위치 보내기"
           large
           value={settings.shareLocationOnHelp}
           onValueChange={(shareLocationOnHelp) => onChangeSettings({ shareLocationOnHelp })}

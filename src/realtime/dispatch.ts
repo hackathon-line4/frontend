@@ -9,6 +9,8 @@ export function createEventDispatcher(options: {
   onIncoming: (message: IncomingMessage) => void;
   onSession: () => void;
   onRefresh: () => void;
+  /** 당사자: 보호자가 지금 위치를 요청했다 */
+  onLocationRequest?: (requestId: string) => void;
 }) {
   return (event: ServerEvent) => {
     if (!options.valid()) return;
@@ -20,6 +22,8 @@ export function createEventDispatcher(options: {
     } else if (event.event === 'message.created' && options.role() === 'recipient') {
       const m = data.message as IncomingMessage | undefined;
       if (m?.id && m.signal && m.playbackPolicy && ['SIGNAL', 'PRACTICE'].includes(m.kind)) options.onIncoming(m);
+    } else if (event.event === 'location_request.created' && options.role() === 'recipient') {
+      if (typeof data.requestId === 'string') options.onLocationRequest?.(data.requestId);
     } else if (event.event.startsWith('link.') || event.event.startsWith('link_request.')) {
       options.onSession();
     }

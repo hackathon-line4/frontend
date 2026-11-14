@@ -23,6 +23,11 @@ class SonullimMessagingService : FirebaseMessagingService() {
   override fun onMessageReceived(message: RemoteMessage) {
     val type = message.data["type"]
     Log.i(TAG, "푸시 받음 type=$type priority=${message.priority}")
+    if (type == "LOCATION_REQUEST") {
+      // 화면은 띄우지 않고 뒤에서 위치만 보낸다 (앱이 켜져 있으면 실시간 이벤트로도 오지만 JS가 한 번만 답한다)
+      message.data["locationRequestId"]?.let { SonullimHeadlessService.startLocationRequest(this, it) }
+      return
+    }
     if (type !in WAKE_TYPES) return
     if (AppLauncher.isForeground) return
     AppLauncher.launchForIncoming(this)

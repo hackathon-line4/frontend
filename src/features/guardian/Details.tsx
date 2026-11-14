@@ -1,6 +1,7 @@
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 import { Button, Screen, ScreenHeader, ScreenTitle, Stack, Text } from '@/components';
+import { locationText, openInMaps } from '@/features/location';
 import GuardianNoReplyScreen from '@/screens/guardian/GuardianNoReplyScreen';
 import HistoryDetailScreen from '@/screens/history/HistoryDetailScreen';
 import { guardianApi, guardianStore } from './client';
@@ -8,6 +9,8 @@ import { GuardianFeedback } from './Feedback';
 import { useGuardianMessage, useGuardianMutation, useGuardianState } from './hooks';
 import { localTime, toNoReply, toRecord } from './models';
 
+const helpLocationMessage = (status: string) =>
+  status === 'PENDING' ? '위치를 받는 중이에요.' : status === 'NOT_SHARED' ? '당사자가 위치 공유를 꺼 두었어요.' : '이 요청에 공유된 위치가 없어요.';
 const openRecord = (id: string) => router.replace({ pathname: '/guardian/record/[id]', params: { id } });
 export function GuardianMessageDetails({ id }: { id?: string }) {
   const message = useGuardianMessage(id);
@@ -50,7 +53,8 @@ export function GuardianOtherDetails({ id, kind }: { id: string; kind: string })
       <Text>{localTime(help?.helpRequest.sentAt ?? item?.occurredAt)}</Text>
       {help && <>
         <Text>{help.helpRequest.guardianOpenedAt ? '요청을 열어 봤어요.' : '요청 확인을 기록하고 있어요.'}</Text>
-        <Text>{help.helpRequest.location ? `요청 당시 위치: ${help.helpRequest.location.address ?? `${help.helpRequest.location.latitude}, ${help.helpRequest.location.longitude}`}` : '이 요청에 공유된 위치가 없어요.'}</Text>
+        <Text>{help.helpRequest.location ? `요청 당시 위치: ${locationText(help.helpRequest.location)}` : helpLocationMessage(help.helpRequest.locationStatus)}</Text>
+        {help.helpRequest.location && <Button label="지도 앱에서 보기" icon="tab-location" onPress={() => { void openInMaps(help.helpRequest.location!, `${help.helpRequest.sender.name}님이 도움을 요청한 곳`); }} />}
         {help.followingMessages.map(message => <Button key={message.id} variant="secondary" label={message.signalName} onPress={() => openRecord(message.id)} />)}
       </>}
     </Stack>

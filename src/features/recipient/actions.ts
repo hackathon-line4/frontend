@@ -1,5 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 
+import { attachHelpLocation, helpLocationStatus } from '@/features/location/recipient';
 import { getSession, getSessionRevision } from '@/features/session/store';
 import { playFeedback } from '@/features/vibration';
 import { recipientApi } from './api';
@@ -7,6 +8,10 @@ import { createRecipientSender } from './sender';
 
 const send = createRecipientSender({
   api: recipientApi, createKey: randomUUID, feedback: playFeedback,
+  extraBody: (kind) => (kind === 'help' ? { locationStatus: helpLocationStatus() } : {}),
+  onCreated: (kind, created) => {
+    if (kind === 'help' && created.locationStatus === 'PENDING') void attachHelpLocation(created.id);
+  },
   context: () => {
     const session = getSession();
     const link = session.links.find((item) => item.status === 'ACTIVE' && item.recipient.id === session.user?.id);

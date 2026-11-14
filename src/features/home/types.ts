@@ -36,6 +36,8 @@ export type RecipientLocation = {
   address: string;
   addressSummary: string;
   accuracyMeters: number;
+  /** 실제 좌표. 있으면 지도 그림 대신 진짜 지도에 핀을 찍는다 (미리보기 목 데이터에는 없음) */
+  point?: { latitude: number; longitude: number };
 };
 
 /** 응답 없음 상세(05-5)의 진행 단계 */

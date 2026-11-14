@@ -31,7 +31,16 @@
         }
       ],
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "도움을 요청할 때와 보호자가 위치를 확인할 때, 그 순간의 위치를 보호자에게 보내요.",
+          "locationAlwaysAndWhenInUsePermission": "앱이 꺼져 있을 때도 보호자가 위치를 확인하면 그 순간의 위치를 한 번 보내요.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": false
+        }
+      ]
     ],
     "scheme": "sonullim",
     "backgroundColor": "#FFFDF7",

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import { api } from '@/api';
 import { guardianStore } from '@/features/guardian/client';
+import { answerLocationRequest } from '@/features/location/recipient';
 import { handleIncoming } from '@/features/recipient/incoming';
 import { recoverIncoming } from '@/features/recipient/recover';
 import { getSession, getSessionRevision, reloadMe, useSession } from '@/features/session/store';
@@ -27,7 +28,8 @@ export function RealtimeSync() {
     };
     const dispatcher = createEventDispatcher({ valid, role: () => getSession().role,
       onMessage: message => guardianStore.ingest(message), onIncoming: handleIncoming,
-      onSession: () => { void reloadMe().catch(() => {}); }, onRefresh: () => guardianStore.scheduleRefresh() });
+      onSession: () => { void reloadMe().catch(() => {}); }, onRefresh: () => guardianStore.scheduleRefresh(),
+      onLocationRequest: requestId => { void answerLocationRequest(requestId); } });
     const stream = createRealtimeClient({ valid, open: (signal, cursor) => api.openStream('/events', signal, cursor),
       onEvent: dispatcher,
       onConnected: () => {

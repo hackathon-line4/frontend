@@ -32,6 +32,11 @@
       </intent-filter>
     </service>
 
+    <!-- 앱이 꺼져 있을 때 보호자의 위치 확인 요청에 답하기 (화면 없이 JS 잠깐 실행) -->
+    <service
+        android:name="com.sonullim.nativemodule.SonullimHeadlessService"
+        android:exported="false" />
+
     <receiver
         android:name="com.sonullim.nativemodule.BootReceiver"
         android:exported="true">

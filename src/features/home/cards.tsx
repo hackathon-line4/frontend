@@ -7,6 +7,7 @@ import { colors, fontFamily, radius, space } from '@/theme';
 import { ChevronLink } from './components';
 import { isOverdue, minutesAgoLabel } from './format';
 import type { RecipientLocation, RecipientStatus } from './types';
+import { TileMap } from '@/features/location/TileMap';
 
 /* ---------- RecipientStatusCard ---------- */
 
@@ -76,7 +77,11 @@ export function LocationPreviewCard({ location, onPressDetail }: LocationPreview
       <Row gap={4}>
         {location.sharing ? (
           <View style={styles.thumb} accessible accessibilityRole="image" accessibilityLabel="위치 미리보기 지도">
-            <MapThumbnail size={96} />
+            {location.point ? (
+              <TileMap latitude={location.point.latitude} longitude={location.point.longitude} zoom={15} pinSize={18} attribution={false} style={styles.tileThumb} />
+            ) : (
+              <MapThumbnail size={96} />
+            )}
           </View>
         ) : (
           <View style={[styles.thumb, styles.thumbOff]}>
@@ -133,6 +138,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
 
+  tileThumb: { width: 96, height: 96 },
   thumb: {
     width: 96,
     height: 96,

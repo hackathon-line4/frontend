@@ -164,8 +164,8 @@ export default function GuardianSettingsScreen({
           <Stack gap={3}>
             <InfoParagraph
               icon="tab-location"
-              title={`${recipientName}의 위치 공유: 도움 요청 때만`}
-              body={`${withSubject(recipientName)} 도움 요청을 보낼 때, 그 순간의 위치가 한 번 함께 와요. 평소에는 위치를 받지 않아요. 이 설정은 ${recipientName}의 휴대폰에서만 바꿀 수 있어요.`}
+              title={`${recipientName}의 위치 공유: 필요할 때 한 번씩`}
+              body={`${withSubject(recipientName)} 도움 요청을 보낼 때, 그리고 위치 탭에서 새로고침할 때 그 순간의 위치가 한 번 와요. 이동 경로는 남지 않아요. 이 설정은 ${recipientName}의 휴대폰에서만 바꿀 수 있어요.`}
             />
             <InfoParagraph
               icon="bell"

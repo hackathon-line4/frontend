@@ -10,6 +10,10 @@ export function createRecipientSender(options: {
   context: () => RecipientContext | null;
   createKey: () => string;
   feedback: (kind: 'sent' | 'failed') => void;
+  /** 새 전송의 본문에 더할 값 (도움 요청의 위치 상태). 재시도는 처음 본문을 그대로 쓴다 */
+  extraBody?: (kind: SendKind) => Partial<SendBody>;
+  /** 서버가 만든 뒤 (도움 요청에 위치 붙이기) */
+  onCreated?: (kind: SendKind, created: { id: string; locationStatus?: string }) => void;
 }) {
   const pending = new Map<SendKind, { context: RecipientContext; body: SendBody; key: string; flight?: Promise<boolean> }>();
   return function send(kind: SendKind, signal?: AbortSignal): Promise<boolean> {
@@ -21,7 +25,7 @@ export function createRecipientSender(options: {
     let intent = pending.get(kind);
     if (intent?.context.owner !== context.owner || intent.context.linkId !== context.linkId) intent = undefined;
     if (intent?.flight) return intent.flight;
-    intent ??= { context, body: { sentAt: new Date().toISOString() }, key: options.createKey() };
+    intent ??= { context, body: { sentAt: new Date().toISOString(), ...options.extraBody?.(kind) }, key: options.createKey() };
     pending.set(kind, intent);
     const current = intent;
     const stillCurrent = () => {
@@ -30,7 +34,8 @@ export function createRecipientSender(options: {
     };
     current.flight = (async () => {
       try {
-        await options.api.send(kind, context.linkId, current.body, current.key, signal);
+        const created = await options.api.send(kind, context.linkId, current.body, current.key, signal);
+        try { options.onCreated?.(kind, created); } catch { /* 위치 붙이기 실패가 전송 결과를 바꾸지 않는다 */ }
         if (!stillCurrent()) return false;
         if (pending.get(kind) === current) pending.delete(kind);
         options.feedback('sent');
