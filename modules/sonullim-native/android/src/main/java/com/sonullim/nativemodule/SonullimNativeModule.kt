@@ -1,6 +1,7 @@
 package com.sonullim.nativemodule
 
 import android.content.Context
+import android.view.WindowManager
 import android.util.Log
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
@@ -62,6 +63,20 @@ class SonullimNativeModule : Module() {
 
     Function("openOverlaySettings") {
       AppLauncher.openOverlaySettings(context)
+    }
+
+    // ── 07-4 신호 수신 중 화면 켜두기 ──
+
+    /**
+     * 수신 화면이 떠 있는 동안 화면이 자동으로 꺼지지 않게 한다.
+     * 화면이 꺼지면 앱이 백그라운드가 되어 반복 진동이 멈추기 때문이다. 화면을 떠날 때 false로 해제
+     */
+    Function("setKeepScreenOn") { on: Boolean ->
+      val activity = appContext.currentActivity ?: return@Function
+      activity.runOnUiThread {
+        if (on) activity.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        else activity.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+      }
     }
 
     // ── 당사자 폰 설정 안내 (B-9) ──

@@ -33,7 +33,7 @@ const stepLabels: Record<CalibrationKey, [decrease: string, increase: string]> =
 // 06-1 내 진동 설정 · 두 역할 공통 (design/screens/Calib1.dc.html)
 export default function CalibrationSettingsScreen({ values, isDraft, onBack, onStep, onTest }: Props) {
   const scale = useRoleScale();
-  const keys: CalibrationKey[] = device.strengthSupported ? ['strength', 'length', 'repeat'] : ['length', 'repeat'];
+  const keys: CalibrationKey[] = device.strengthSupported ? ['strength', 'length'] : ['length'];
 
   return (
     <Screen

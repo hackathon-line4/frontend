@@ -1,5 +1,6 @@
 import { AppRegistry } from 'react-native';
 
+import { api } from '@/api';
 import { answerLocationRequest } from '@/features/location/recipient';
 import { getSession, restoreSession } from '@/features/session/store';
 
@@ -10,4 +11,12 @@ AppRegistry.registerHeadlessTask('SonullimLocationRequest', () => async (data: {
   if (!data?.requestId) return;
   if (getSession().status !== 'authenticated') await restoreSession().catch(() => {});
   await answerLocationRequest(data.requestId, { background: true });
+});
+
+// 연결 확인 요청(CONNECTION_CHECK 푸시): 앱이 꺼져 있어도 '받았음'만 서버에 알린다. 화면 · 진동 없음
+AppRegistry.registerHeadlessTask('SonullimConnectionCheck', () => async (data: { checkId?: string }) => {
+  if (!data?.checkId) return;
+  if (getSession().status !== 'authenticated') await restoreSession().catch(() => {});
+  if (getSession().status !== 'authenticated') return;
+  await api.request(`/connection-checks/${encodeURIComponent(data.checkId)}/ack`, { method: 'POST' }).catch(() => {});
 });

@@ -17,7 +17,8 @@ type Props = {
 
 const actions = [{ name: 'activate' }, { name: 'longpress' }, { name: 'help', label: '도움 요청' }] as const;
 
-// 07-2 신호 보내기. 화면 어디든 두 번 탭하면 전송한다.
+// 07-2 신호 보내기. 화면 어디든 한 번 누르면 전송한다 (대기 화면에서 이미 두 번 탭으로 들어왔으므로).
+// 스크린리더 사용자는 평소처럼 두 번 탭(활성화)으로 보낸다.
 export default function RecipientSendScreen({ guardianName, signalName, busy = false, onSend, onHelp, onHelpTick, onTimeout }: Props) {
   useTimeout(onTimeout, busy ? null : SEND_IDLE_TIMEOUT_MS);
 
@@ -32,8 +33,8 @@ export default function RecipientSendScreen({ guardianName, signalName, busy = f
       state="compose"
       busy={busy}
       signalName={signalName}
-      accessibilityLabel={`${signalName} 보내기. 화면 어디든 두 번 탭하면 ${guardianName} 보호자에게 보내요`}
-      onDoubleTap={onSend}
+      accessibilityLabel={`${signalName} 보내기. 화면 어디든 누르면 ${guardianName} 보호자에게 보내요`}
+      onPress={onSend}
       onLongPress={onHelp}
       onHoldTick={onHelpTick}
       accessibilityActions={actions}

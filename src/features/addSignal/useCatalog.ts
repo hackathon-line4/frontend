@@ -13,7 +13,8 @@ export function useCatalog() {
   const linkId = scope?.linkId, key = scope?.key;
   const resource = useLinkResource(useCallback(async (signal: AbortSignal) => {
     if (!linkId || !key) throw new ApiError('ROLE_REQUIRED');
-    const [templates, presets] = await Promise.all([signalApi.templates(linkId, signal), signalApi.presets(linkId, signal)]);
+    // 프리셋 API가 없거나 실패해도 기본 신호 목록 · 직접 만들기는 쓸 수 있게 프리셋만 빈 목록으로 둔다
+    const [templates, presets] = await Promise.all([signalApi.templates(linkId, signal), signalApi.presets(linkId, signal).catch(() => [])]);
     return { owner: key, templates, presets };
   }, [linkId, key]));
   const preview = __DEV__ && !session.tokens;

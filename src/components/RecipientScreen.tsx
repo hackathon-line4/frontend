@@ -38,7 +38,11 @@ type RecipientScreenProps = {
   onAccessibilityAction?: (event: AccessibilityActionEvent) => void;
 };
 
-const DOUBLE_TAP_MS = 350;
+/**
+ * 두 번 탭: 첫 탭을 뗀 순간부터 두 번째 탭을 누른 순간까지 이 시간 안이면 두 번 탭.
+ * 누르고 있는 시간은 빼고 잰다 (뗀 순간끼리 재면 실제로는 0.25초 안에 눌러야 해서 거의 안 됨)
+ */
+const DOUBLE_TAP_GAP_MS = 500;
 const LONG_PRESS_MS = 3000;
 const HOLD_TICK_MS = 1000;
 
@@ -62,7 +66,9 @@ export function RecipientScreen({
   accessibilityActions,
   onAccessibilityAction,
 }: RecipientScreenProps) {
-  const lastTap = useRef(0);
+  /** 직전 한 번 탭을 뗀 시각 · 이번 탭을 누른 시각 */
+  const lastRelease = useRef(0);
+  const pressedAt = useRef(0);
   const holdTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearHold = useCallback(() => {
@@ -78,6 +84,7 @@ export function RecipientScreen({
   useEffect(() => { if (busy) clearHold(); }, [busy, clearHold]);
 
   const handlePressIn = () => {
+    pressedAt.current = Date.now();
     clearHold();
     if (!onLongPress || !onHoldTick) return;
     for (let t = HOLD_TICK_MS; t < LONG_PRESS_MS; t += HOLD_TICK_MS) {
@@ -88,13 +95,12 @@ export function RecipientScreen({
 
   const handlePress = () => {
     if (onDoubleTap) {
-      const now = Date.now();
-      if (now - lastTap.current < DOUBLE_TAP_MS) {
-        lastTap.current = 0;
+      if (pressedAt.current - lastRelease.current < DOUBLE_TAP_GAP_MS) {
+        lastRelease.current = 0;
         onDoubleTap();
         return;
       }
-      lastTap.current = now;
+      lastRelease.current = Date.now();
     }
     onPress?.();
   };

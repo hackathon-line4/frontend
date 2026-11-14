@@ -16,7 +16,7 @@ class SonullimHeadlessService : HeadlessJsTaskService() {
   override fun getTaskConfig(intent: Intent?): HeadlessJsTaskConfig? {
     val extras = intent?.extras ?: return null
     return HeadlessJsTaskConfig(
-      TASK_LOCATION_REQUEST,
+      extras.getString(EXTRA_TASK) ?: TASK_LOCATION_REQUEST,
       Arguments.fromBundle(extras),
       TIMEOUT_MS,
       true, // 앱이 화면에 있어도 실행 (실시간 이벤트와 겹치면 JS가 한 번만 답한다)
@@ -26,18 +26,28 @@ class SonullimHeadlessService : HeadlessJsTaskService() {
   companion object {
     private const val TAG = "Sonullim"
     const val TASK_LOCATION_REQUEST = "SonullimLocationRequest"
+    /** 연결 확인 요청(CONNECTION_CHECK) → 화면 없이 ack만 보낸다 (src/headless.ts) */
+    const val TASK_CONNECTION_CHECK = "SonullimConnectionCheck"
+    private const val EXTRA_TASK = "task"
     /** 서버가 기다리는 시간(30초)보다 조금 짧게 */
     private const val TIMEOUT_MS = 25_000L
 
-    fun startLocationRequest(context: Context, requestId: String) {
-      val intent = Intent(context, SonullimHeadlessService::class.java).putExtra("requestId", requestId)
+    fun startConnectionCheck(context: Context, checkId: String) =
+      start(context, Intent(context, SonullimHeadlessService::class.java)
+        .putExtra(EXTRA_TASK, TASK_CONNECTION_CHECK).putExtra("checkId", checkId), "연결 확인")
+
+    fun startLocationRequest(context: Context, requestId: String) =
+      start(context, Intent(context, SonullimHeadlessService::class.java)
+        .putExtra(EXTRA_TASK, TASK_LOCATION_REQUEST).putExtra("requestId", requestId), "위치 요청")
+
+    private fun start(context: Context, intent: Intent, label: String) {
       try {
         // 높은 우선순위 푸시를 받은 직후에는 백그라운드에서도 서비스를 시작할 수 있다
         context.startService(intent)
         HeadlessJsTaskService.acquireWakeLockNow(context)
-        Log.i(TAG, "위치 요청 → JS 작업 시작")
+        Log.i(TAG, "$label → JS 작업 시작")
       } catch (e: Exception) {
-        Log.w(TAG, "위치 요청 작업을 시작하지 못함", e)
+        Log.w(TAG, "$label 작업을 시작하지 못함", e)
       }
     }
   }

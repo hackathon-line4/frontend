@@ -22,6 +22,8 @@ export type HistoryItem = {
   title: string; description: string | null; occurredAt: string;
   delivery: { status: string; at: string | null; failureReason: string | null };
   response: { status: string; at: string | null } | null; summaryStatus: string;
+  /** RECIPIENT_SIGNAL · HELP_REQUEST: 보호자가 열어 본 시각 */
+  openedAt?: string | null;
 };
 export type GuardianHome = {
   recipient: { id: string; name: string; connection: { state: string; lastConfirmedAt: string | null };

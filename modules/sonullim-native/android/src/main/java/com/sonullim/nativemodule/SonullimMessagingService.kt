@@ -28,9 +28,24 @@ class SonullimMessagingService : FirebaseMessagingService() {
       message.data["locationRequestId"]?.let { SonullimHeadlessService.startLocationRequest(this, it) }
       return
     }
-    if (type !in WAKE_TYPES) return
+    if (type == "CONNECTION_CHECK") {
+      // 보호자의 연결 확인 요청: 화면 · 진동 없이 ack만 보낸다
+      message.data["checkId"]?.let { SonullimHeadlessService.startConnectionCheck(this, it) }
+      return
+    }
+    if (type == "HELP_CONFIRMED") {
+      // 보호자가 도움 요청을 열어 봄 → 당사자에게 '확인함' 진동만 (화면 · 알림 없음)
+      SonullimVibrator.vibrate(this, longArrayOf(0, 120, 120, 120, 120, 400), intArrayOf(0, 255, 0, 255, 0, 255))
+      return
+    }
+    if (type in WAKE_TYPES) {
+      if (AppLauncher.isForeground) return
+      AppLauncher.launchForIncoming(this)
+      return
+    }
+    // 보호자용 푸시: 앱이 떠 있으면 SSE가 화면에 바로 반영하므로 알림을 띄우지 않는다
     if (AppLauncher.isForeground) return
-    AppLauncher.launchForIncoming(this)
+    if (!GuardianNotifier.show(this, message.data)) Log.i(TAG, "처리하지 않는 푸시 type=$type")
   }
 
   companion object {

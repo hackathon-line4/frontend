@@ -13,6 +13,7 @@ export {
   canDecrease,
   canIncrease,
   device,
+  FIXED_REPEAT,
   getCalibration,
   isSame,
   ranges,

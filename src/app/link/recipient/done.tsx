@@ -10,5 +10,5 @@ export default function RecipientLinkDoneRoute() {
   if (resource.error) return <LinkFeedback message={resource.error} onRetry={resource.retry} onBack={() => router.replace('/recipient')} />;
   if (!resource.request) return <LinkFeedback message="연결 결과를 확인하고 있어요…" busy />;
   if (resource.request.status !== 'APPROVED') return <LinkFeedback message="아직 연결이 완료되지 않았어요." onBack={() => router.replace('/link/recipient')} />;
-  return <RecipientLinkDoneScreen guardianName={resource.request.guardian.name} onDone={() => router.replace('/recipient')} />;
+  return <RecipientLinkDoneScreen guardianName={resource.request.guardian.name} onDone={() => router.replace({ pathname: '/recipient/setup', params: { from: 'link' } })} />;
 }

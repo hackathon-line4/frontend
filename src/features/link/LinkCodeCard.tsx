@@ -1,7 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { Card, Row, Tag, Text } from '@/components';
-import { QrPlaceholder } from '@/components/Illustrations';
+import { Card, Tag, Text } from '@/components';
 import { colors, space, typography } from '@/theme';
 
 import { formatLinkCode, spellLinkCode } from './code';
@@ -13,7 +12,7 @@ type LinkCodeCardProps = {
   remainingSeconds: number;
 };
 
-// 04-G2 연결 코드 + 만료 시간 + QR
+// 04-G2 연결 코드 + 만료 시간 (QR 연결은 하지 않음)
 export function LinkCodeCard({ code, remainingSeconds }: LinkCodeCardProps) {
   const expired = remainingSeconds <= 0;
 
@@ -31,17 +30,6 @@ export function LinkCodeCard({ code, remainingSeconds }: LinkCodeCardProps) {
       ) : (
         <Tag icon="timer" label={`${formatMinutes(remainingSeconds)} 후 만료`} bold={false} />
       )}
-
-      <View style={styles.divider} />
-
-      <Row gap={4} style={[styles.stretch, expired && styles.dimmed]}>
-        <View accessible accessibilityRole="image" accessibilityLabel="연결용 QR 코드">
-          <QrPlaceholder />
-        </View>
-        <Text variant="label" weight="regular" color="textSecondary" style={styles.flex}>
-          당사자 휴대폰의 <Text variant="label">QR 코드로 연결</Text>을 눌러 이 화면을 비춰도 돼요.
-        </Text>
-      </Row>
     </Card>
   );
 }
@@ -59,19 +47,5 @@ const styles = StyleSheet.create({
   expiredCode: {
     color: colors.textTertiary,
     textDecorationLine: 'line-through',
-  },
-  divider: {
-    alignSelf: 'stretch',
-    height: 1,
-    backgroundColor: colors.line,
-  },
-  stretch: {
-    alignSelf: 'stretch',
-  },
-  dimmed: {
-    opacity: 0.3,
-  },
-  flex: {
-    flex: 1,
   },
 });

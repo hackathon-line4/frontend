@@ -166,6 +166,10 @@ const icons = {
   // 진동 설정 (Calib*)
   minus: () => <Path d="M5 12h14" />,
   'arrow-up': () => <Path d="M12 19V5M6 11l6-6 6 6" />,
+  // 기록의 방향 (전화 앱처럼): 보냄 ↗ · 받음 ↙
+  'arrow-out': () => <Path d="M7 17L17 7M9 7h8v8" />,
+  'arrow-in': () => <Path d="M17 7L7 17M15 17H7V9" />,
+  trash: () => <Path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5" />,
   stop: (color: string) => <Rect x="5" y="5" width="14" height="14" rx="2" fill={color} stroke="none" />,
   phone: () => (
     <>

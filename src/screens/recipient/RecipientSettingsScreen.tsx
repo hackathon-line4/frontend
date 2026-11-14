@@ -25,6 +25,8 @@ type Props = {
   onCalibrationTest: () => void;
   onChangeSettings: (patch: Partial<RecipientSettings>) => void;
   onOpenPhoneSettings: () => void;
+  /** 손울림에 필요한 휴대폰 설정(알림 · 다른 앱 위에 표시 · 배터리 등) 확인 화면 */
+  onOpenSetup?: () => void;
   busy?: boolean; error?: string; onLogout?: () => void;
 };
 
@@ -43,6 +45,7 @@ export default function RecipientSettingsScreen({
   onCalibrationTest,
   onChangeSettings,
   onOpenPhoneSettings,
+  onOpenSetup,
   busy, error, onLogout,
 }: Props) {
   const scale = useRoleScale();
@@ -114,6 +117,12 @@ export default function RecipientSettingsScreen({
         <BigLinkRow label="진동 테스트 다시 하기" onPress={onCalibrationTest} minHeight={scale.rowMinHeight} />
       </Section>
 
+      {onOpenSetup && (
+        <Section title="휴대폰" size="lg">
+          <BigLinkRow label="휴대폰 설정 확인" onPress={onOpenSetup} minHeight={scale.rowMinHeight} />
+        </Section>
+      )}
+
       <Section title="알림" size="lg">
         <View style={[styles.rowCard, { minHeight: scale.rowMinHeight }]}>
           <Row gap={3} accessible accessibilityLiveRegion="polite">
@@ -166,7 +175,6 @@ export default function RecipientSettingsScreen({
           label="보호자에게 위치 보내기"
           large
           value={settings.shareLocationOnHelp}
-          disabled={busy}
           onValueChange={(shareLocationOnHelp) => onChangeSettings({ shareLocationOnHelp })}
         />
       </Section>

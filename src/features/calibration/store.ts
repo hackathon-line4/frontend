@@ -31,7 +31,13 @@ export const ranges: Record<CalibrationKey, { min: number; max: number }> = {
   repeat: { min: 1, max: 5 },
 };
 
-const defaults: CalibrationValues = { strength: 2, length: 2, repeat: 2 };
+/**
+ * 반복 횟수는 화면에서 바꾸지 않고 고정한다. 신호 수신(07-4)은 응답이 올 때까지 계속 반복하므로
+ * 반복 횟수로 체감 차이가 거의 없어 설정 항목을 줄였다. 서버(repeatCount) 형식은 그대로 둔다.
+ */
+export const FIXED_REPEAT = 2;
+
+const defaults: CalibrationValues = { strength: 2, length: 2, repeat: FIXED_REPEAT };
 
 let state: CalibrationState = {
   // 앱 시작 때 restoreCalibration(persist.ts)이 기기·서버 저장값으로 바꾼다

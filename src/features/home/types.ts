@@ -24,6 +24,8 @@ export type Activity = {
   /** 'HH:mm' */
   sentAt: string;
   status: SignalStatus;
+  /** 당사자에게서 받은 기록(보호자 부르기 · 도움 요청). 없으면 보낸 기록 */
+  received?: boolean;
 };
 
 /** 당사자 휴대폰이 마지막으로 알려 준 위치. 이동 경로·과거 위치는 저장하지 않는다 */

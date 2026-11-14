@@ -10,10 +10,15 @@ type Props = {
   onBack: () => void;
   onClose: () => void;
   onNext: (method: AddSignalMethod) => void;
+  /**
+   * 기본 신호는 연결할 때 모두 추가된다. 보호자가 지운 기본 신호가 있을 때만 이 화면이 나오며,
+   * 그때 첫 선택지는 '기본 신호 다시 추가'가 된다. (미리보기에서는 원래 문구)
+   */
+  restoreCount?: number;
 };
 
 // 10-1 신호 추가 1 · 종류 선택 (design/screens/Add1Choose.dc.html)
-export default function AddSignalChooseScreen({ initialMethod = 'list', onBack, onClose, onNext }: Props) {
+export default function AddSignalChooseScreen({ initialMethod = 'list', onBack, onClose, onNext, restoreCount }: Props) {
   const [method, setMethod] = useState<AddSignalMethod>(initialMethod);
 
   return (
@@ -27,8 +32,12 @@ export default function AddSignalChooseScreen({ initialMethod = 'list', onBack, 
       <Stack gap={3} accessibilityRole="radiogroup" accessibilityLabel="신호 추가 방법">
         <MethodCard
           icon="book"
-          title="촉신호 목록에서 고르기"
-          description="현장에서 쓰는 촉신호 어휘에서 골라요. 리듬이 미리 정해져 있어요."
+          title={restoreCount ? '기본 신호 다시 추가' : '촉신호 목록에서 고르기'}
+          description={
+            restoreCount
+              ? `지운 기본 신호 ${restoreCount}개를 다시 추가할 수 있어요. 리듬은 촉신호 그대로예요.`
+              : '현장에서 쓰는 촉신호 어휘에서 골라요. 리듬이 미리 정해져 있어요.'
+          }
           type="basic"
           typeLabel="기본 신호"
           selected={method === 'list'}

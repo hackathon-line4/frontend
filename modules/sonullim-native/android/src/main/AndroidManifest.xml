@@ -6,6 +6,8 @@
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <!-- 도움 요청 알림을 잠금화면 위 전체 화면으로 (GuardianNotifier) -->
+  <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
   <!-- B-7 전원 3번 → 백그라운드에서 앱 띄우기 ('다른 앱 위에 표시') -->
   <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />

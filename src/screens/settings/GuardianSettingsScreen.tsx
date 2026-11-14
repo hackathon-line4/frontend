@@ -37,7 +37,6 @@ type Props = {
   busy?: boolean; error?: string; locationSharing?: boolean; showRetention?: boolean;
   notificationPermission: NotificationPermission;
   onCheckConnection: () => void;
-  onLinkAnother: () => void;
   onConnectionHelp: () => void;
   onCalibration: () => void;
   onCalibrationTest: () => void;
@@ -57,7 +56,6 @@ export default function GuardianSettingsScreen({
   calibration,
   notificationPermission,
   onCheckConnection,
-  onLinkAnother,
   onConnectionHelp,
   onCalibration,
   onCalibrationTest,
@@ -91,7 +89,7 @@ export default function GuardianSettingsScreen({
           </Stack>
         </Card>
         <ListGroup>
-          <ListRow title="다른 당사자 연결하기" icon="plus" onPress={onLinkAnother} />
+          {/* MVP는 보호자 1명 : 당사자 1명 연결만 (다른 당사자 연결하기 없음) */}
           <ListRow title="연결이 안 될 때" icon="info" onPress={onConnectionHelp} />
         </ListGroup>
       </Section>

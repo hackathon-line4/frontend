@@ -1,5 +1,5 @@
 import * as Clipboard from 'expo-clipboard';
-import { router, type Href } from 'expo-router';
+import { Redirect, router, type Href } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
@@ -87,7 +87,6 @@ const sections: { title: string; items: Item[] }[] = [
       ['04-G3 연결 요청 확인', '/link/guardian/request'],
       ['04-G4 연결 완료', '/link/guardian/done', 'guardian'],
       ['04-R1 코드 입력', '/link/recipient'],
-      ['04-R2 QR 인식', '/link/recipient/scan'],
       ['04-R3 연결 대상 확인', '/link/recipient/confirm'],
       ['04-R4 연결 완료', '/link/recipient/done', 'recipient'],
     ],
@@ -163,6 +162,12 @@ function vibrationTitle() {
 }
 
 export default function DevRoute() {
+  // 개발용 화면. 출시용 APK에서는 딥링크(sonullim://dev)로 들어와도 첫 화면으로 보낸다
+  if (!__DEV__) return <Redirect href="/" />;
+  return <DevScreen />;
+}
+
+function DevScreen() {
   const role = useRole();
   const [service, setService] = useState(getBackgroundServiceState);
   // 서비스는 시작 요청 후 조금 뒤에 켜지므로 잠깐 기다렸다 읽는다

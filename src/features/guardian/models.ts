@@ -38,6 +38,7 @@ export function homeRecipient(home: GuardianHome, now = Date.now()): RecipientSt
 export function homeActivities(home: Pick<GuardianHome, 'recentActivities'>): Activity[] {
   const map: Record<string, SignalStatus> = { SENDING: 'unconfirmed', FAILED: 'failed', UNCONFIRMED: 'unconfirmed', WAITING: 'waiting', DELIVERED_ONLY: 'delivered', RESPONDED: 'replied', NO_RESPONSE: 'noReply' };
   return home.recentActivities.map(item => ({ id: item.id, signalName: item.title, sentAt: localTime(item.occurredAt).slice(0, 5),
+    received: item.kind === 'RECIPIENT_SIGNAL' || item.kind === 'HELP_REQUEST',
     status: map[item.summaryStatus] ?? 'unconfirmed' }));
 }
 export function toRecord(m: GuardianMessage, now = Date.now()): SignalRecord {
