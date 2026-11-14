@@ -36,3 +36,4 @@ export type HelpDetail = {
   followingMessages: { id: string; signalName: string; sentAt: string; deliveredAt: string | null; respondedAt: string | null }[];
 };
 export type GuardianScope = { key: string; linkId: string; userId: string };
+export type HistoryCalendar = { month: string; days: { date: string; count: number; hasNoResponse: boolean }[] };

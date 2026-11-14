@@ -15,9 +15,10 @@ export const waitMinuteOptions: readonly WaitMinutes[] = [5, 10, 30];
 export const defaultWaitMinutes: WaitMinutes = 10;
 
 /** 위치 권한 (운영체제 값을 그대로 읽어 표시) */
-export type LocationPermission = 'granted' | 'denied' | 'whileInUse' | 'approximate';
+export type LocationPermission = 'granted' | 'denied' | 'whileInUse' | 'approximate' | 'unknown';
 
 export const locationPermissionLabel: Record<LocationPermission, string> = {
+  unknown: '휴대폰 설정에서 확인',
   granted: '켜짐',
   denied: '꺼짐',
   whileInUse: '사용 중에만 허용',
@@ -29,7 +30,7 @@ export function canSendLocation(permission: LocationPermission): boolean {
   return permission === 'granted' || permission === 'whileInUse';
 }
 
-export type NotificationPermission = 'granted' | 'denied';
+export type NotificationPermission = 'granted' | 'denied' | 'unknown';
 
 export type GuardianSettings = {
   /** 터치 응답 알림 */

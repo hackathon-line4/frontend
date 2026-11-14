@@ -43,7 +43,7 @@ export default function AddSignalListScreen({
     () => entries.filter((e) => (trimmed ? e.name.includes(trimmed) : e.category === category)),
     [entries, trimmed, category],
   );
-  const selected = entries.find((e) => e.id === selectedId);
+  const selected = entries.find((e) => e.id === selectedId && !addedIds.includes(e.id));
 
   return (
     <Screen

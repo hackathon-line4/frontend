@@ -89,17 +89,19 @@ export function SegmentedTabs<T extends string>({ options, value, onChange }: Se
 /* ---------- Chip ---------- */
 
 type ChipProps = {
+  disabled?: boolean;
   label: string;
   selected: boolean;
   onPress: () => void;
 };
 
-export function Chip({ label, selected, onPress }: ChipProps) {
+export function Chip({ label, selected, onPress, disabled = false }: ChipProps) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityState={{ selected, disabled }}
       style={[styles.chip, selected ? styles.chipSelected : styles.chipIdle]}
     >
       {selected && <Icon name="check" size={14} color={colors.textOnDark} strokeWidth={3} />}
@@ -117,6 +119,7 @@ export function Chip({ label, selected, onPress }: ChipProps) {
 /* ---------- Switch ---------- */
 
 type SwitchRowProps = {
+  disabled?: boolean;
   label: string;
   value: boolean;
   onValueChange: (value: boolean) => void;
@@ -125,7 +128,7 @@ type SwitchRowProps = {
 };
 
 // 옆에 '켜짐/꺼짐' 글자 필수
-export function SwitchRow({ label, value, onValueChange, large = false }: SwitchRowProps) {
+export function SwitchRow({ label, value, onValueChange, large = false, disabled = false }: SwitchRowProps) {
   const w = large ? 64 : 52;
   const h = large ? 40 : 32;
   const onThumb = h - 8;
@@ -134,9 +137,10 @@ export function SwitchRow({ label, value, onValueChange, large = false }: Switch
   return (
     <Pressable
       onPress={() => onValueChange(!value)}
+      disabled={disabled}
       accessibilityRole="switch"
       accessibilityLabel={label}
-      accessibilityState={{ checked: value }}
+      accessibilityState={{ checked: value, disabled }}
       style={[styles.row, large && styles.rowLarge]}
     >
       <Text variant={large ? 'rBody' : 'bodyStrong'} style={[styles.flex, large && styles.bold]}>

@@ -33,7 +33,8 @@ type Props = {
   connection: ConnectionState;
   checking: boolean;
   settings: GuardianSettings;
-  calibration: CalibrationSummary;
+  calibration: CalibrationSummary | null;
+  busy?: boolean; error?: string; locationSharing?: boolean; showRetention?: boolean;
   notificationPermission: NotificationPermission;
   onCheckConnection: () => void;
   onLinkAnother: () => void;
@@ -64,6 +65,7 @@ export default function GuardianSettingsScreen({
   onOpenPhoneSettings,
   onOpenRetention,
   onLogout,
+  busy, error, locationSharing, showRetention = true,
 }: Props) {
   const connected = connection.status === 'connected';
   const notificationsOn = notificationPermission === 'granted';
@@ -71,6 +73,7 @@ export default function GuardianSettingsScreen({
   return (
     <Screen gutter="tab" inTabs scroll paddingTop={6} gap={8}>
       <ScreenTitle title="설정" />
+      {error && <Text accessibilityRole="alert">{error}</Text>}
 
       <Section title="연결 관리">
         <Card variant="emphasis" style={[styles.connCard, !connected && styles.connCardUnconfirmed]}>
@@ -99,8 +102,7 @@ export default function GuardianSettingsScreen({
           <Stack paddingY={3} accessible>
             <Text variant="label">{recipientName}의 진동 설정</Text>
             <Text variant="caption" color="textSecondary">
-              {calibration.calibratedOn} 보정 · 세기 {calibration.strength} · 길이 {calibration.length} · 반복{' '}
-              {calibration.repeat}번
+              {calibration ? `${calibration.calibratedOn} · 세기 ${calibration.strength} · 길이 ${calibration.length} · 반복 ${calibration.repeat}번` : '당사자의 진동 설정을 확인하지 못했어요.'}
             </Text>
           </Stack>
           <ListRow
@@ -119,12 +121,14 @@ export default function GuardianSettingsScreen({
             label="터치 응답 알림"
             description={`${withSubject(recipientName)} 화면을 터치해 응답하면`}
             value={settings.replyAlert}
+            disabled={busy}
             onValueChange={(replyAlert) => onChangeSettings({ replyAlert })}
           />
           <SwitchListRow
             label="응답 없음 알림"
             description="정한 시간 동안 터치 응답이 없으면"
             value={settings.noReplyAlert}
+            disabled={busy}
             onValueChange={(noReplyAlert) => onChangeSettings({ noReplyAlert })}
           />
           <Stack gap={2} paddingY={3}>
@@ -137,6 +141,7 @@ export default function GuardianSettingsScreen({
                   key={min}
                   label={`${min}분`}
                   selected={settings.waitMinutes === min}
+                  disabled={busy}
                   onPress={() => onChangeSettings({ waitMinutes: min })}
                 />
               ))}
@@ -164,23 +169,23 @@ export default function GuardianSettingsScreen({
           <Stack gap={3}>
             <InfoParagraph
               icon="tab-location"
-              title={`${recipientName}의 위치 공유: 도움 요청 때만`}
-              body={`${withSubject(recipientName)} 도움 요청을 보낼 때, 그 순간의 위치가 한 번 함께 와요. 평소에는 위치를 받지 않아요. 이 설정은 ${recipientName}의 휴대폰에서만 바꿀 수 있어요.`}
+              title={`${recipientName}의 위치 공유: ${locationSharing === undefined ? '확인 안 됨' : locationSharing ? '도움 요청 때만' : '꺼짐'}`}
+              body={`위치 공유는 ${recipientName}의 휴대폰에서만 바꿀 수 있어요. 위치 수집이 가능하면 도움 요청 순간의 위치만 공유해요.`}
             />
             <InfoParagraph
               icon="bell"
-              title={`내 알림 권한: ${notificationsOn ? '허용됨' : '꺼짐'}`}
+              title={`내 알림 권한: ${notificationPermission === 'unknown' ? '휴대폰 설정에서 확인' : notificationsOn ? '허용됨' : '꺼짐'}`}
               body="알림을 끄면 도움 요청을 바로 받을 수 없어요."
             />
             <Stack>
               <LinkRow label="휴대폰 설정에서 권한 바꾸기" icon="external" onPress={onOpenPhoneSettings} />
-              <LinkRow label="기록 보관과 삭제" onPress={onOpenRetention} />
+              {showRetention && <LinkRow label="기록 보관과 삭제" onPress={onOpenRetention} />}
             </Stack>
           </Stack>
         </Card>
       </Section>
 
-      <Button label="로그아웃" variant="text" onPress={onLogout} />
+      <Button label={busy ? '처리 중…' : '로그아웃'} disabled={busy} variant="text" onPress={onLogout} />
     </Screen>
   );
 }

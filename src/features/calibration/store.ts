@@ -28,7 +28,7 @@ export const device = {
 export const ranges: Record<CalibrationKey, { min: number; max: number }> = {
   strength: { min: 1, max: device.strengthLevels },
   length: { min: 1, max: 3 },
-  repeat: { min: 1, max: 3 },
+  repeat: { min: 1, max: 5 },
 };
 
 const defaults: CalibrationValues = { strength: 2, length: 2, repeat: 2 };
@@ -52,6 +52,12 @@ function subscribe(listener: () => void) {
 
 export function getCalibration(): CalibrationState {
   return state;
+}
+
+/** 계정이 바뀌면 저장값과 작성 중인 값 모두 초기화한다. */
+export function resetCalibration() {
+  state = { saved: { ...defaults }, draft: { ...defaults } };
+  emit();
 }
 
 export function useCalibration(): CalibrationState {

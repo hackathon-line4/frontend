@@ -18,7 +18,7 @@ type Props = {
   followUps: readonly SignalRecord[];
   onBack: () => void;
   onOpenRecord: (id: string) => void;
-  onOpenMap: () => void;
+  onOpenMap?: () => void;
 };
 
 // 08-3 도움 요청 기록 (design/screens/LogHelp.dc.html)
@@ -59,11 +59,11 @@ export default function HelpRequestDetailScreen({
           {location ? (
             <>
               {/* TODO: 실제 지도 (공유된 1회 위치에 핀 표시) */}
-              <View accessible accessibilityRole="image" accessibilityLabel="지도 영역, 공유된 위치 표시" style={styles.map}>
+              {onOpenMap && <View accessible accessibilityRole="image" accessibilityLabel="지도 영역, 공유된 위치 표시" style={styles.map}>
                 <Text variant="caption" color="textSecondary">
                   [지도 영역]
                 </Text>
-              </View>
+              </View>}
               <DefinitionList
                 items={[
                   ['주소', location.address],
@@ -74,7 +74,7 @@ export default function HelpRequestDetailScreen({
               <Text variant="caption" color="textSecondary">
                 요청한 순간의 위치 한 번만 공유돼요. 그 뒤의 위치는 공유되지 않아요.
               </Text>
-              <Button label="지도 앱에서 열기" variant="secondary" size="sm" onPress={onOpenMap} />
+              {onOpenMap && <Button label="지도 앱에서 열기" variant="secondary" size="sm" onPress={onOpenMap} />}
             </>
           ) : (
             <Text variant="caption" color="textSecondary">
