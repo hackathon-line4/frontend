@@ -11,6 +11,8 @@ type SonullimNativeModule = {
   openNotificationSettings(): void;
   openAppDetails(): void;
   isSamsung(): boolean;
+  canUseFullScreenIntent?(): boolean;
+  openFullScreenIntentSettings?(): void;
 };
 
 const native = requireOptionalNativeModule<SonullimNativeModule>('SonullimNative');
@@ -51,4 +53,14 @@ export function openAppDetails() {
 
 export function isSamsung(): boolean {
   return native?.isSamsung() ?? false;
+}
+
+/** 전체 화면 알림 허용 여부 (Android 14+만 따로 허용). 예전 APK처럼 함수가 없으면 확인할 수 없음(null) */
+export function canUseFullScreenIntent(): boolean | null {
+  if (!native?.canUseFullScreenIntent) return null;
+  return native.canUseFullScreenIntent();
+}
+
+export function openFullScreenIntentSettings() {
+  native?.openFullScreenIntentSettings?.();
 }

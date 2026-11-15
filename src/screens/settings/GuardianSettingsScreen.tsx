@@ -38,6 +38,8 @@ type Props = {
   notificationPermission: NotificationPermission;
   onCheckConnection: () => void;
   onConnectionHelp: () => void;
+  /** 알림 · 전체 화면 알림 · 배터리 등 휴대폰 설정 확인 */
+  onOpenSetup?: () => void;
   onCalibration: () => void;
   onCalibrationTest: () => void;
   onChangeSettings: (patch: Partial<GuardianSettings>) => void;
@@ -57,6 +59,7 @@ export default function GuardianSettingsScreen({
   notificationPermission,
   onCheckConnection,
   onConnectionHelp,
+  onOpenSetup,
   onCalibration,
   onCalibrationTest,
   onChangeSettings,
@@ -91,6 +94,7 @@ export default function GuardianSettingsScreen({
         <ListGroup>
           {/* MVP는 보호자 1명 : 당사자 1명 연결만 (다른 당사자 연결하기 없음) */}
           <ListRow title="연결이 안 될 때" icon="info" onPress={onConnectionHelp} />
+          {onOpenSetup && <ListRow title="휴대폰 설정 확인" icon="bell" divider onPress={onOpenSetup} />}
         </ListGroup>
       </Section>
 
