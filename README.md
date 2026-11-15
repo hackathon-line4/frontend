@@ -147,4 +147,4 @@ npx eas-cli build -p android --profile preview
 
 ## 라이선스
 
-[LICENSE](LICENSE)
+MIT — [LICENSE](LICENSE)
