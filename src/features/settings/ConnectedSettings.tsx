@@ -31,7 +31,7 @@ export function ConnectedGuardianSettings() {
     connection={connectionModel(link, data.check)} checking={action.busy || data.check?.status === 'PENDING'}
     settings={data.guardian} calibration={calibrationModel(data.partner)} notificationPermission={permissions.notification}
     busy={action.busy || data.saving} error={action.error || data.error} locationSharing={data.partner?.locationSharing.enabled} showRetention={false}
-    onCheckConnection={() => { void action.run(signal => serverSettings.startCheck(signal)); }} onConnectionHelp={() => router.push('/guardian/connection-help')}
+    onCheckConnection={() => { void action.run(signal => serverSettings.startCheck(signal)); }} onOpenSetup={() => router.push('/guardian/setup')} onConnectionHelp={() => router.push('/guardian/connection-help')}
     onCalibration={() => router.push('/calibration')} onCalibrationTest={() => router.push('/calibration/test')}
     onChangeSettings={patch => { void action.run(signal => serverSettings.save(patch, signal)); }}
     onOpenPhoneSettings={phoneSettings} onOpenRetention={() => {}} onLogout={onLogout} />;

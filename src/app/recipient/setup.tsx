@@ -2,7 +2,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
-import { getBackgroundServiceState, startBackgroundService } from '@/native/background';
+import { ConfirmDialog } from '@/features/guardian/ConfirmDialog';
+import { getBackgroundServiceState, startBackgroundService, stopBackgroundService } from '@/native/background';
 import {
   areNotificationsEnabled,
   enableNotifications,
@@ -38,6 +39,7 @@ export default function RecipientSetupRoute() {
   const { from } = useLocalSearchParams<{ from?: string }>();
   const afterLink = from === 'link';
   const [state, setState] = useState(readDeviceState);
+  const [confirmStop, setConfirmStop] = useState(false);
   const refresh = useCallback(() => setState(readDeviceState()), []);
 
   useEffect(() => {
@@ -58,6 +60,9 @@ export default function RecipientSetupRoute() {
         await startBackgroundService();
         refresh();
       },
+      // 상단 '손울림이 대기 중이에요' 알림이 거슬리거나 잠시 쓰지 않을 때. 실수로 끄지 않게 확인 창을 거친다
+      offLabel: '대기 끄기',
+      onOff: () => setConfirmStop(true),
     },
     {
       key: 'notifications',
@@ -111,10 +116,27 @@ export default function RecipientSetupRoute() {
   }
 
   return (
+    <>
     <RecipientSetupScreen
       items={items}
       onBack={() => (afterLink ? router.replace('/recipient') : router.canGoBack() ? router.back() : router.replace('/recipient/settings'))}
       onDone={afterLink ? () => router.replace('/recipient') : undefined}
     />
+    <ConfirmDialog
+      visible={confirmStop}
+      icon="warning"
+      destructive
+      title="손울림 대기를 끌까요?"
+      message="끄면 화면이 꺼진 상태에서 전원 버튼 3번으로 손울림을 켤 수 없어요. 신호는 앱이 꺼져 있어도 계속 받아요."
+      confirmLabel="대기 끄기"
+      onCancel={() => setConfirmStop(false)}
+      onConfirm={() => {
+        stopBackgroundService();
+        setConfirmStop(false);
+        // 서비스가 멈추는 데 잠깐 걸리므로 조금 뒤 다시 읽는다
+        setTimeout(refresh, 500);
+      }}
+    />
+    </>
   );
 }

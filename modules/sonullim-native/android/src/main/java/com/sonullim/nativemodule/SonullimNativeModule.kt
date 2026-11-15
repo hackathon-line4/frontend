@@ -101,6 +101,14 @@ class SonullimNativeModule : Module() {
       DeviceSettings.openAppDetails(context)
     }
 
+    Function("canUseFullScreenIntent") {
+      DeviceSettings.canUseFullScreenIntent(context)
+    }
+
+    Function("openFullScreenIntentSettings") {
+      DeviceSettings.openFullScreenIntentSettings(context)
+    }
+
     Function("isSamsung") {
       DeviceSettings.isSamsung
     }
