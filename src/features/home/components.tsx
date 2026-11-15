@@ -147,15 +147,16 @@ export function SignalListRow({ signal, onPress, divider = true, favorite }: Sig
     >
       <Icon name={signal.icon} size={24} />
       <Stack gap={2} flex>
-        <Row gap={2}>
+        {/* '연습 전'은 신호의 상태라 이름 · 종류 뱃지 옆에 둔다 */}
+        <Row gap={2} wrap>
           <Text variant="bodyStrong">{signal.name}</Text>
           <SignalBadge type={signal.source} />
+          {signal.untrained && <SignalBadge type="untrained" />}
         </Row>
         <Rhythm beats={signal.beats} size="sm" />
       </Stack>
-      {signal.untrained ? (
-        <SignalBadge type="untrained" />
-      ) : (
+      {/* 별이 있는 목록은 오른쪽을 별 하나만 두고, 없을 때만 화살표로 누를 수 있음을 알린다 */}
+      {!favorite && !signal.untrained && (
         <Icon name="chevron-right" size={20} color={colors.textSecondary} strokeWidth={2.4} />
       )}
     </Pressable>
