@@ -50,6 +50,7 @@ export default function SignalDetailScreen({ signal, recipientName, onBack, onTe
           <Row gap={1}>
             {favorite && (
               <IconButton
+                key={favorite.on ? 'star-on' : 'star'}
                 icon={favorite.on ? 'star-on' : 'star'}
                 accessibilityLabel={favorite.on ? '자주 쓰는 신호에서 빼기' : '자주 쓰는 신호에 추가'}
                 onPress={favorite.onToggle}
