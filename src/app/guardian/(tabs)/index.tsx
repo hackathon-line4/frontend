@@ -25,7 +25,10 @@ function ConnectedRoute() {
   };
   return <GuardianHomeScreen
     refreshError={data.errors.home}
-    recipient={homeRecipient(home)} frequentSignals={home.favoriteSignals.map(toSignal)}
+    recipient={homeRecipient(home)} frequentSignals={(home.favoriteSignals.length
+      ? home.favoriteSignals
+      // 아직 고른 적이 없으면 기본 신호(촉신호)를 대신 보여 준다 ('협의할 것': 연결 직후 기본 6개로 채움)
+      : (data.signals ?? []).filter(s => s.source === 'TEMPLATE').slice(0, 6)).map(toSignal)}
     emergencySignals={signals.filter(s => s.category === 'emergency')}
     location={toRecipientLocation({ sharingEnabled: home.location.sharingEnabled, last: home.location.last as LastLocation | null })}
     recentActivity={homeActivities(home)} onSendSignal={(signal, abort) => guardianStore.send(signal.id, abort)}

@@ -20,10 +20,14 @@ type Props = {
   onEdit?: (signal: Signal) => void;
   /** 삭제 (확인 창은 화면 밖에서) */
   onDelete?: (signal: Signal) => void;
+  /** 자주 쓰는 신호(홈 · 최대 6개) */
+  favorite?: { on: boolean; onToggle: () => void };
+  /** 화면 아래 안내 (자주 쓰는 신호 6개 초과 등) */
+  notice?: string;
 };
 
 // 05-4 신호 상세 · 알려주기 (design/screens/SignalDetail.dc.html)
-export default function SignalDetailScreen({ signal, recipientName, onBack, onTeach, onSend, onEdit, onDelete }: Props) {
+export default function SignalDetailScreen({ signal, recipientName, onBack, onTeach, onSend, onEdit, onDelete, favorite, notice }: Props) {
   const [taught, setTaught] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -44,6 +48,13 @@ export default function SignalDetailScreen({ signal, recipientName, onBack, onTe
         <Row justify="space-between" align="center">
           <BackTextButton onPress={onBack} />
           <Row gap={1}>
+            {favorite && (
+              <IconButton
+                icon={favorite.on ? 'star-on' : 'star'}
+                accessibilityLabel={favorite.on ? '자주 쓰는 신호에서 빼기' : '자주 쓰는 신호에 추가'}
+                onPress={favorite.onToggle}
+              />
+            )}
             {onEdit && <IconButton icon="pencil" accessibilityLabel="신호 수정" onPress={() => onEdit(signal)} />}
             {onDelete && <IconButton icon="trash" accessibilityLabel="신호 삭제" onPress={() => onDelete(signal)} />}
           </Row>
@@ -95,6 +106,7 @@ export default function SignalDetailScreen({ signal, recipientName, onBack, onTe
         </Stack>
       </Card>
 
+      {notice && <StatusMessage icon="info">{notice}</StatusMessage>}
       {taught && <StatusMessage icon="vibrate">{`${recipientName}의 휴대폰에 연습 진동을 보냈어요`}</StatusMessage>}
 
       <SendSignalSheet

@@ -29,6 +29,10 @@ function ConnectedDetail({ id }: { id: string }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const server = data?.signals?.find(s => s.id === id);
   const signal = server ? toSignal(server) : undefined;
+  // 자주 쓰는 신호: 홈 요약의 목록이 기준 (최대 6개)
+  const favoriteIds = data?.home?.favoriteSignals.map(s => s.id) ?? [];
+  const isFavorite = favoriteIds.includes(id);
+  const [notice, setNotice] = useState<string>();
   return <>
     <SignalDetailScreen signal={signal}
       recipientName={data?.home?.recipient.name ?? '당사자'} onBack={() => router.back()}
@@ -42,7 +46,21 @@ function ConnectedDetail({ id }: { id: string }) {
         });
       }}
       onEdit={s => router.push({ pathname: '/guardian/signal/edit/[id]', params: { id: s.id } })}
-      onDelete={() => setConfirmDelete(true)} />
+      onDelete={() => setConfirmDelete(true)}
+      notice={notice ?? (mutation.error && !confirmDelete ? mutation.error : undefined)}
+      favorite={scope && data?.home ? {
+        on: isFavorite,
+        onToggle: () => {
+          setNotice(undefined);
+          if (!isFavorite && favoriteIds.length >= 6) { setNotice('자주 쓰는 신호는 6개까지 고를 수 있어요. 다른 신호를 먼저 빼 주세요.'); return; }
+          const next = isFavorite ? favoriteIds.filter(f => f !== id) : [...favoriteIds, id];
+          void mutation.run(async abort => {
+            await guardianApi.setFavorites(scope.linkId, next, abort);
+            await guardianStore.loadHome(true);
+            setNotice(isFavorite ? '자주 쓰는 신호에서 뺐어요' : '홈의 자주 쓰는 신호에 추가했어요');
+          });
+        },
+      } : undefined} />
     <ConfirmDialog
       visible={confirmDelete && !!signal}
       icon="warning"

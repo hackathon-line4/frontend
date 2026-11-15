@@ -54,6 +54,10 @@ export function createGuardianApi(client: Pick<ReturnType<typeof createApiClient
         method: 'POST', creation: true, idempotencyKey: key, body: {}, signal,
       });
     },
+    /** 자주 쓰는 신호 목록을 통째로 바꾼다 (최대 6개, 순서대로 홈에 보임) */
+    async setFavorites(id: string, signalIds: string[], signal?: AbortSignal) {
+      await client.request(`${link(id)}/favorite-signals`, { method: 'PUT', body: { signalIds }, signal });
+    },
     async resend(id: string, key: string, signal?: AbortSignal) {
       return check(await client.request<GuardianMessage>(`${message(id)}/resend`, { method: 'POST', creation: true, idempotencyKey: key, signal }));
     },
