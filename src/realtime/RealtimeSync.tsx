@@ -31,7 +31,11 @@ export function RealtimeSync() {
       if (getSession().role === 'guardian' && Date.now() - signalReadAt > 30000) { signalReadAt = Date.now(); void guardianStore.loadSignals(); }
     };
     const dispatcher = createEventDispatcher({ valid, role: () => getSession().role,
-      onMessage: message => guardianStore.ingest(message), onIncoming: handleIncoming,
+      onMessage: message => {
+        guardianStore.ingest(message);
+        // 알려주기(연습)를 당사자가 받으면 서버가 신호의 '연습 전'을 해제한다 → 신호 목록을 바로 다시 읽는다
+        if (message.kind === 'PRACTICE') void guardianStore.loadSignals(true);
+      }, onIncoming: handleIncoming,
       onSession: () => { void reloadMe().catch(() => {}); }, onRefresh: () => guardianStore.scheduleRefresh(),
       onConnectionCheck: id => { queueConnectionCheck(id); void acknowledgeConnectionChecks(foreground?.signal); },
       onSettings: () => { void serverSettings.load(); void serverSettings.pollCheck(); },

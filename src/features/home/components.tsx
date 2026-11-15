@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Icon, Row, Rhythm, SignalBadge, Stack, Text, type IconName } from '@/components';
+import { Icon, IconButton, Rhythm, Row, SignalBadge, Stack, Text, type IconName } from '@/components';
 import type { Signal } from '@/features/signals';
 import { colors, describeRhythm, fontFamily, radius, space, touch } from '@/theme';
 
@@ -127,21 +127,23 @@ type SignalListRowProps = {
   signal: Signal;
   onPress: () => void;
   divider?: boolean;
+  /** 자주 쓰는 신호(홈) 별. 없으면 별을 그리지 않는다 */
+  favorite?: { on: boolean; onToggle: () => void; disabled?: boolean };
 };
 
 // 신호 탭 목록 한 줄: 아이콘 · 이름 · 배지 · 리듬. 아직 알려 주지 않은 신호는 chevron 대신 '연습 전'
-export function SignalListRow({ signal, onPress, divider = true }: SignalListRowProps) {
+export function SignalListRow({ signal, onPress, divider = true, favorite }: SignalListRowProps) {
   const sourceLabel = signal.source === 'custom' ? '직접 만든 신호' : '기본 신호';
   const label = [signal.name, sourceLabel, signal.untrained ? '연습 전' : null, describeRhythm(signal.beats)]
     .filter(Boolean)
     .join(', ');
 
-  return (
+  const row = (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
-      style={({ pressed }) => [styles.signalRow, divider && styles.divider, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.signalRow, !favorite && divider && styles.divider, favorite && styles.flex, pressed && styles.pressed]}
     >
       <Icon name={signal.icon} size={24} />
       <Stack gap={2} flex>
@@ -157,6 +159,21 @@ export function SignalListRow({ signal, onPress, divider = true }: SignalListRow
         <Icon name="chevron-right" size={20} color={colors.textSecondary} strokeWidth={2.4} />
       )}
     </Pressable>
+  );
+  if (!favorite) return row;
+
+  // 별은 줄 누르기(상세 열기)와 따로 눌리게 줄 밖 오른쪽에 둔다
+  return (
+    <View style={[styles.favoriteRow, divider && styles.divider]}>
+      {row}
+      <IconButton
+        icon={favorite.on ? 'star-on' : 'star'}
+        accessibilityLabel={favorite.on ? `${signal.name}, 자주 쓰는 신호에서 빼기` : `${signal.name}, 자주 쓰는 신호에 추가`}
+        color={favorite.on ? colors.textPrimary : colors.textSecondary}
+        disabled={favorite.disabled}
+        onPress={favorite.onToggle}
+      />
+    </View>
   );
 }
 
@@ -211,6 +228,8 @@ export function DeliveryTimeline({ steps }: { steps: readonly DeliveryStep[] }) 
 }
 
 const styles = StyleSheet.create({
+  favoriteRow: { flexDirection: 'row', alignItems: 'center' },
+  flex: { flex: 1 },
   pressed: { opacity: 0.7 },
   bold: { fontFamily: fontFamily.bold },
   medium: { fontFamily: fontFamily.medium },
