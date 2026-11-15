@@ -36,6 +36,22 @@ object DeviceSettings {
     if (!start(context, intent)) openAppDetails(context)
   }
 
+  /**
+   * 전체 화면 알림(도움 요청을 잠금화면 위 전체 화면으로). Android 14+는 사용자가 따로 허용해야 한다.
+   * 13 이하는 설치할 때 자동으로 허용된다
+   */
+  fun canUseFullScreenIntent(context: Context): Boolean {
+    if (Build.VERSION.SDK_INT < 34) return true
+    val manager = context.getSystemService(android.app.NotificationManager::class.java)
+    return manager.canUseFullScreenIntent()
+  }
+
+  fun openFullScreenIntentSettings(context: Context) {
+    if (Build.VERSION.SDK_INT < 34) { openNotificationSettings(context); return }
+    val intent = Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:${context.packageName}"))
+    if (!start(context, intent)) openNotificationSettings(context)
+  }
+
   /** 앱 정보 화면. 삼성은 여기 '배터리 → 제한 없음'에서 절전 예외를 켠다 */
   fun openAppDetails(context: Context) {
     start(context, Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}")))
