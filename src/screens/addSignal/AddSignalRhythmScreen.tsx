@@ -60,8 +60,10 @@ export default function AddSignalRhythmScreen({
   // 진동이 완전히 같은 신호 (기본 신호와도 진동 배열로 비교)
   const usedBy = (beats: readonly Beat[]) => presetConflicts[beats.join('')] ?? signals.find((s) => samePulses(s.pulses, beatsToPulses(beats)))?.name;
 
+  // 고를 수 있는 프리셋이 하나도 없으면(아직 없음 · 모두 사용 중) 직접 조합하기 탭부터 연다
+  const noPresetAvailable = presets.every((p) => usedBy(p) !== undefined);
   // 돌아왔을 때 고른 리듬을 그대로 보여 준다 (프리셋이면 프리셋 탭, 아니면 직접 조합 탭)
-  const initialIsPreset = initialBeats.length === 0 || presets.some((p) => sameBeats(p, initialBeats));
+  const initialIsPreset = initialBeats.length === 0 ? !noPresetAvailable : presets.some((p) => sameBeats(p, initialBeats));
   const [mode, setMode] = useState<RhythmMode>(initialIsPreset ? 'preset' : 'tap');
   const [preset, setPreset] = useState<readonly Beat[] | undefined>(() =>
     initialIsPreset && initialBeats.length > 0 && usedBy(initialBeats) === undefined ? initialBeats : undefined,
@@ -126,7 +128,19 @@ export default function AddSignalRhythmScreen({
       {error && <Text accessibilityRole="alert">{error}</Text>}
       <SegmentedTabs options={modeOptions} value={mode} onChange={setMode} />
 
-      {mode === 'preset' ? (
+      {mode === 'preset' && noPresetAvailable ? (
+        <Card>
+          <Stack gap={3}>
+            <Text accessibilityRole="alert">
+              {presets.length === 0 ? '아직 추천 리듬이 없어요.' : '추천 리듬을 모두 다른 신호가 쓰고 있어요.'}
+            </Text>
+            <Text variant="caption" color="textSecondary">
+              직접 조합하기에서 짧게 · 중간 · 길게를 이어 붙여 만들어 보세요.
+            </Text>
+            <Button label="직접 조합하기" variant="secondary" size="sm" onPress={() => setMode('tap')} />
+          </Stack>
+        </Card>
+      ) : mode === 'preset' ? (
         <Grid columns={2} gap={3}>
           {presets.map((beats) => {
             const key = beats.join('');
