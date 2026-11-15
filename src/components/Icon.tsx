@@ -170,7 +170,8 @@ const icons = {
   'arrow-out': () => <Path d="M7 17L17 7M9 7h8v8" />,
   'arrow-in': () => <Path d="M17 7L7 17M15 17H7V9" />,
   // 자주 쓰는 신호: 빈 별 / 채운 별
-  star: () => <Path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" />,
+  // ☆→★→☆로 바뀔 때 fill을 '없앰'으로 두면 react-native-svg가 이전 채움을 그대로 남긴다 → 빈 별도 fill을 명시
+  star: () => <Path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" fill="none" />,
   'star-on': (color: string) => <Path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" fill={color} />,
   trash: () => <Path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5" />,
   stop: (color: string) => <Rect x="5" y="5" width="14" height="14" rx="2" fill={color} stroke="none" />,

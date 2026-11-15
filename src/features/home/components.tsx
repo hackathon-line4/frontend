@@ -165,6 +165,8 @@ export function SignalListRow({ signal, onPress, divider = true, favorite }: Sig
     <View style={[styles.favoriteRow, divider && styles.divider]}>
       {row}
       <IconButton
+        // 상태가 바뀌면 새로 그린다 (react-native-svg가 이전 채움을 남기는 경우 방지)
+        key={favorite.on ? 'star-on' : 'star'}
         icon={favorite.on ? 'star-on' : 'star'}
         accessibilityLabel={favorite.on ? `${signal.name}, 자주 쓰는 신호에서 빼기` : `${signal.name}, 자주 쓰는 신호에 추가`}
         color={favorite.on ? colors.textPrimary : colors.textSecondary}
