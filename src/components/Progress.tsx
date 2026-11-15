@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
-import { colors } from '@/theme';
+import { colors, radius, space } from '@/theme';
 
 type StepProps = {
   total: number;
@@ -43,21 +43,21 @@ export function PageDots({ total, current }: StepProps) {
 const styles = StyleSheet.create({
   stepBar: {
     flexDirection: 'row',
-    gap: 4,
+    gap: space[1],
   },
   step: {
     flex: 1,
     height: 6,
-    borderRadius: 3,
+    borderRadius: radius.full,
   },
   dots: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: space[2],
   },
   dot: {
     height: 8,
-    borderRadius: 4,
+    borderRadius: radius.full,
   },
   dotActive: { width: 24, backgroundColor: colors.ink900 },
   dotIdle: { width: 8, backgroundColor: colors.lineStrong },

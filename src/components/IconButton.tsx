@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, touch } from '@/theme';
+import { colors, radius, touch } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
 
@@ -9,6 +9,7 @@ type IconButtonProps = {
   /** 아이콘만 있는 버튼은 레이블 필수 */
   accessibilityLabel: string;
   onPress?: () => void;
+  disabled?: boolean;
   size?: number;
   color?: string;
   strokeWidth?: number;
@@ -21,6 +22,7 @@ export function IconButton({
   icon,
   accessibilityLabel,
   onPress,
+  disabled = false,
   size = 24,
   color = colors.textPrimary,
   strokeWidth = 2.4,
@@ -30,12 +32,15 @@ export function IconButton({
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
+      accessibilityState={{ disabled }}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       style={({ pressed }) => [
         styles.base,
         { width: touchSize, height: touchSize },
         pressed && styles.pressed,
+        disabled && styles.disabled,
         style,
       ]}
     >
@@ -46,11 +51,12 @@ export function IconButton({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: 12,
+    borderRadius: radius.xs,
     alignItems: 'center',
     justifyContent: 'center',
   },
   pressed: {
     opacity: 0.6,
   },
+  disabled: { opacity: 0.4 },
 });

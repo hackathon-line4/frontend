@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AccessibilityInfo, StyleSheet } from 'react-native';
+import { AccessibilityInfo } from 'react-native';
 
 import { Button, Screen, ScreenTitle, SuccessMark } from '@/components';
 
@@ -15,7 +15,12 @@ export default function RecipientLinkDoneScreen({ guardianName, onDone }: Props)
   }, [guardianName]);
 
   return (
-    <Screen contentStyle={styles.content} footer={<Button label="확인" variant="dark" size="lg" onPress={onDone} />}>
+    <Screen
+      align="center"
+      justify="center"
+      gap={8}
+      footer={<Button label="확인" variant="dark" size="lg" onPress={onDone} />}
+    >
       <SuccessMark size={180} label="연결 완료" />
       <ScreenTitle
         title="연결됐어요"
@@ -23,18 +28,7 @@ export default function RecipientLinkDoneScreen({ guardianName, onDone }: Props)
         size={36}
         descriptionSize={20}
         align="center"
-        style={styles.title}
       />
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  content: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    marginTop: 32,
-  },
-});

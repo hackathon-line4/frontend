@@ -1,14 +1,17 @@
 import { router } from 'expo-router';
+import { useCallback, useState } from 'react';
 
+import { linkApi } from '@/features/link/client';
+import { useLinkResource } from '@/features/link/useLinkResource';
 import RecipientCodeEntryScreen from '@/screens/link/RecipientCodeEntryScreen';
 
-// TODO: 코드 확인 API. 실패(코드 틀림·만료·거절) 시 error='코드를 다시 확인해 주세요'
 export default function RecipientCodeEntryRoute() {
-  return (
-    <RecipientCodeEntryScreen
-      onBack={() => router.back()}
-      onScanQr={() => router.push('/link/recipient/scan')}
-      onSubmit={() => router.push('/link/recipient/confirm')}
-    />
-  );
+  const resource = useLinkResource(useCallback(async () => null, []));
+  const [edited, setEdited] = useState(false);
+  const submit = (code: string) => {
+    setEdited(false);
+    void resource.run(() => linkApi.verify(code), () => router.push({ pathname: '/link/recipient/confirm', params: { code } }));
+  };
+  return <RecipientCodeEntryScreen busy={resource.busy} error={edited ? undefined : resource.error}
+    onChange={() => setEdited(true)} onBack={() => router.back()} onSubmit={submit} />;
 }

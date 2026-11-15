@@ -1,0 +1,64 @@
+import { useEffect } from 'react';
+import { AppState } from 'react-native';
+import { api } from '@/api';
+import { guardianStore } from '@/features/guardian/client';
+import { announceRecipientCall } from '@/features/guardian/recipientCall';
+import { answerLocationRequest } from '@/features/location/recipient';
+import { handleIncoming } from '@/features/recipient/incoming';
+import { recoverIncoming } from '@/features/recipient/recover';
+import { getSession, getSessionRevision, reloadMe, useSession } from '@/features/session/store';
+import { acknowledgeConnectionChecks, queueConnectionCheck, serverSettings } from '@/features/settings/client';
+import { createRealtimeClient } from './client';
+import { createEventDispatcher } from './dispatch';
+
+/** Exactly one stream per signed-in account, across all screens. */
+export function RealtimeSync() {
+  const session = useSession();
+  const revision = getSessionRevision();
+  const owner = session.status === 'authenticated' && session.tokens && session.role && session.user ? `${session.user.id}:${revision}` : null;
+  useEffect(() => {
+    guardianStore.bind();
+    serverSettings.bind();
+    if (!owner) return;
+    const valid = () => getSessionRevision() === revision && getSession().status === 'authenticated';
+    let foreground: AbortController | undefined;
+    let fallback: ReturnType<typeof setInterval> | undefined;
+    let signalReadAt = 0;
+    const refresh = () => {
+      if (!valid() || !foreground || foreground.signal.aborted) return;
+      void guardianStore.refresh();
+      void acknowledgeConnectionChecks(foreground.signal);
+      if (getSession().role === 'guardian' && Date.now() - signalReadAt > 30000) { signalReadAt = Date.now(); void guardianStore.loadSignals(); }
+    };
+    const dispatcher = createEventDispatcher({ valid, role: () => getSession().role,
+      onMessage: message => {
+        guardianStore.ingest(message);
+        // 알려주기(연습)를 당사자가 받으면 서버가 신호의 '연습 전'을 해제한다 → 신호 목록을 바로 다시 읽는다
+        if (message.kind === 'PRACTICE') void guardianStore.loadSignals(true);
+      }, onIncoming: handleIncoming,
+      onSession: () => { void reloadMe().catch(() => {}); }, onRefresh: () => guardianStore.scheduleRefresh(),
+      onConnectionCheck: id => { queueConnectionCheck(id); void acknowledgeConnectionChecks(foreground?.signal); },
+      onSettings: () => { void serverSettings.load(); void serverSettings.pollCheck(); },
+      onLocationRequest: requestId => { void answerLocationRequest(requestId); },
+      onRecipientSignal: call => announceRecipientCall(call, foreground?.signal) });
+    const stream = createRealtimeClient({ valid, open: (signal, cursor) => api.openStream('/events', signal, cursor),
+      onEvent: dispatcher,
+      onConnected: () => {
+        refresh(); void reloadMe().catch(() => {});
+        void recoverIncoming(foreground?.signal).catch(() => {});
+      } });
+    const pause = () => {
+      foreground?.abort(); foreground = undefined; clearInterval(fallback); stream.stop(); guardianStore.stop(); serverSettings.stop();
+    };
+    const resume = () => {
+      if (foreground || !valid()) return;
+      foreground = new AbortController(); refresh(); stream.start();
+      // Recovery also covers the current backend dev, whose domain SSE publishing is not merged yet.
+      fallback = setInterval(refresh, 5000);
+    };
+    if (!AppState.currentState || AppState.currentState === 'active') resume();
+    const subscription = AppState.addEventListener('change', state => { if (state === 'active') resume(); else pause(); });
+    return () => { subscription.remove(); pause(); };
+  }, [owner, revision]);
+  return null;
+}

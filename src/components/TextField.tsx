@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { colors, fontFamily, radius } from '@/theme';
+import { colors, fontFamily, radius, space } from '@/theme';
 
 import { Icon } from './Icon';
 import { IconButton } from './IconButton';
@@ -27,7 +27,9 @@ export function TextField({ label, helper, error, success, password, onFocus, on
 
   return (
     <View style={styles.root}>
-      <Text variant="label">{label}</Text>
+      <Text variant="label" weight="medium">
+        {label}
+      </Text>
       <View style={[styles.box, boxStyles[state]]}>
         <TextInput
           {...rest}
@@ -51,6 +53,8 @@ export function TextField({ label, helper, error, success, password, onFocus, on
             icon={hidden ? 'eye' : 'eye-off'}
             accessibilityLabel={hidden ? '비밀번호 보기' : '비밀번호 숨기기'}
             onPress={() => setHidden((v) => !v)}
+            size={20}
+            touchSize={42}
             strokeWidth={2}
             color={colors.textSecondary}
           />
@@ -93,36 +97,38 @@ export function TextField({ label, helper, error, success, password, onFocus, on
 
 const styles = StyleSheet.create({
   root: {
-    gap: 8,
+    gap: space[2],
   },
   box: {
-    minHeight: 56,
+    minHeight: 46,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: radius.sm,
     backgroundColor: colors.surface,
-    paddingRight: 4,
+    paddingRight: space[1],
   },
   input: {
     flex: 1,
     alignSelf: 'stretch',
-    paddingHorizontal: 16,
+    paddingHorizontal: space[4],
+    paddingVertical: 0,
     fontFamily: fontFamily.regular,
-    fontSize: 17,
+    fontSize: 15,
     color: colors.textPrimary,
   },
   message: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: space[2],
   },
   medium: {
     fontFamily: fontFamily.medium,
+    flexShrink: 1,
   },
 });
 
 const boxStyles = StyleSheet.create({
-  default: { borderWidth: 1.5, borderColor: colors.borderInput },
-  focus: { borderWidth: 2, borderColor: colors.ink900 },
-  error: { borderWidth: 2, borderColor: colors.dangerFg },
+  default: { borderWidth: 1, borderColor: colors.borderInput },
+  focus: { borderWidth: 1.5, borderColor: colors.ink900 },
+  error: { borderWidth: 1.5, borderColor: colors.dangerFg },
 });

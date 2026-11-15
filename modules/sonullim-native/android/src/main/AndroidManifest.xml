@@ -1,0 +1,51 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <uses-permission android:name="android.permission.VIBRATE" />
+
+  <!-- B-5 포그라운드 서비스 · 재부팅 후 다시 켜기 -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <!-- 도움 요청 알림을 잠금화면 위 전체 화면으로 (GuardianNotifier) -->
+  <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+  <!-- B-7 전원 3번 → 백그라운드에서 앱 띄우기 ('다른 앱 위에 표시') -->
+  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+  <!-- B-9 설정 안내: '배터리 사용량 최적화 중지' 확인 창 -->
+  <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+  <application>
+    <service
+        android:name="com.sonullim.nativemodule.SonullimService"
+        android:exported="false"
+        android:foregroundServiceType="specialUse">
+      <property
+          android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+          android:value="시청각장애인 당사자가 화면 없이 전원 버튼으로 앱을 켜고, 보호자의 진동 신호를 앱이 꺼져 있어도 받기 위한 상시 대기" />
+    </service>
+
+    <!-- B-8 앱이 꺼져 있을 때 신호 푸시 (FCM) -->
+    <service
+        android:name="com.sonullim.nativemodule.SonullimMessagingService"
+        android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+    </service>
+
+    <!-- 앱이 꺼져 있을 때 보호자의 위치 확인 요청에 답하기 (화면 없이 JS 잠깐 실행) -->
+    <service
+        android:name="com.sonullim.nativemodule.SonullimHeadlessService"
+        android:exported="false" />
+
+    <receiver
+        android:name="com.sonullim.nativemodule.BootReceiver"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+      </intent-filter>
+    </receiver>
+  </application>
+</manifest>

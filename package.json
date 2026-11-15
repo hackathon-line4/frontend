@@ -1,21 +1,26 @@
 {
   "name": "dayeon",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "index.js",
   "dependencies": {
     "@expo-google-fonts/noto-sans-kr": "^0.4.4",
     "@expo-google-fonts/roboto-mono": "^0.4.2",
-    "expo": "~58.0.21",
+    "expo": "~58.0.23",
     "expo-clipboard": "~58.0.4",
     "expo-constants": "~58.0.14",
+    "expo-crypto": "~58.0.7",
+    "expo-dev-client": "~58.0.18",
     "expo-font": "~58.0.11",
-    "expo-linking": "~58.0.15",
-    "expo-router": "~58.0.28",
-    "expo-splash-screen": "~58.0.12",
+    "expo-linking": "~58.0.16",
+    "expo-location": "~58.0.22",
+    "expo-router": "~58.0.30",
+    "expo-secure-store": "~58.0.2",
+    "expo-splash-screen": "~58.0.13",
     "expo-status-bar": "~58.0.4",
     "react": "19.3.0",
+    "react-dom": "19.3.0",
     "react-native": "0.88.1",
-    "react-native-safe-area-context": "~5.10.1",
+    "react-native-safe-area-context": "~5.11.1",
     "react-native-screens": "~4.30.0",
     "react-native-svg": "15.16.0"
   },
@@ -27,11 +32,16 @@
   },
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
+    "backend:up": "docker compose --project-directory ../backend up -d --build",
+    "backend:status": "docker compose --project-directory ../backend ps",
+    "backend:logs": "docker compose --project-directory ../backend logs --tail 100 app",
+    "backend:down": "docker compose --project-directory ../backend down",
     "typecheck": "tsc --noEmit",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "test": "node --test tests/*.test.cjs"
   },
   "private": true
 }

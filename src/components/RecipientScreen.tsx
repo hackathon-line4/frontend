@@ -1,5 +1,7 @@
-import { useRef } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef } from 'react';
 import {
+  AppState,
   Pressable,
   StyleSheet,
   View,
@@ -8,7 +10,7 @@ import {
 } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { colors, typography } from '@/theme';
+import { colors, radius, space, typography } from '@/theme';
 
 import { Text } from './Text';
 
@@ -19,6 +21,7 @@ export type RecipientState = 'idle' | 'compose' | 'sent' | 'incoming' | 'replied
 
 type RecipientScreenProps = {
   state: RecipientState;
+  busy?: boolean;
   /** 보낸 사람·신호 이름·할 수 있는 동작 포함 */
   accessibilityLabel: string;
   /** incoming: 신호 이름 · compose: 보낼 신호 이름 */
@@ -28,13 +31,20 @@ type RecipientScreenProps = {
   onDoubleTap?: () => void;
   /** idle: 3초 길게 = 도움 요청 */
   onLongPress?: () => void;
+  /** 길게 누르는 동안 1초마다 (1초, 2초). 3초가 되면 onLongPress */
+  onHoldTick?: () => void;
   /** 스크린리더 사용자 지정 동작 */
   accessibilityActions?: readonly AccessibilityActionInfo[];
   onAccessibilityAction?: (event: AccessibilityActionEvent) => void;
 };
 
-const DOUBLE_TAP_MS = 350;
+/**
+ * 두 번 탭: 첫 탭을 뗀 순간부터 두 번째 탭을 누른 순간까지 이 시간 안이면 두 번 탭.
+ * 누르고 있는 시간은 빼고 잰다 (뗀 순간끼리 재면 실제로는 0.25초 안에 눌러야 해서 거의 안 됨)
+ */
+const DOUBLE_TAP_GAP_MS = 500;
 const LONG_PRESS_MS = 3000;
+const HOLD_TICK_MS = 1000;
 
 const backgrounds: Record<RecipientState, string> = {
   idle: colors.rBlack,
@@ -46,33 +56,62 @@ const backgrounds: Record<RecipientState, string> = {
 
 export function RecipientScreen({
   state,
+  busy = false,
   accessibilityLabel,
   signalName,
   onPress,
   onDoubleTap,
   onLongPress,
+  onHoldTick,
   accessibilityActions,
   onAccessibilityAction,
 }: RecipientScreenProps) {
-  const lastTap = useRef(0);
+  /** 직전 한 번 탭을 뗀 시각 · 이번 탭을 누른 시각 */
+  const lastRelease = useRef(0);
+  const pressedAt = useRef(0);
+  const holdTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearHold = useCallback(() => {
+    holdTimers.current.forEach(clearTimeout);
+    holdTimers.current = [];
+  }, []);
+
+  // 화면을 떠나면 남은 타이머 정리
+  useFocusEffect(useCallback(() => {
+    const subscription = AppState.addEventListener('change', clearHold);
+    return () => { clearHold(); subscription.remove(); };
+  }, [clearHold]));
+  useEffect(() => { if (busy) clearHold(); }, [busy, clearHold]);
+
+  const handlePressIn = () => {
+    pressedAt.current = Date.now();
+    clearHold();
+    if (!onLongPress || !onHoldTick) return;
+    for (let t = HOLD_TICK_MS; t < LONG_PRESS_MS; t += HOLD_TICK_MS) {
+      holdTimers.current.push(setTimeout(onHoldTick, t));
+    }
+  };
   const isStatus = state === 'sent' || state === 'replied';
 
   const handlePress = () => {
     if (onDoubleTap) {
-      const now = Date.now();
-      if (now - lastTap.current < DOUBLE_TAP_MS) {
-        lastTap.current = 0;
+      if (pressedAt.current - lastRelease.current < DOUBLE_TAP_GAP_MS) {
+        lastRelease.current = 0;
         onDoubleTap();
         return;
       }
-      lastTap.current = now;
+      lastRelease.current = Date.now();
     }
     onPress?.();
   };
 
   return (
     <Pressable
+      disabled={busy}
+      accessibilityState={{ busy, disabled: busy }}
       onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={clearHold}
       onLongPress={onLongPress}
       delayLongPress={LONG_PRESS_MS}
       accessibilityRole={isStatus ? undefined : 'button'}
@@ -163,18 +202,19 @@ const styles = StyleSheet.create({
   },
   composeWrap: {
     alignItems: 'center',
-    gap: 36,
+    gap: space[10],
   },
   composeCircle: {
     width: 300,
     height: 300,
-    borderRadius: 150,
+    borderRadius: radius.full,
     backgroundColor: colors.rYellow,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // 종이비행기 글리프의 시각 중심을 원 가운데로
   composeGlyph: {
-    marginRight: 10,
+    paddingRight: space[3],
   },
   composeText: {
     ...typography.rTitle,
@@ -183,7 +223,7 @@ const styles = StyleSheet.create({
   },
   sentWrap: {
     alignItems: 'center',
-    gap: 40,
+    gap: space[10],
   },
   sentText: {
     ...typography.display,
@@ -192,11 +232,11 @@ const styles = StyleSheet.create({
   incomingCircle: {
     width: 320,
     height: 320,
-    borderRadius: 160,
+    borderRadius: radius.full,
     backgroundColor: colors.rBlack,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 40,
+    padding: space[10],
   },
   incomingText: {
     ...typography.rDisplay,

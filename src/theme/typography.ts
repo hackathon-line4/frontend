@@ -1,10 +1,11 @@
 import type { TextStyle } from 'react-native';
 
-// 굵기는 400 · 500 · 800 세 단계만 사용. 숫자 코드는 Roboto Mono.
+// 굵기: 400 · 500 · 700(보호자 앱 강조) · 800(당사자 앱 강조). 숫자 코드는 Roboto Mono.
 // 폰트 파일마다 family 이름이 따로 있어서 fontWeight 대신 fontFamily로 굵기를 고른다.
 export const fontFamily = {
   regular: 'NotoSansKR_400Regular',
   medium: 'NotoSansKR_500Medium',
+  bold: 'NotoSansKR_700Bold',
   extraBold: 'NotoSansKR_800ExtraBold',
   monoMedium: 'RobotoMono_500Medium',
   monoBold: 'RobotoMono_700Bold',
@@ -18,17 +19,17 @@ type TypeSpec = {
 };
 
 const spec: Record<string, TypeSpec> = {
-  display: { size: 44, lineHeight: 1.1, family: fontFamily.extraBold, letterSpacing: -0.04 },
-  title1: { size: 28, lineHeight: 1.3, family: fontFamily.extraBold, letterSpacing: -0.03 },
-  title2: { size: 24, lineHeight: 1.35, family: fontFamily.extraBold, letterSpacing: -0.03 },
-  heading: { size: 18, lineHeight: 1.4, family: fontFamily.extraBold },
-  bodyStrong: { size: 16, lineHeight: 1.5, family: fontFamily.extraBold },
-  body: { size: 16, lineHeight: 1.6, family: fontFamily.regular },
-  label: { size: 15, lineHeight: 1.5, family: fontFamily.extraBold },
-  caption: { size: 14, lineHeight: 1.55, family: fontFamily.regular },
-  small: { size: 13, lineHeight: 1.5, family: fontFamily.medium },
-  badge: { size: 11, lineHeight: 1, family: fontFamily.extraBold },
-  code: { size: 48, lineHeight: 1, family: fontFamily.monoBold, letterSpacing: 0.08 },
+  display: { size: 36, lineHeight: 1.15, family: fontFamily.bold, letterSpacing: -0.03 },
+  title1: { size: 24, lineHeight: 1.35, family: fontFamily.bold, letterSpacing: -0.02 },
+  title2: { size: 20, lineHeight: 1.4, family: fontFamily.bold, letterSpacing: -0.02 },
+  heading: { size: 17, lineHeight: 1.45, family: fontFamily.bold },
+  bodyStrong: { size: 15, lineHeight: 1.5, family: fontFamily.bold },
+  body: { size: 15, lineHeight: 1.6, family: fontFamily.regular },
+  label: { size: 14, lineHeight: 1.5, family: fontFamily.bold },
+  caption: { size: 13, lineHeight: 1.55, family: fontFamily.regular },
+  small: { size: 12, lineHeight: 1.5, family: fontFamily.medium },
+  badge: { size: 11, lineHeight: 1, family: fontFamily.bold },
+  code: { size: 44, lineHeight: 1, family: fontFamily.monoBold, letterSpacing: 0.08 },
 
   // 당사자 앱 스케일 (최소 18, 주요 글자 20 이상)
   rDisplay: { size: 52, lineHeight: 1.15, family: fontFamily.extraBold, letterSpacing: -0.04 },

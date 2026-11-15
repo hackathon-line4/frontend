@@ -1,17 +1,26 @@
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { Button, Screen, Text } from '@/components';
+import { restoreSession, sessionHref, useSession } from '@/features/session';
 import SplashScreen from '@/screens/SplashScreen';
 
-const SPLASH_MS = 1500;
-
-// 01 스플래시. 약 1.5초 뒤 자동 전환.
-// TODO: 첫 실행 → 온보딩 / 재실행 → 저장된 유형의 홈 (저장소 연결 후)
 export default function SplashRoute() {
+  const session = useSession();
+  const [elapsed, setElapsed] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(() => router.replace('/onboarding'), SPLASH_MS);
+    void restoreSession();
+    const timer = setTimeout(() => setElapsed(true), 1500);
     return () => clearTimeout(timer);
   }, []);
-
+  useEffect(() => {
+    if (elapsed && session.status !== 'loading' && session.status !== 'error') router.replace(sessionHref(session));
+  }, [elapsed, session]);
+  if (session.status === 'error') {
+    return <Screen gap={5} reserveHeader="lg">
+      <Text accessibilityRole="alert">{session.error}</Text>
+      <Button label="다시 시도" onPress={() => { void restoreSession(); }} />
+    </Screen>;
+  }
   return <SplashScreen />;
 }

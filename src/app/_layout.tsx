@@ -4,6 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { CalibrationSync } from '@/features/calibration/CalibrationSync';
+import DevShortcut from '@/features/dev/DevShortcut';
+import { SessionBoundary } from '@/features/session/SessionBoundary';
+import { PushRegistration } from '@/features/push';
+import { RealtimeSync } from '@/realtime/RealtimeSync';
 import { colors, useAppFonts } from '@/theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -32,6 +37,11 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ animation: 'none' }} />
         <Stack.Screen name="onboarding" options={{ animation: 'fade', gestureEnabled: false }} />
       </Stack>
+      <DevShortcut />
+      <SessionBoundary />
+      <RealtimeSync />
+      <PushRegistration />
+      <CalibrationSync />
       <StatusBar style="dark" />
     </SafeAreaProvider>
   );

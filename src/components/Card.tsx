@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, describeRhythm, fontFamily, radius, shadow, type Beat } from '@/theme';
+import { colors, describeRhythm, fontFamily, radius, screen, shadow, space, type Beat } from '@/theme';
 
 import { SignalBadge, type SignalBadgeType } from './Badge';
 import { Icon, type IconName } from './Icon';
@@ -126,27 +126,27 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
-    padding: 16,
+    padding: screen.cardPadding,
   },
   outline: {
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.line,
   },
   emphasis: {
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: colors.ink900,
-    borderRadius: radius.xl,
-    padding: 20,
+    borderRadius: radius.lg,
+    padding: space[4],
   },
 
   tile: {
-    minHeight: 116,
-    padding: 12,
-    borderWidth: 1.5,
+    minHeight: 96,
+    padding: space[3],
+    borderWidth: 1,
     borderColor: colors.line,
     borderRadius: radius.md,
     backgroundColor: colors.bgIvory,
-    gap: 8,
+    gap: space[2],
   },
   tilePressed: { backgroundColor: colors.surfaceSunken },
   tileTop: {
@@ -155,17 +155,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tileName: {
-    fontFamily: fontFamily.extraBold,
-    fontSize: 17,
-    lineHeight: 24,
+    fontFamily: fontFamily.bold,
+    fontSize: 16,
+    lineHeight: 22,
   },
 
   row: {
-    minHeight: 60,
+    minHeight: 54,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingVertical: 8,
+    gap: space[3],
+    paddingVertical: space[2],
   },
   rowPressed: { opacity: 0.7 },
   divider: {
@@ -175,19 +175,19 @@ const styles = StyleSheet.create({
 
   info: {
     borderRadius: radius.sm,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: space[3],
+    paddingHorizontal: space[4],
   },
   infoText: {
     fontFamily: fontFamily.regular,
-    fontSize: 14,
-    lineHeight: 22,
+    fontSize: 13,
+    lineHeight: 20,
     color: colors.textPrimary,
   },
 });
 
 const infoTone = StyleSheet.create({
   neutral: { backgroundColor: colors.surfaceMuted },
-  brand: { backgroundColor: colors.yellow100, borderWidth: 2, borderColor: colors.ink900 },
-  caution: { backgroundColor: colors.surface, borderWidth: 2, borderStyle: 'dashed', borderColor: colors.ink900 },
+  brand: { backgroundColor: colors.yellow100 },
+  caution: { backgroundColor: colors.surface, borderWidth: 1.5, borderStyle: 'dashed', borderColor: colors.ink900 },
 });

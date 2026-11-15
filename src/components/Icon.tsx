@@ -163,6 +163,31 @@ const icons = {
     </>
   ),
   save: () => <Path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM7 3v5h8V3M7 21v-7h10v7" />,
+  // 진동 설정 (Calib*)
+  minus: () => <Path d="M5 12h14" />,
+  'arrow-up': () => <Path d="M12 19V5M6 11l6-6 6 6" />,
+  // 기록의 방향 (전화 앱처럼): 보냄 ↗ · 받음 ↙
+  'arrow-out': () => <Path d="M7 17L17 7M9 7h8v8" />,
+  'arrow-in': () => <Path d="M17 7L7 17M15 17H7V9" />,
+  // 자주 쓰는 신호: 빈 별 / 채운 별
+  star: () => <Path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" />,
+  'star-on': (color: string) => <Path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" fill={color} />,
+  trash: () => <Path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v5.5M14 11v5.5" />,
+  stop: (color: string) => <Rect x="5" y="5" width="14" height="14" rx="2" fill={color} stroke="none" />,
+  phone: () => (
+    <>
+      <Rect x="7" y="3" width="10" height="18" rx="2.5" />
+      <Path d="M11 17.5h2" />
+    </>
+  ),
+  lengthen: () => <Path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4" />,
+  repeat: () => <Path d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3" />,
+  people: () => (
+    <>
+      <Circle cx="9" cy="8" r="4" />
+      <Path d="M2 21a7 7 0 0 1 14 0M17 11a3 3 0 1 0 0-6M22 21a5 5 0 0 0-5-5" />
+    </>
+  ),
 
   // 신호 아이콘 (중립적인 사물만. 손동작·진동 모양은 그리지 않음)
   'sig-door': (color: string) => (
@@ -197,6 +222,40 @@ const icons = {
       <Circle cx="12" cy="12" r="9" />
       <Circle cx="12" cy="12" r="4" />
       <Path d="M5.6 5.6l3.6 3.6M14.8 14.8l3.6 3.6M18.4 5.6l-3.6 3.6M9.2 14.8l-3.6 3.6" />
+    </>
+  ),
+
+  // 위치 (05 보호자 홈)
+  'pin-off': () => (
+    <>
+      <Path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z" />
+      <Circle cx="12" cy="10" r="2.5" />
+      <Path d="M3 3l18 18" />
+    </>
+  ),
+
+  // 신호 기록 (08)
+  /** 전송 요청 중 (점선 원) */
+  pending: () => <Circle cx="12" cy="12" r="9" strokeDasharray="3 3" />,
+  /** 기기 전달 완료 (휴대폰 + 체크) */
+  'device-check': () => (
+    <>
+      <Rect x="6" y="2" width="12" height="20" rx="3" />
+      <Path d="M9.5 12l2 2 3.5-4" />
+    </>
+  ),
+  /** 응답 없음 (점선 원 X) */
+  'no-reply-dashed': () => (
+    <>
+      <Circle cx="12" cy="12" r="9" strokeDasharray="3 3" />
+      <Path d="M9 9l6 6M15 9l-6 6" />
+    </>
+  ),
+  /** 응답 완료 (노란 원 + 체크) */
+  replied: (color: string) => (
+    <>
+      <Circle cx="12" cy="12" r="10" fill={colors.yellow500} stroke={color} strokeWidth={1.5} />
+      <Path d="M7 12.5l3.2 3.2L17 9" strokeWidth={2.5} />
     </>
   ),
 } satisfies Record<string, (color: string) => ReactNode>;

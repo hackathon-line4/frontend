@@ -1,14 +1,18 @@
-// 간격 (4px 단위)
+// 간격 (4px 단위). 화면·컴포넌트의 모든 여백과 gap은 이 값만 쓴다.
 export const space = {
+  0: 0,
   1: 4,
   2: 8,
   3: 12,
   4: 16,
   5: 20,
   6: 24,
+  7: 28, // 섹션 사이 (Foundations '섹션 사이 28')
   8: 32,
   10: 40,
 } as const;
+
+export type SpaceToken = keyof typeof space;
 
 export const radius = {
   xs: 10, // 세그먼트 탭 안쪽, 배지
@@ -33,13 +37,14 @@ export const touch = {
   recipientPrimary: 80,
 } as const;
 
+// 화면 단위 의미 토큰 (값은 space에서 가져온다)
 export const screen = {
-  gutter: 20, // 기본 화면 좌우 여백
-  gutterTab: 16, // 홈·탭 화면
-  gutterRecipient: 24, // 당사자 앱
-  cardPadding: 16,
-  cardGap: 16,
-  sectionGap: 28,
-  buttonGap: 12, // 보호자 10–12
-  buttonGapRecipient: 14,
+  gutter: space[5], // 기본 화면 좌우 여백
+  gutterTab: space[4], // 홈·탭 화면
+  gutterRecipient: space[6], // 당사자 앱
+  cardPadding: space[4],
+  cardGap: space[4],
+  sectionGap: space[7],
+  buttonGap: space[3], // 보호자 10–12
+  buttonGapRecipient: space[4], // 당사자 14 이상
 } as const;

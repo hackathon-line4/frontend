@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-import { colors, fontFamily } from '@/theme';
+import { colors, fontFamily, space } from '@/theme';
 
 import { Text } from './Text';
 
@@ -10,7 +10,7 @@ export function Logo({ size = 'lg' }: { size?: 'lg' | 'sm' }) {
   const isLg = size === 'lg';
   const fontSize = isLg ? 52 : 24;
   return (
-    <View style={[styles.row, { gap: isLg ? 4 : 2 }]} accessible accessibilityRole="image" accessibilityLabel="손울림">
+    <View style={[styles.row, { gap: isLg ? space[1] : space[0] }]} accessible accessibilityRole="image" accessibilityLabel="손울림">
       <Text style={[styles.word, { fontSize, lineHeight: fontSize, letterSpacing: fontSize * -0.04 }]}>손울림</Text>
       <Svg width={isLg ? 22 : 13} height={isLg ? 30 : 18} viewBox="0 0 22 30" fill="none">
         <Path d="M4 9 q4 6 0 12" stroke={colors.yellow500} strokeWidth={isLg ? 3.5 : 4} strokeLinecap="round" />
@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
   word: {
     fontFamily: fontFamily.extraBold,
     // Noto Sans KR 위아래 여백 때문에 lineHeight = fontSize 에서 잘리지 않게
-    paddingTop: 4,
+    paddingTop: space[1],
   },
 });

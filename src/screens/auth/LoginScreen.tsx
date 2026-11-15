@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
-import { Button, Logo, Screen, ScreenTitle, Text, TextField } from '@/components';
-import { fontFamily } from '@/theme';
+import { Button, Logo, Screen, ScreenTitle, Stack, Text, TextField } from '@/components';
+import { touch } from '@/theme';
 
 type LoginScreenProps = {
   onLogin: (form: { email: string; password: string }) => void;
@@ -10,34 +10,41 @@ type LoginScreenProps = {
   onForgotPassword?: () => void;
   /** 로그인 실패 문구 (서버 응답) */
   error?: string;
+  errorField?: string;
+  onFormChange?: () => void;
+  busy?: boolean;
+  retryAfterSec?: number;
 };
 
 // 03-1 로그인 (design/screens/Login.dc.html)
-export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error }: LoginScreenProps) {
+export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error, errorField, onFormChange, busy, retryAfterSec = 0 }: LoginScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   return (
     <Screen
       scroll
-      contentStyle={styles.content}
+      paddingTop={8}
+      gap={10}
       footer={
-        <View style={styles.footer}>
-          <Text color="textSecondary" style={styles.footerText}>
+        <Stack gap={3}>
+          <Text variant="label" weight="regular" color="textSecondary" style={styles.center}>
             아직 계정이 없나요?
           </Text>
-          <Button label="회원가입" variant="secondary" onPress={onSignup} style={styles.stretch} />
-        </View>
+          <Button label="회원가입" variant="secondary" onPress={onSignup} />
+        </Stack>
       }
     >
       <Logo size="sm" />
-      <ScreenTitle title="다시 만나서 반가워요" description="이메일로 로그인해 주세요." style={styles.title} />
+      <ScreenTitle title="다시 만나서 반가워요" description="이메일로 로그인해 주세요." />
 
-      <View style={styles.form}>
+      <Stack gap={6}>
+        {error && errorField !== 'password' && <Text accessibilityRole="alert" color="dangerFg">{error}</Text>}
         <TextField
           label="이메일"
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(value) => { setEmail(value); onFormChange?.(); }}
+          editable={!busy}
           placeholder="example@email.com"
           keyboardType="email-address"
           autoCapitalize="none"
@@ -45,57 +52,41 @@ export default function LoginScreen({ onLogin, onSignup, onForgotPassword, error
           textContentType="emailAddress"
           returnKeyType="next"
         />
-        <TextField
-          label="비밀번호"
-          value={password}
-          onChangeText={setPassword}
-          placeholder="비밀번호 입력"
-          password
-          autoComplete="current-password"
-          textContentType="password"
-          returnKeyType="done"
-          error={error}
-        />
-        <Pressable onPress={onForgotPassword} accessibilityRole="link" style={styles.forgot}>
-          <Text variant="caption" color="textSecondary" style={styles.forgotText}>
-            비밀번호를 잊으셨나요?
-          </Text>
-        </Pressable>
-        <Button label="로그인" onPress={() => onLogin({ email, password })} />
-      </View>
+        <Stack gap={3}>
+          <TextField
+            label="비밀번호"
+            value={password}
+            onChangeText={(value) => { setPassword(value); onFormChange?.(); }}
+            editable={!busy}
+            placeholder="비밀번호 입력"
+            password
+            autoComplete="current-password"
+            textContentType="password"
+            returnKeyType="done"
+            error={errorField === 'password' ? error : undefined}
+          />
+          <Pressable onPress={onForgotPassword} accessibilityRole="link" style={styles.forgot}>
+            <Text variant="caption" weight="medium" color="textSecondary" style={styles.underline}>
+              비밀번호를 잊으셨나요?
+            </Text>
+          </Pressable>
+        </Stack>
+        <Button label={busy ? '로그인 중…' : retryAfterSec > 0 ? `${retryAfterSec}초 후 다시 시도` : '로그인'} disabled={busy || retryAfterSec > 0 || !email.trim() || !password} onPress={() => onLogin({ email, password })} />
+      </Stack>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
-    paddingTop: 36,
-  },
-  title: {
-    marginTop: 40,
-  },
-  form: {
-    marginTop: 36,
-    gap: 20,
-  },
   forgot: {
     alignSelf: 'flex-end',
-    minHeight: 44,
+    minHeight: touch.guardianMin,
     justifyContent: 'center',
-    marginTop: -8,
   },
-  forgotText: {
-    fontFamily: fontFamily.medium,
+  underline: {
     textDecorationLine: 'underline',
   },
-  footer: {
-    alignItems: 'center',
-    gap: 12,
-  },
-  footerText: {
-    fontSize: 15,
-  },
-  stretch: {
-    alignSelf: 'stretch',
+  center: {
+    textAlign: 'center',
   },
 });

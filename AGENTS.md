@@ -23,6 +23,13 @@ npx expo install --fix      # fix incompatible package versions
 
 Run lint and typecheck before declaring any task done.
 
+## Git synchronization
+
+- Before starting work and again before pushing, run `git fetch origin --prune` and inspect the working tree and upstream status.
+- Pull the current branch with `git pull --ff-only` when it is behind its remote. If the branches have diverged, inspect both sides and merge without discarding either side's work.
+- Before pushing a PR branch, merge the latest remote PR target branch (for example, `origin/dev`) into it. Pulling only the feature branch does not catch conflicts with the PR target.
+- Resolve conflicts preserving both features, run lint and typecheck (and relevant existing tests), and check for conflict markers before committing the merge and pushing. Fetch again if the remote changes during validation. Never force-push to bypass a conflict.
+
 ## Navigation & Routing
 
 - Use **Expo Router** for all navigation. Routes live in `src/app/` — every file there is a screen, `_layout.tsx` files define navigators. Keep non-route code (components, hooks, utils) outside `src/app/`.

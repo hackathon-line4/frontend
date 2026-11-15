@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { colors, fontFamily, radius, shadow } from '@/theme';
+import { colors, fontFamily, radius, shadow, space, touch } from '@/theme';
 
 import { Icon } from './Icon';
 import { Text } from './Text';
@@ -89,17 +89,19 @@ export function SegmentedTabs<T extends string>({ options, value, onChange }: Se
 /* ---------- Chip ---------- */
 
 type ChipProps = {
+  disabled?: boolean;
   label: string;
   selected: boolean;
   onPress: () => void;
 };
 
-export function Chip({ label, selected, onPress }: ChipProps) {
+export function Chip({ label, selected, onPress, disabled = false }: ChipProps) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityState={{ selected, disabled }}
       style={[styles.chip, selected ? styles.chipSelected : styles.chipIdle]}
     >
       {selected && <Icon name="check" size={14} color={colors.textOnDark} strokeWidth={3} />}
@@ -117,6 +119,7 @@ export function Chip({ label, selected, onPress }: ChipProps) {
 /* ---------- Switch ---------- */
 
 type SwitchRowProps = {
+  disabled?: boolean;
   label: string;
   value: boolean;
   onValueChange: (value: boolean) => void;
@@ -125,7 +128,7 @@ type SwitchRowProps = {
 };
 
 // 옆에 '켜짐/꺼짐' 글자 필수
-export function SwitchRow({ label, value, onValueChange, large = false }: SwitchRowProps) {
+export function SwitchRow({ label, value, onValueChange, large = false, disabled = false }: SwitchRowProps) {
   const w = large ? 64 : 52;
   const h = large ? 40 : 32;
   const onThumb = h - 8;
@@ -134,9 +137,10 @@ export function SwitchRow({ label, value, onValueChange, large = false }: Switch
   return (
     <Pressable
       onPress={() => onValueChange(!value)}
+      disabled={disabled}
       accessibilityRole="switch"
       accessibilityLabel={label}
-      accessibilityState={{ checked: value }}
+      accessibilityState={{ checked: value, disabled }}
       style={[styles.row, large && styles.rowLarge]}
     >
       <Text variant={large ? 'rBody' : 'bodyStrong'} style={[styles.flex, large && styles.bold]}>
@@ -154,7 +158,7 @@ export function SwitchRow({ label, value, onValueChange, large = false }: Switch
         <View
           style={
             value
-              ? [styles.thumbOn, { width: onThumb, height: onThumb, borderRadius: onThumb / 2, left: w - onThumb - 4 }]
+              ? [styles.thumbOn, { width: onThumb, height: onThumb, borderRadius: onThumb / 2, left: w - onThumb - space[1] }]
               : [styles.thumbOff, { width: offThumb, height: offThumb, borderRadius: offThumb / 2 }]
           }
         />
@@ -198,21 +202,21 @@ const styles = StyleSheet.create({
 
   radioCard: {
     minHeight: 64,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: space[4],
+    paddingVertical: space[3],
     borderRadius: radius.md,
     backgroundColor: colors.surface,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: space[3],
   },
   radioSelected: { borderWidth: 2.5, borderColor: colors.ink900 },
   radioIdle: { borderWidth: 1.5, borderColor: colors.lineStrong },
 
   segTrack: {
     flexDirection: 'row',
-    gap: 6,
-    padding: 4,
+    gap: space[1],
+    padding: space[1],
     borderRadius: radius.sm,
     backgroundColor: colors.surfaceMuted,
   },
@@ -230,29 +234,29 @@ const styles = StyleSheet.create({
 
   chip: {
     minHeight: 44,
-    paddingHorizontal: 14,
+    paddingHorizontal: space[3],
     borderRadius: radius.sm,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 4,
+    gap: space[1],
   },
   chipSelected: { backgroundColor: colors.ink900 },
   chipIdle: { backgroundColor: colors.surface, borderWidth: 1.5, borderColor: colors.borderInput },
 
   row: {
     minHeight: 64,
-    paddingHorizontal: 16,
+    paddingHorizontal: space[4],
     borderWidth: 1.5,
     borderColor: colors.lineStrong,
     borderRadius: radius.md,
     backgroundColor: colors.surface,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: space[3],
   },
   rowLarge: {
-    minHeight: 80,
+    minHeight: touch.recipientPrimary,
     borderRadius: radius.lg,
   },
   switchText: { fontSize: 14 },
@@ -264,15 +268,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   thumbOn: { position: 'absolute', backgroundColor: colors.yellow500 },
-  thumbOff: { position: 'absolute', left: 4, backgroundColor: colors.textTertiary },
+  thumbOff: { position: 'absolute', left: space[1], backgroundColor: colors.textTertiary },
 
   checkRow: {
     minHeight: 56,
-    paddingHorizontal: 16,
+    paddingHorizontal: space[4],
     borderRadius: radius.sm,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: space[3],
   },
   checkBrand: { backgroundColor: colors.yellow100 },
   checkBox: {

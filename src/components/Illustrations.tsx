@@ -151,3 +151,57 @@ export function ScanFrame({ size = 260 }: { size?: number }) {
     </Svg>
   );
 }
+
+/* ---------- 지도 자리 (design/screens/DS-Assets placeholder/map + pin) ---------- */
+// TODO: 실제 지도 SDK로 교체. 지금은 모양만 보여 주는 그림이다.
+
+const mapGround = colors.line;
+const mapBlock = colors.lineStrong;
+const mapRoad = colors.surface;
+const mapPark = colors.successBg;
+
+/** placeholder/map + pin · 홈 위치 미리보기 썸네일 (96) */
+export function MapThumbnail({ size = 96, pin = true }: { size?: number; pin?: boolean }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 96 96">
+      <Rect width="96" height="96" fill={mapGround} />
+      <Path d="M0 34h96M0 70h96M30 0v96M70 0v96" stroke={mapRoad} strokeWidth={6} />
+      <Rect x="36" y="40" width="28" height="24" fill={mapBlock} />
+      {pin && (
+        <>
+          <Path d="M48 26c-7 0-12 5-12 11 0 8 12 19 12 19s12-11 12-19c0-6-5-11-12-11z" fill={ink} />
+          <Circle cx="48" cy="37" r="4.5" fill={accent} />
+        </>
+      )}
+    </Svg>
+  );
+}
+
+/** 위치 탭 전체 지도. 부모 크기를 채운다 (가운데 기준으로 잘림). pin=false면 핀·정확도 원 없음 */
+export function MapPlaceholder({ pin = true }: { pin?: boolean }) {
+  return (
+    <Svg width="100%" height="100%" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice">
+      <Rect width="390" height="844" fill={mapGround} />
+      <G fill={mapBlock}>
+        <Rect x="20" y="120" width="120" height="90" rx="6" />
+        <Rect x="180" y="110" width="170" height="110" rx="6" />
+        <Rect x="30" y="260" width="110" height="150" rx="6" />
+        <Rect x="190" y="270" width="150" height="70" rx="6" />
+        <Rect x="190" y="380" width="80" height="80" rx="6" />
+        <Rect x="20" y="460" width="130" height="90" rx="6" />
+      </G>
+      <Rect x="290" y="380" width="80" height="80" rx="6" fill={mapPark} />
+      <G stroke={mapRoad} strokeWidth={14}>
+        <Path d="M0 240h390M0 430h390M160 0v844M0 600h390" />
+        <Path d="M-20 700 L410 520" strokeWidth={10} />
+      </G>
+      {pin && (
+        <>
+          <Circle cx="230" cy="360" r="46" fill={accent} fillOpacity={0.25} stroke={accent} strokeWidth={2} />
+          <Path d="M230 300c-14 0-25 11-25 24 0 17 25 40 25 40s25-23 25-40c0-13-11-24-25-24z" fill={ink} />
+          <Circle cx="230" cy="324" r="9" fill={accent} />
+        </>
+      )}
+    </Svg>
+  );
+}

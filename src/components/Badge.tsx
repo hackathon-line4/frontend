@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
-import { colors, radius, typography } from '@/theme';
+import { colors, radius, space, typography } from '@/theme';
 
 import { Icon, type IconName } from './Icon';
 import { Text } from './Text';
@@ -83,19 +83,19 @@ export function StatusChip({ status, label }: StatusChipProps) {
 const styles = StyleSheet.create({
   badge: {
     height: 22,
-    paddingHorizontal: 8,
-    borderRadius: 11,
+    paddingHorizontal: space[2],
+    borderRadius: radius.full,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
+    gap: space[1],
     alignSelf: 'flex-start',
   },
-  basic: { borderWidth: 1.5, borderColor: colors.ink900 },
+  basic: { borderWidth: 1, borderColor: colors.ink900 },
   custom: { backgroundColor: colors.ink900 },
   untrained: {
     height: 26,
-    borderRadius: 13,
-    borderWidth: 1.5,
+    borderRadius: radius.full,
+    borderWidth: 1,
     borderStyle: 'dashed',
     borderColor: colors.textTertiary,
   },
@@ -106,11 +106,11 @@ const styles = StyleSheet.create({
   },
   chip: {
     height: 28,
-    paddingHorizontal: 10,
+    paddingHorizontal: space[3],
     borderRadius: radius.full,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: space[1],
     alignSelf: 'flex-start',
   },
   chipText: {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   noReply: {
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderStyle: 'dashed',
     borderColor: colors.ink900,
   },

@@ -1,8 +1,7 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { Card, Tag, Text } from '@/components';
-import { QrPlaceholder } from '@/components/Illustrations';
-import { colors, typography } from '@/theme';
+import { colors, space, typography } from '@/theme';
 
 import { formatLinkCode, spellLinkCode } from './code';
 import { formatMinutes } from './useCountdown';
@@ -13,7 +12,7 @@ type LinkCodeCardProps = {
   remainingSeconds: number;
 };
 
-// 04-G2 연결 코드 + 만료 시간 + QR
+// 04-G2 연결 코드 + 만료 시간 (QR 연결은 하지 않음)
 export function LinkCodeCard({ code, remainingSeconds }: LinkCodeCardProps) {
   const expired = remainingSeconds <= 0;
 
@@ -31,17 +30,6 @@ export function LinkCodeCard({ code, remainingSeconds }: LinkCodeCardProps) {
       ) : (
         <Tag icon="timer" label={`${formatMinutes(remainingSeconds)} 후 만료`} bold={false} />
       )}
-
-      <View style={styles.divider} />
-
-      <View style={[styles.qrRow, expired && styles.dimmed]}>
-        <View accessible accessibilityRole="image" accessibilityLabel="연결용 QR 코드">
-          <QrPlaceholder />
-        </View>
-        <Text color="textSecondary" style={styles.qrText}>
-          당사자 휴대폰의 <Text style={styles.qrStrong}>QR 코드로 연결</Text>을 눌러 이 화면을 비춰도 돼요.
-        </Text>
-      </View>
     </Card>
   );
 }
@@ -49,37 +37,15 @@ export function LinkCodeCard({ code, remainingSeconds }: LinkCodeCardProps) {
 const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    gap: 14,
+    gap: space[3],
   },
   code: {
     ...typography.code,
+    // 48 글자가 잘리지 않게 한 줄 높이만 늘린다
     lineHeight: 56,
   },
   expiredCode: {
     color: colors.textTertiary,
     textDecorationLine: 'line-through',
-  },
-  divider: {
-    alignSelf: 'stretch',
-    height: 1,
-    backgroundColor: colors.line,
-  },
-  qrRow: {
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  dimmed: {
-    opacity: 0.3,
-  },
-  qrText: {
-    flex: 1,
-    fontSize: 15,
-    lineHeight: 24,
-  },
-  qrStrong: {
-    fontFamily: typography.label.fontFamily,
-    color: colors.textPrimary,
   },
 });
