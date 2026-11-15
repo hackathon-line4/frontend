@@ -13,6 +13,5 @@ export default function RecipientCodeEntryRoute() {
     void resource.run(() => linkApi.verify(code), () => router.push({ pathname: '/link/recipient/confirm', params: { code } }));
   };
   return <RecipientCodeEntryScreen busy={resource.busy} error={edited ? undefined : resource.error}
-    onChange={() => setEdited(true)} onBack={() => router.back()}
-    onScanQr={() => router.push('/link/recipient/scan')} onSubmit={submit} />;
+    onChange={() => setEdited(true)} onBack={() => router.back()} onSubmit={submit} />;
 }

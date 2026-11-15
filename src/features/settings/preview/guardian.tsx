@@ -20,7 +20,6 @@ export default function GuardianSettingsRoute() {
       calibration={mockCalibration}
       notificationPermission={notificationPermission}
       onCheckConnection={checkConnection}
-      onLinkAnother={() => router.push('/link/guardian')}
       onConnectionHelp={() => router.push('/guardian/connection-help')}
       onCalibration={() => router.push('/calibration')}
       onCalibrationTest={() => router.push('/calibration/test')}

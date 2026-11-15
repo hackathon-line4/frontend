@@ -23,6 +23,8 @@ export type SetupItem = {
 type Props = {
   items: SetupItem[];
   onBack: () => void;
+  /** 계정 연결 직후 들어왔을 때: 다 켠 뒤 대기 화면으로 */
+  onDone?: () => void;
 };
 
 const statusLabel: Record<SetupStatus, string> = {
@@ -33,13 +35,14 @@ const statusLabel: Record<SetupStatus, string> = {
 
 // 당사자 폰 설정 안내 (B-9). 디자인 시안 없음 → 공용 부품으로 구성.
 // 보호자가 당사자 폰을 들고 이 화면 하나로 설정을 끝낸다. 상태는 아이콘 + 글자로 (색만으로 구분하지 않음).
-export default function RecipientSetupScreen({ items, onBack }: Props) {
+export default function RecipientSetupScreen({ items, onBack, onDone }: Props) {
   const scale = useRoleScale();
   const checkable = items.filter((i) => i.status !== 'manual');
   const done = checkable.filter((i) => i.status === 'on').length;
 
   return (
-    <Screen scroll gap={5} gutter="recipient" header={<ScreenHeader onBack={onBack} size={scale.headerSize} />}>
+    <Screen scroll gap={5} gutter="recipient" header={<ScreenHeader onBack={onBack} size={scale.headerSize} />}
+      footer={onDone && <Button label="설정 완료" size={scale.buttonSize} onPress={onDone} />}>
       <ScreenTitle
         title="폰 설정 확인"
         description="손울림이 꺼져 있거나 화면이 잠겨 있어도 신호를 받으려면 아래 설정이 필요해요."

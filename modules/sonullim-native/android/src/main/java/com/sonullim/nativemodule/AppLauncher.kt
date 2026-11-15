@@ -24,6 +24,11 @@ object AppLauncher {
 
   private var activity = WeakReference<Activity>(null)
 
+  /** 앱 화면이 지금 보이는 중인지 (onResume ~ onPause). 푸시를 받았을 때 띄울지 정한다 */
+  @Volatile
+  var isForeground = false
+    internal set
+
   fun attach(activity: Activity) {
     this.activity = WeakReference(activity)
     setShowWhenLocked(activity, SonullimService.isEnabled(activity))
@@ -47,10 +52,15 @@ object AppLauncher {
     context.startActivity(intent)
   }
 
-  /** 서비스에서 호출. 권한이 없으면 띄우지 못하고 false */
-  fun launchFromTrigger(context: Context): Boolean {
+  /** 전원 3번. 권한이 없으면 띄우지 못하고 false */
+  fun launchFromTrigger(context: Context): Boolean = launch(context, "전원 3번")
+
+  /** B-8 앱이 꺼져 있을 때 신호 푸시를 받음 → 당사자 대기 화면을 띄우면 IncomingSync가 07-4로 이어간다 */
+  fun launchForIncoming(context: Context): Boolean = launch(context, "신호 푸시")
+
+  private fun launch(context: Context, reason: String): Boolean {
     if (!canDrawOverlays(context)) {
-      Log.w("Sonullim", "'다른 앱 위에 표시' 권한이 없어서 앱을 띄우지 못했어요")
+      Log.w("Sonullim", "$reason: '다른 앱 위에 표시' 권한이 없어서 앱을 띄우지 못했어요")
       return false
     }
     // 이미 메모리에 있는 앱 화면은 올라오기 전에 미리 걸어둔다

@@ -28,6 +28,6 @@ export function valueCaption(key: CalibrationKey, value: number): string {
 
 /** 세기 강하게 · 길이 보통 · 반복 2번 (세기 조절 미지원 기기는 세기 생략) */
 export function summarize(values: CalibrationValues): string {
-  const keys: CalibrationKey[] = device.strengthSupported ? ['strength', 'length', 'repeat'] : ['length', 'repeat'];
+  const keys: CalibrationKey[] = device.strengthSupported ? ['strength', 'length'] : ['length'];
   return keys.map((key) => `${calibrationTitle[key]} ${valueLabel(key, values[key])}`).join(' · ');
 }

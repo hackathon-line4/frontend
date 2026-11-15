@@ -27,7 +27,7 @@ export default function GuardianLinkStartScreen({ onBack, onCreateCode }: Props)
       <Stack gap={6}>
         <ScreenTitle title="당사자와 연결해요" description="연결하면 서로 메시지를 주고받을 수 있어요." />
         <NumberedSteps
-          steps={['연결 코드를 만들어요', '당사자 휴대폰에 코드를 입력하거나 QR을 비춰요', '연결 요청을 확인하면 완료돼요']}
+          steps={['연결 코드를 만들어요', '당사자 휴대폰에 코드를 입력해요', '연결 요청을 확인하면 완료돼요']}
         />
       </Stack>
     </Screen>

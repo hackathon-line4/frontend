@@ -38,6 +38,7 @@ export function homeRecipient(home: GuardianHome, now = Date.now()): RecipientSt
 export function homeActivities(home: Pick<GuardianHome, 'recentActivities'>): Activity[] {
   const map: Record<string, SignalStatus> = { SENDING: 'unconfirmed', FAILED: 'failed', UNCONFIRMED: 'unconfirmed', WAITING: 'waiting', DELIVERED_ONLY: 'delivered', RESPONDED: 'replied', NO_RESPONSE: 'noReply' };
   return home.recentActivities.map(item => ({ id: item.id, signalName: item.title, sentAt: localTime(item.occurredAt).slice(0, 5),
+    received: item.kind === 'RECIPIENT_SIGNAL' || item.kind === 'HELP_REQUEST',
     status: map[item.summaryStatus] ?? 'unconfirmed' }));
 }
 export function toRecord(m: GuardianMessage, now = Date.now()): SignalRecord {
@@ -67,7 +68,7 @@ export function helpRecords(detail: HelpDetail): { record: HelpRequestRecord; fo
   return {
     record: { id: h.id, type: 'help', date: toDateKey(new Date(h.sentAt)), sentAt: localTime(h.sentAt),
       arrivedAt: h.guardianDeliveredAt ? localTime(h.guardianDeliveredAt) : '확인 안 됨', openedAt: h.guardianOpenedAt ? localTime(h.guardianOpenedAt) : undefined,
-      location: h.location ? { ...h.location, address: h.location.address || '주소 정보가 없어요', at: new Date(h.location.capturedAt).toLocaleString() } : null,
+      location: h.location ? { ...h.location, latitude: Number(h.location.latitude), longitude: Number(h.location.longitude), address: h.location.address ?? '', at: new Date(h.location.capturedAt).toLocaleString() } : null,
       followUpIds: detail.followingMessages.map(m => m.id) },
     followUps: detail.followingMessages.map(m => ({ id: m.id, type: 'signal', date: toDateKey(new Date(m.sentAt)), signalId: '', name: m.signalName, meaning: '', sentAt: localTime(m.sentAt),
       delivery: m.deliveredAt ? { kind: 'delivered', at: localTime(m.deliveredAt) } : { kind: 'unknown' },

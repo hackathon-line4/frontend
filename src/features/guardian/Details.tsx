@@ -1,9 +1,11 @@
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
-import { Screen, ScreenHeader, ScreenTitle, Stack, Text } from '@/components';
 import GuardianNoReplyScreen from '@/screens/guardian/GuardianNoReplyScreen';
 import HistoryDetailScreen from '@/screens/history/HistoryDetailScreen';
 import HelpRequestDetailScreen from '@/screens/history/HelpRequestDetailScreen';
+import RecipientCallDetailScreen from '@/screens/history/RecipientCallDetailScreen';
+import { useSession } from '@/features/session';
+import { openInMaps } from '@/features/location';
 import { guardianApi, guardianStore } from './client';
 import { GuardianFeedback } from './Feedback';
 import { useGuardianMessage, useGuardianMutation, useGuardianState } from './hooks';
@@ -32,6 +34,7 @@ export function GuardianMessageDetails({ id }: { id?: string }) {
 
 export function GuardianOtherDetails({ id, kind }: { id: string; kind: string }) {
   const { data, scope } = useGuardianState();
+  const session = useSession();
   const scopeKey = scope?.key;
   useFocusEffect(useCallback(() => {
     if (!scopeKey) return;
@@ -45,14 +48,16 @@ export function GuardianOtherDetails({ id, kind }: { id: string; kind: string })
   if (kind === 'HELP_REQUEST' && !help) return <GuardianFeedback message={data?.errors[`help:${id}`] || '도움 요청을 불러오는 중이에요'} onRetry={() => { void guardianStore.loadHelp(id, true); }} />;
   if (help) {
     const { record, followUps } = helpRecords(help);
-    return <HelpRequestDetailScreen record={record} followUps={followUps} recipientName={help.helpRequest.sender.name} onBack={() => router.back()} onOpenRecord={openRecord} />;
+    return <HelpRequestDetailScreen record={record} followUps={followUps} recipientName={help.helpRequest.sender.name} onBack={() => router.back()} onOpenRecord={openRecord}
+      onOpenMap={record.location ? () => { void openInMaps(record.location!, `${help.helpRequest.sender.name}님이 도움을 요청한 곳`); } : undefined} />;
   }
   const item = data?.home?.recentActivities.find(item => item.id === id) ?? Object.values(data?.histories ?? {}).flat().find(item => item.id === id);
-  return <Screen scroll header={<ScreenHeader title="당사자 신호" onBack={() => router.back()} />}>
-    <Stack gap={4}>
-      <ScreenTitle title={kind === 'HELP_REQUEST' ? '도움 요청' : item?.title ?? '보호자 호출'} />
-      <Text>{data?.home?.recipient.name ?? '당사자'}님이 보낸 신호예요.</Text>
-      <Text>{localTime(item?.occurredAt)}</Text>
-    </Stack>
-  </Screen>;
+  const time = (value?: string | null) => (value ? localTime(value) : undefined);
+  return <RecipientCallDetailScreen
+    recipientName={data?.home?.recipient.name ?? '당사자'}
+    guardianName={session.user?.name ?? '보호자'}
+    sentAt={localTime(item?.occurredAt)}
+    arrivedAt={time(item?.delivery.at)}
+    openedAt={time(item?.openedAt)}
+    onBack={() => router.back()} />;
 }

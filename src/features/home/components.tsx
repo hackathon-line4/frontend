@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Icon, Row, Rhythm, SignalBadge, Stack, Text, type IconName } from '@/components';
+import { Icon, IconButton, Rhythm, Row, SignalBadge, Stack, Text, type IconName } from '@/components';
 import type { Signal } from '@/features/signals';
 import { colors, describeRhythm, fontFamily, radius, space, touch } from '@/theme';
 
@@ -127,36 +127,61 @@ type SignalListRowProps = {
   signal: Signal;
   onPress: () => void;
   divider?: boolean;
+  /** 자주 쓰는 신호(홈) 별. 없으면 별을 그리지 않는다 */
+  favorite?: { on: boolean; onToggle: () => void; disabled?: boolean };
 };
 
 // 신호 탭 목록 한 줄: 아이콘 · 이름 · 배지 · 리듬. 아직 알려 주지 않은 신호는 chevron 대신 '연습 전'
-export function SignalListRow({ signal, onPress, divider = true }: SignalListRowProps) {
+export function SignalListRow({ signal, onPress, divider = true, favorite }: SignalListRowProps) {
   const sourceLabel = signal.source === 'custom' ? '직접 만든 신호' : '기본 신호';
   const label = [signal.name, sourceLabel, signal.untrained ? '연습 전' : null, describeRhythm(signal.beats)]
     .filter(Boolean)
     .join(', ');
 
-  return (
+  const row = (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
-      style={({ pressed }) => [styles.signalRow, divider && styles.divider, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.signalRow, !favorite && divider && styles.divider, favorite && styles.flex, pressed && styles.pressed]}
     >
       <Icon name={signal.icon} size={24} />
       <Stack gap={2} flex>
-        <Row gap={2}>
+        {/* '연습 전'은 신호의 상태라 이름 · 종류 뱃지 옆에 둔다 */}
+        <Row gap={2} wrap>
           <Text variant="bodyStrong">{signal.name}</Text>
           <SignalBadge type={signal.source} />
+          {signal.untrained && <SignalBadge type="untrained" />}
         </Row>
         <Rhythm beats={signal.beats} size="sm" />
       </Stack>
-      {signal.untrained ? (
-        <SignalBadge type="untrained" />
-      ) : (
-        <Icon name="chevron-right" size={20} color={colors.textSecondary} strokeWidth={2.4} />
-      )}
+      {!favorite && <Icon name="chevron-right" size={20} color={colors.textSecondary} strokeWidth={2.4} />}
     </Pressable>
+  );
+  if (!favorite) return row;
+
+  // 별은 줄 누르기(상세 열기)와 따로 눌리게 줄 밖 오른쪽에 둔다
+  return (
+    <View style={[styles.favoriteRow, divider && styles.divider]}>
+      {row}
+      <IconButton
+        icon={favorite.on ? 'star-on' : 'star'}
+        accessibilityLabel={favorite.on ? `${signal.name}, 자주 쓰는 신호에서 빼기` : `${signal.name}, 자주 쓰는 신호에 추가`}
+        color={favorite.on ? colors.textPrimary : colors.textSecondary}
+        disabled={favorite.disabled}
+        onPress={favorite.onToggle}
+      />
+      {/* 줄을 누르면 상세가 열린다는 단서. 오른쪽 끝은 모든 줄이 '☆ ›'로 같다 (화살표도 상세를 연다) */}
+      <Pressable
+        onPress={onPress}
+        importantForAccessibility="no-hide-descendants"
+        accessibilityElementsHidden
+        hitSlop={8}
+        style={styles.chevron}
+      >
+        <Icon name="chevron-right" size={18} color={colors.textSecondary} strokeWidth={2.2} />
+      </Pressable>
+    </View>
   );
 }
 
@@ -211,6 +236,9 @@ export function DeliveryTimeline({ steps }: { steps: readonly DeliveryStep[] }) 
 }
 
 const styles = StyleSheet.create({
+  chevron: { paddingLeft: 2, paddingRight: 4, alignSelf: 'stretch', justifyContent: 'center' },
+  favoriteRow: { flexDirection: 'row', alignItems: 'center' },
+  flex: { flex: 1 },
   pressed: { opacity: 0.7 },
   bold: { fontFamily: fontFamily.bold },
   medium: { fontFamily: fontFamily.medium },

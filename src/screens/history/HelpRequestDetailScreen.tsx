@@ -9,6 +9,7 @@ import {
   type SignalRecord,
 } from '@/features/history';
 import { RecordSection, TimelineRow } from '@/features/history/RecordSection';
+import { TileMap } from '@/features/location/TileMap';
 import { colors, radius } from '@/theme';
 
 type Props = {
@@ -58,15 +59,18 @@ export default function HelpRequestDetailScreen({
         >
           {location ? (
             <>
-              {/* TODO: 실제 지도 (공유된 1회 위치에 핀 표시) */}
-              {onOpenMap && <View accessible accessibilityRole="image" accessibilityLabel="지도 영역, 공유된 위치 표시" style={styles.map}>
-                <Text variant="caption" color="textSecondary">
-                  [지도 영역]
-                </Text>
-              </View>}
+              <View accessible accessibilityRole="image" accessibilityLabel={`지도. ${recipientName}이 도움을 요청한 곳에 핀 하나`}>
+                <TileMap
+                  latitude={location.latitude}
+                  longitude={location.longitude}
+                  accuracyM={location.accuracyM}
+                  zoom={16}
+                  style={styles.map}
+                />
+              </View>
               <DefinitionList
                 items={[
-                  ['주소', location.address],
+                  ...(location.address ? [['주소', location.address] as [string, string]] : []),
                   ['기준 시각', location.at],
                   ['정확도', `약 ${location.accuracyM}m`],
                 ]}
@@ -126,10 +130,7 @@ const styles = StyleSheet.create({
     borderColor: colors.ink900,
   },
   map: {
-    height: 160,
+    height: 180,
     borderRadius: radius.sm,
-    backgroundColor: colors.surfaceSunken,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

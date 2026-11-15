@@ -1,7 +1,9 @@
 package com.sonullim.nativemodule
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.os.Build
+import android.os.VibrationAttributes
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -29,7 +31,13 @@ object SonullimVibrator {
       } else {
         VibrationEffect.createWaveform(timings, -1)
       }
-      v.vibrate(effect)
+      // 알람 용도: 화면이 꺼지거나 앱이 잠깐 백그라운드여도 OS가 진동을 막지 않게 한다
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        v.vibrate(effect, VibrationAttributes.createForUsage(VibrationAttributes.USAGE_ALARM))
+      } else {
+        @Suppress("DEPRECATION")
+        v.vibrate(effect, AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build())
+      }
     } else {
       @Suppress("DEPRECATION")
       v.vibrate(timings, -1)

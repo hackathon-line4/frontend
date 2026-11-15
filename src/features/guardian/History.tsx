@@ -27,8 +27,15 @@ export default function GuardianHistory() {
     <Row justify="space-between"><IconButton icon="back" accessibilityLabel="이전 날짜" onPress={() => setDate(d => shiftDateKey(d, -1))} /><Button variant="text" icon="calendar" label={date} onPress={() => setCalendarOpen(true)} /><IconButton icon="chevron-right" accessibilityLabel="다음 날짜" disabled={date >= todayKey()} onPress={() => setDate(d => shiftDateKey(d, 1))} /></Row>
     <Row gap={3}><Chip label="전체" selected={!onlyNoResponse} onPress={() => setOnlyNoResponse(false)} /><Chip label="응답 없음" selected={onlyNoResponse} onPress={() => setOnlyNoResponse(true)} /></Row>
     {data?.errors[`history:${date}`] ? <Stack gap={2}><Text accessibilityRole="alert">{data.errors[`history:${date}`]}</Text><Button label="다시 시도" onPress={() => { void guardianStore.loadHistory(date, true); }} /></Stack> : !items ? <Text>기록을 불러오는 중이에요.</Text> : <Card>
-      {activities.filter(item => !onlyNoResponse || item.status === 'noReply').map(item => <ListRow key={item.id} title={item.signalName} subtitle={item.sentAt} divider
-        trailing={<StatusChip status={item.status} />} onPress={() => router.push({ pathname: '/guardian/record/[id]', params: { id: item.id, kind: items.find(source => source.id === item.id)!.kind } })} />)}
+      {activities.filter(item => !onlyNoResponse || item.status === 'noReply').map(item => {
+        // 전화 앱처럼 보낸 것 / 받은 것을 아이콘과 글자로 구분한다 (색만으로 구분하지 않음)
+        const kind = items.find(source => source.id === item.id)!.kind;
+        const received = kind === 'RECIPIENT_SIGNAL' || kind === 'HELP_REQUEST';
+        const direction = received ? '받음' : kind === 'PRACTICE' ? '연습 · 보냄' : '보냄';
+        return <ListRow key={item.id} icon={received ? 'arrow-in' : 'arrow-out'} title={item.signalName} subtitle={`${direction} · ${item.sentAt}`} divider
+          accessibilityLabel={`${item.signalName}, ${direction}, ${item.sentAt}`}
+          trailing={<StatusChip status={item.status} />} onPress={() => router.push({ pathname: '/guardian/record/[id]', params: { id: item.id, kind } })} />;
+      })}
       {(!items.length || (onlyNoResponse && !activities.some(item => item.status === 'noReply'))) && <Text>이 날은 해당하는 기록이 없어요.</Text>}
     </Card>}
     {calendarOpen && <CalendarPicker date={date} onSelect={next => { setDate(next); setCalendarOpen(false); }} onClose={() => setCalendarOpen(false)} />}

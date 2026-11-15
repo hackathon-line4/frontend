@@ -5,12 +5,11 @@ import { radius, space } from '@/theme';
 
 type Props = {
   recipientName: string;
-  onSendFirstMessage: () => void;
   onHome: () => void;
 };
 
 // 04-G4 보호자 · 연결 완료 (design/screens/LinkG4.dc.html)
-export default function GuardianLinkDoneScreen({ recipientName, onSendFirstMessage, onHome }: Props) {
+export default function GuardianLinkDoneScreen({ recipientName, onHome }: Props) {
   return (
     <Screen
       scroll
@@ -19,10 +18,7 @@ export default function GuardianLinkDoneScreen({ recipientName, onSendFirstMessa
       gap={8}
       align="center"
       footer={
-        <Stack gap={2}>
-          <Button label="첫 메시지 보내기" onPress={onSendFirstMessage} />
-          <Button label="홈으로" variant="text" underline={false} onPress={onHome} />
-        </Stack>
+        <Button label="홈으로" onPress={onHome} />
       }
     >
       <Stack gap={7} align="center">

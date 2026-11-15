@@ -1,4 +1,5 @@
-import { router, type Href } from 'expo-router';
+import * as Clipboard from 'expo-clipboard';
+import { Redirect, router, type Href } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
@@ -16,6 +17,7 @@ import {
 } from '@/features/vibration';
 import { getBackgroundServiceState, startBackgroundService, stopBackgroundService } from '@/native/background';
 import { canDrawOverlays, openOverlaySettings } from '@/native/launch';
+import { getPushToken, isPushConfigured } from '@/native/push';
 import type { Beat } from '@/theme';
 
 // 진동 엔진 확인용. 보정값(세기·길이·반복)은 06 진동 설정의 저장값을 쓴다
@@ -85,7 +87,6 @@ const sections: { title: string; items: Item[] }[] = [
       ['04-G3 연결 요청 확인', '/link/guardian/request'],
       ['04-G4 연결 완료', '/link/guardian/done', 'guardian'],
       ['04-R1 코드 입력', '/link/recipient'],
-      ['04-R2 QR 인식', '/link/recipient/scan'],
       ['04-R3 연결 대상 확인', '/link/recipient/confirm'],
       ['04-R4 연결 완료', '/link/recipient/done', 'recipient'],
     ],
@@ -161,6 +162,12 @@ function vibrationTitle() {
 }
 
 export default function DevRoute() {
+  // 개발용 화면. 출시용 APK에서는 딥링크(sonullim://dev)로 들어와도 첫 화면으로 보낸다
+  if (!__DEV__) return <Redirect href="/" />;
+  return <DevScreen />;
+}
+
+function DevScreen() {
   const role = useRole();
   const [service, setService] = useState(getBackgroundServiceState);
   // 서비스는 시작 요청 후 조금 뒤에 켜지므로 잠깐 기다렸다 읽는다
@@ -262,6 +269,16 @@ export default function DevRoute() {
               title={`다른 앱 위에 표시: ${overlay ? '허용됨' : '꺼짐 → 설정 열기'}`}
               divider
               onPress={openOverlaySettings}
+            />
+            <ListRow
+              title={isPushConfigured() ? 'FCM 토큰 복사 (콘솔 테스트용)' : 'FCM 꺼짐 · google-services.json 없음'}
+              divider
+              onPress={async () => {
+                const token = await getPushToken();
+                if (!token) return;
+                await Clipboard.setStringAsync(token);
+                console.log('[push] FCM 토큰', token);
+              }}
             />
           </Card>
         </Stack>

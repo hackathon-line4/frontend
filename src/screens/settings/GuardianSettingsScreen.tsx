@@ -37,7 +37,6 @@ type Props = {
   busy?: boolean; error?: string; locationSharing?: boolean; showRetention?: boolean;
   notificationPermission: NotificationPermission;
   onCheckConnection: () => void;
-  onLinkAnother: () => void;
   onConnectionHelp: () => void;
   onCalibration: () => void;
   onCalibrationTest: () => void;
@@ -57,7 +56,6 @@ export default function GuardianSettingsScreen({
   calibration,
   notificationPermission,
   onCheckConnection,
-  onLinkAnother,
   onConnectionHelp,
   onCalibration,
   onCalibrationTest,
@@ -91,7 +89,7 @@ export default function GuardianSettingsScreen({
           </Stack>
         </Card>
         <ListGroup>
-          <ListRow title="다른 당사자 연결하기" icon="plus" onPress={onLinkAnother} />
+          {/* MVP는 보호자 1명 : 당사자 1명 연결만 (다른 당사자 연결하기 없음) */}
           <ListRow title="연결이 안 될 때" icon="info" onPress={onConnectionHelp} />
         </ListGroup>
       </Section>
@@ -169,8 +167,8 @@ export default function GuardianSettingsScreen({
           <Stack gap={3}>
             <InfoParagraph
               icon="tab-location"
-              title={`${recipientName}의 위치 공유: ${locationSharing === undefined ? '확인 안 됨' : locationSharing ? '도움 요청 때만' : '꺼짐'}`}
-              body={`위치 공유는 ${recipientName}의 휴대폰에서만 바꿀 수 있어요. 위치 수집이 가능하면 도움 요청 순간의 위치만 공유해요.`}
+              title={`${recipientName}의 위치 공유: ${locationSharing === undefined ? '확인 안 됨' : locationSharing ? '켜짐' : '꺼짐'}`}
+              body={`위치 공유는 ${recipientName}의 휴대폰에서만 바꿀 수 있어요. 켜져 있으면 도움 요청을 보낼 때와 위치 탭에서 새로고침할 때, 그 순간의 위치가 한 번 와요. 이동 경로는 남지 않아요.`}
             />
             <InfoParagraph
               icon="bell"

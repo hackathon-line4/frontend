@@ -25,6 +25,8 @@ type Props = {
   onCalibrationTest: () => void;
   onChangeSettings: (patch: Partial<RecipientSettings>) => void;
   onOpenPhoneSettings: () => void;
+  /** 손울림에 필요한 휴대폰 설정(알림 · 다른 앱 위에 표시 · 배터리 등) 확인 화면 */
+  onOpenSetup?: () => void;
   busy?: boolean; error?: string; onLogout?: () => void;
 };
 
@@ -43,6 +45,7 @@ export default function RecipientSettingsScreen({
   onCalibrationTest,
   onChangeSettings,
   onOpenPhoneSettings,
+  onOpenSetup,
   busy, error, onLogout,
 }: Props) {
   const scale = useRoleScale();
@@ -114,6 +117,12 @@ export default function RecipientSettingsScreen({
         <BigLinkRow label="진동 테스트 다시 하기" onPress={onCalibrationTest} minHeight={scale.rowMinHeight} />
       </Section>
 
+      {onOpenSetup && (
+        <Section title="휴대폰" size="lg">
+          <BigLinkRow label="휴대폰 설정 확인" onPress={onOpenSetup} minHeight={scale.rowMinHeight} />
+        </Section>
+      )}
+
       <Section title="알림" size="lg">
         <View style={[styles.rowCard, { minHeight: scale.rowMinHeight }]}>
           <Row gap={3} accessible accessibilityLiveRegion="polite">
@@ -144,12 +153,15 @@ export default function RecipientSettingsScreen({
               </Text>
             </Row>
             <Text variant="rBody">
-              도움 요청을 보낼 때만, 그 순간의 위치를 {guardianLabel}에게 보내요. 평소에는 보내지 않아요.
+              도움 요청을 보낼 때와 {guardianLabel}가 위치를 확인할 때, 그 순간의 위치를 한 번 보내요. 이동 경로는 남지 않아요.
             </Text>
             {locationPermission === 'denied' && (
-              <Text variant="rBody">지금은 권한이 꺼져 있어서 도움 요청만 가고 위치는 가지 않아요.</Text>
+              <Text variant="rBody">지금은 권한이 꺼져 있어서 위치는 가지 않아요.</Text>
             )}
-            {!locationOk && (
+            {locationPermission === 'whileInUse' && (
+              <Text variant="rBody">앱이 꺼져 있을 때도 보내려면 휴대폰 설정에서 위치를 &apos;항상 허용&apos;으로 바꿔 주세요.</Text>
+            )}
+            {(!locationOk || locationPermission === 'whileInUse') && (
               <Button
                 label="휴대폰 설정 열기"
                 trailingIcon="external"
@@ -160,10 +172,9 @@ export default function RecipientSettingsScreen({
           </Stack>
         </View>
         <SwitchRow
-          label="도움 요청에 위치 보내기"
+          label="보호자에게 위치 보내기"
           large
           value={settings.shareLocationOnHelp}
-          disabled={busy}
           onValueChange={(shareLocationOnHelp) => onChangeSettings({ shareLocationOnHelp })}
         />
       </Section>

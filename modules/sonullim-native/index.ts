@@ -22,6 +22,11 @@ declare class SonullimNativeModule extends NativeModule {
 
   canDrawOverlays(): boolean;
   openOverlaySettings(): void;
+
+  /** google-services.json이 들어간 빌드인지 */
+  isPushConfigured(): boolean;
+  /** FCM 토큰. 설정이 없거나 실패하면 null */
+  getPushToken(): Promise<string | null>;
 }
 
 // Android 전용. Expo Go에는 없으므로 development build에서만 동작한다.

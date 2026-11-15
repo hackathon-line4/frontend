@@ -1,4 +1,4 @@
-import { getCalibration, type CalibrationValues } from '@/features/calibration/store';
+import { FIXED_REPEAT, getCalibration, type CalibrationValues } from '@/features/calibration/store';
 import { getVibrationCapability, playWaveform, stopVibration } from '@/native/vibration';
 import type { Beat, Pulses } from '@/theme';
 
@@ -19,8 +19,13 @@ export function playRhythm(beats: readonly Beat[], values: CalibrationValues = g
   return waveformMs(waveform);
 }
 
+/** 저장된 내 진동 설정. 반복 횟수는 화면에서 없앴으므로 저장값과 상관없이 고정값을 쓴다 */
+function savedForPlayback(): CalibrationValues {
+  return { ...getCalibration().saved, repeat: FIXED_REPEAT };
+}
+
 /** 신호 진동 배열을 내 진동 설정(보정값)대로 재생. 끝날 때까지 걸리는 시간(ms)을 돌려준다 */
-export function playSignal(pulses: Pulses, values: CalibrationValues = getCalibration().saved): number {
+export function playSignal(pulses: Pulses, values: CalibrationValues = savedForPlayback()): number {
   const waveform = pulsesWaveform(pulses, values);
   playWaveform(waveform);
   return waveformMs(waveform);

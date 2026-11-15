@@ -21,7 +21,7 @@ type Props = {
 // 06-5 설정 저장 · 두 역할 공통 (design/screens/Calib5.dc.html)
 export default function CalibrationSaveScreen({ values, onSave, onRetest, busy = false, error }: Props) {
   const scale = useRoleScale();
-  const keys: CalibrationKey[] = device.strengthSupported ? ['strength', 'length', 'repeat'] : ['length', 'repeat'];
+  const keys: CalibrationKey[] = device.strengthSupported ? ['strength', 'length'] : ['length'];
 
   return (
     <Screen

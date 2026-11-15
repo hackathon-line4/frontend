@@ -21,7 +21,6 @@ type Props = {
 
 const options = [
   { key: 'length', icon: 'lengthen', title: '길이를 길게' },
-  { key: 'repeat', icon: 'repeat', title: '반복을 늘리기' },
 ] as const;
 
 // 06-4 다른 설정 시험하기 · 두 역할 공통 (design/screens/Calib4.dc.html)

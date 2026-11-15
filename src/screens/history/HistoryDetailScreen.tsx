@@ -50,19 +50,16 @@ export default function HistoryDetailScreen({
         <DeliverySection record={record} />
         <ResponseSection record={record} />
 
-        <RecordSection title="관련 도움 요청 · 위치 공유" gap={2}>
-          {relatedHelp ? (
+        {/* 관련 도움 요청이 있을 때만 보여 준다 (대부분의 신호는 비어 있어 의미 없는 섹션이 됨) */}
+        {relatedHelp && (
+          <RecordSection title="관련 도움 요청 · 위치 공유" gap={2}>
             <ListRow
               title={`도움 요청 · ${hhmm(relatedHelp.sentAt)} 받음`}
               subtitle={relatedHelp.location ? '위치 함께 공유됨' : undefined}
               onPress={() => onOpenRecord(relatedHelp.id)}
             />
-          ) : (
-            <Text variant="caption" color="textSecondary">
-              이 신호와 관련된 기록이 없어요.
-            </Text>
-          )}
-        </RecordSection>
+          </RecordSection>
+        )}
       </Stack>
 
       <Text variant="caption" color="textSecondary">

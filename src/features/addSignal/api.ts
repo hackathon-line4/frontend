@@ -24,6 +24,15 @@ export function createSignalApi(client: Pick<ReturnType<typeof createApiClient>,
       if (!result?.id || !result.name || !Array.isArray(result.pulses)) throw new ApiError('INVALID_RESPONSE');
       return result;
     },
+    /** 신호 수정. 기본 신호는 이름 · 리듬을 바꿀 수 없다 (서버 SIGNAL_NOT_EDITABLE) */
+    async update(linkId: string, signalId: string, patch: { name?: string; description?: string; category?: string }, signal?: AbortSignal) {
+      const result = await client.request<ServerSignal>(`${root(linkId)}/${encodeURIComponent(signalId)}`, { method: 'PATCH', body: patch, signal });
+      if (!result?.id) throw new ApiError('INVALID_RESPONSE');
+      return result;
+    },
+    async remove(linkId: string, signalId: string, signal?: AbortSignal) {
+      await client.request(`${root(linkId)}/${encodeURIComponent(signalId)}`, { method: 'DELETE', signal });
+    },
     async rhythmCheck(linkId: string, rhythm: ServerBeat[], signal?: AbortSignal) {
       const result = await client.request<{ valid: boolean; conflictSignal: { id: string; name: string } | null }>(`${root(linkId)}/rhythm-check`, { method: 'POST', body: { rhythm }, signal });
       if (typeof result?.valid !== 'boolean') throw new ApiError('INVALID_RESPONSE');

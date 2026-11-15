@@ -23,6 +23,11 @@ class SonullimActivityListener : ReactActivityLifecycleListener {
 
   override fun onResume(activity: Activity) {
     AppLauncher.attach(activity)
+    AppLauncher.isForeground = true
+  }
+
+  override fun onPause(activity: Activity) {
+    AppLauncher.isForeground = false
   }
 
   override fun onDestroy(activity: Activity) {

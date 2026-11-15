@@ -24,6 +24,8 @@ export type Activity = {
   /** 'HH:mm' */
   sentAt: string;
   status: SignalStatus;
+  /** 당사자에게서 받은 기록(보호자 부르기 · 도움 요청). 없으면 보낸 기록 */
+  received?: boolean;
 };
 
 /** 당사자 휴대폰이 마지막으로 알려 준 위치. 이동 경로·과거 위치는 저장하지 않는다 */
@@ -36,6 +38,8 @@ export type RecipientLocation = {
   address: string;
   addressSummary: string;
   accuracyMeters: number;
+  /** 실제 좌표. 있으면 지도 그림 대신 진짜 지도에 핀을 찍는다 (미리보기 목 데이터에는 없음) */
+  point?: { latitude: number; longitude: number };
 };
 
 /** 응답 없음 상세(05-5)의 진행 단계 */

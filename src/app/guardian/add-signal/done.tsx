@@ -18,7 +18,6 @@ export default function AddSignalDoneRoute() {
   return (
     <AddSignalDoneScreen
       signal={signal}
-      teachAvailable={!session.tokens}
       recipientName={data?.home?.recipient.name ?? (session.tokens ? session.links.find(l => l.status === 'ACTIVE')?.recipient.name ?? '당사자' : mockRecipient.name)}
       onTeachNow={() => {
         // 신호 추가 화면들을 닫고 신호 상세(05-4 알려주기)로

@@ -5,6 +5,7 @@ import { useGuardianState } from '@/features/guardian/hooks';
 import { guardianStore } from '@/features/guardian/client';
 import { GuardianFeedback } from '@/features/guardian/Feedback';
 import { homeActivities, homeRecipient, toSignal } from '@/features/guardian/models';
+import { toRecipientLocation, type LastLocation } from '@/features/location';
 import GuardianHomeScreen from '@/screens/guardian/GuardianHomeScreen';
 
 export default function GuardianHomeRoute() {
@@ -26,7 +27,7 @@ function ConnectedRoute() {
     refreshError={data.errors.home}
     recipient={homeRecipient(home)} frequentSignals={home.favoriteSignals.map(toSignal)}
     emergencySignals={signals.filter(s => s.category === 'emergency')}
-    location={{ sharing: false, updatedAt: '', minutesAgo: 0, address: '', addressSummary: '', accuracyMeters: 0 }}
+    location={toRecipientLocation({ sharingEnabled: home.location.sharingEnabled, last: home.location.last as LastLocation | null })}
     recentActivity={homeActivities(home)} onSendSignal={(signal, abort) => guardianStore.send(signal.id, abort)}
     onOpenNotifications={() => router.navigate('/guardian/history')}
     onOpenSignals={() => router.navigate('/guardian/signals')}

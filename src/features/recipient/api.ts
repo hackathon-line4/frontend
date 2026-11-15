@@ -3,7 +3,8 @@ import type { createApiClient } from '@/api/client';
 import type { IncomingMessage } from '@/api/types';
 
 export type SendKind = 'call' | 'help';
-export type SendBody = { sentAt: string };
+/** locationStatus는 도움 요청에만 쓴다. 위치는 기다리지 않고 PENDING으로 먼저 보낸 뒤 붙인다 */
+export type SendBody = { sentAt: string; locationStatus?: 'PENDING' | 'UNAVAILABLE' };
 export type Acknowledgement = { deliveredAt: string; waitUntil: string | null };
 
 export function canRetryRecipient(error: unknown) {
@@ -23,10 +24,11 @@ export function createRecipientApi(client: Pick<ReturnType<typeof createApiClien
       return result.items;
     },
     async send(kind: SendKind, linkId: string, body: SendBody, idempotencyKey?: string, signal?: AbortSignal) {
-      const result = await client.request<{ id: string; linkId: string }>(
+      const { locationStatus, ...rest } = body;
+      const result = await client.request<{ id: string; linkId: string; locationStatus?: string }>(
         `/links/${encodeURIComponent(linkId)}/${kind === 'call' ? 'recipient-signals' : 'help-requests'}`, {
           method: 'POST', creation: true, idempotencyKey, signal,
-          body: kind === 'call' ? { ...body, type: 'CALL_GUARDIAN' } : { ...body, locationStatus: 'UNAVAILABLE', location: null },
+          body: kind === 'call' ? { ...rest, type: 'CALL_GUARDIAN' } : { ...rest, locationStatus: locationStatus ?? 'UNAVAILABLE', location: null },
         });
       if (!result?.id || result.linkId !== linkId) throw new ApiError('INVALID_RESPONSE', { idempotencyKey });
       return result;

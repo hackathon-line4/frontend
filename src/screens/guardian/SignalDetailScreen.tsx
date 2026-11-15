@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Button, Card, Rhythm, Screen, ScreenHeader, ScreenTitle, Stack, StatusMessage, Tag, Text } from '@/components';
+import { Button, Card, IconButton, Rhythm, Row, Screen, ScreenHeader, ScreenTitle, Stack, StatusMessage, Tag, Text } from '@/components';
 import { BackTextButton, rhythmSeconds, SendSignalSheet, SignalIconBox } from '@/features/home';
 import type { Signal } from '@/features/signals';
 import type { GuardianMessage } from '@/features/guardian/types';
@@ -16,10 +16,18 @@ type Props = {
   onTeach?: (signal: Signal) => void;
   /** 실제 신호 전송 → 응답 대기 */
   onSend: (signal: Signal, abort?: AbortSignal) => Promise<GuardianMessage>;
+  /** 이름 · 설명 · 카테고리 수정 (기본 신호는 이름 잠금) */
+  onEdit?: (signal: Signal) => void;
+  /** 삭제 (확인 창은 화면 밖에서) */
+  onDelete?: (signal: Signal) => void;
+  /** 자주 쓰는 신호(홈 · 최대 6개) */
+  favorite?: { on: boolean; onToggle: () => void };
+  /** 화면 아래 안내 (자주 쓰는 신호 6개 초과 등) */
+  notice?: string;
 };
 
 // 05-4 신호 상세 · 알려주기 (design/screens/SignalDetail.dc.html)
-export default function SignalDetailScreen({ signal, recipientName, onBack, onTeach, onSend }: Props) {
+export default function SignalDetailScreen({ signal, recipientName, onBack, onTeach, onSend, onEdit, onDelete, favorite, notice }: Props) {
   const [taught, setTaught] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -35,7 +43,23 @@ export default function SignalDetailScreen({ signal, recipientName, onBack, onTe
 
   return (
     <Screen
-      header={<BackTextButton onPress={onBack} />}
+      header={
+        // 수정 · 삭제는 자주 쓰지 않으므로 오른쪽 위 구석에 아이콘으로
+        <Row justify="space-between" align="center">
+          <BackTextButton onPress={onBack} />
+          <Row gap={1}>
+            {favorite && (
+              <IconButton
+                icon={favorite.on ? 'star-on' : 'star'}
+                accessibilityLabel={favorite.on ? '자주 쓰는 신호에서 빼기' : '자주 쓰는 신호에 추가'}
+                onPress={favorite.onToggle}
+              />
+            )}
+            {onEdit && <IconButton icon="pencil" accessibilityLabel="신호 수정" onPress={() => onEdit(signal)} />}
+            {onDelete && <IconButton icon="trash" accessibilityLabel="신호 삭제" onPress={() => onDelete(signal)} />}
+          </Row>
+        </Row>
+      }
       scroll
       paddingTop={6}
       gap={7}
@@ -82,6 +106,7 @@ export default function SignalDetailScreen({ signal, recipientName, onBack, onTe
         </Stack>
       </Card>
 
+      {notice && <StatusMessage icon="info">{notice}</StatusMessage>}
       {taught && <StatusMessage icon="vibrate">{`${recipientName}의 휴대폰에 연습 진동을 보냈어요`}</StatusMessage>}
 
       <SendSignalSheet

@@ -1,6 +1,8 @@
-import type { AccessibilityActionEvent } from 'react-native';
+import { StyleSheet, View, type AccessibilityActionEvent } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { RecipientScreen } from '@/components';
+import { IconButton, RecipientScreen } from '@/components';
+import { colors, space, touch } from '@/theme';
 
 type Props = {
   busy?: boolean;
@@ -26,6 +28,7 @@ const actions = [
 // 07-1 대기 (design/screens/RecvIdle.dc.html)
 // 한 번 탭: 전송 없음 · 두 번 탭: 07-2 신호 보내기 · 3초 길게: 도움 요청
 export default function RecipientIdleScreen({ guardianName, busy = false, onTap, onSend, onHelp, onHelpTick, onSettings }: Props) {
+  const insets = useSafeAreaInsets();
   const handleAction = ({ nativeEvent }: AccessibilityActionEvent) => {
     if (busy) return;
     switch (nativeEvent.actionName) {
@@ -44,6 +47,7 @@ export default function RecipientIdleScreen({ guardianName, busy = false, onTap,
   };
 
   return (
+    <View style={styles.root}>
     <RecipientScreen
       state="idle"
       busy={busy}
@@ -55,5 +59,33 @@ export default function RecipientIdleScreen({ guardianName, busy = false, onTap,
       accessibilityActions={actions}
       onAccessibilityAction={handleAction}
     />
+      {/*
+        설정은 보호자와 함께 쓰는 기능이라 화면 구석에 작게 둔다 (전체 화면 터치와 겹치지 않는 별도 버튼).
+        스크린리더 사용자는 화면 전체의 사용자 지정 동작 '설정'을 쓰므로 이 버튼은 읽지 않는다.
+        개발 빌드의 개발 도구 버튼(오른쪽 위)과 겹치지 않게 왼쪽 위에 둔다.
+      */}
+      <View
+        style={[styles.corner, { top: insets.top + space[3], left: insets.left + space[3] }]}
+        importantForAccessibility="no-hide-descendants"
+        accessibilityElementsHidden
+      >
+        <IconButton
+          icon="tab-settings"
+          accessibilityLabel="설정"
+          onPress={onSettings}
+          disabled={busy}
+          color={colors.borderInput}
+          size={26}
+          touchSize={touch.recipientMin}
+          style={styles.cornerButton}
+        />
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: { flex: 1 },
+  corner: { position: 'absolute' },
+  cornerButton: { backgroundColor: colors.ink900, borderRadius: 999 },
+});

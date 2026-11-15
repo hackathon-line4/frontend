@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "30728130739",
+    "project_id": "sonullim",
+    "storage_bucket": "sonullim.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30728130739:android:c380bb8a3f8b3e2debe0c6",
+        "android_client_info": {
+          "package_name": "com.sonullim.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsEUNqIFiys9vOryCpT6hustywRo8qdN4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

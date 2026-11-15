@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Grid, IconButton, ListRow, Logo, Row, Screen, SignalTile, Stack, StatusChip, Text } from '@/components';
+import { Card, Grid, Icon, IconButton, ListRow, Logo, Row, Screen, SignalTile, Stack, StatusChip, Text } from '@/components';
+import { colors, radius, space } from '@/theme';
 import {
   DashedButton,
   LocationPreviewCard,
@@ -61,14 +62,6 @@ export default function GuardianHomeScreen({
       inTabs
       scroll
       gap={6}
-      footer={
-        <Button
-          variant="emergency"
-          label="긴급 신호"
-          trailingIcon="chevron-right"
-          onPress={() => setSheet({ candidates: emergencySignals, emergency: true })}
-        />
-      }
     >
       <Row justify="space-between" style={styles.header}>
         <Logo size="sm" />
@@ -76,6 +69,27 @@ export default function GuardianHomeScreen({
       </Row>
 
       <RecipientStatusCard status={recipient} onPressNoReply={() => onOpenNoReply()} />
+
+      {/* 긴급 신호: 하단 고정 대신 콘텐츠 안의 카드로. 연한 빨강 면 + 빨간 테두리 · 경고 아이콘으로 강조 */}
+      <Pressable
+        onPress={() => setSheet({ candidates: emergencySignals, emergency: true })}
+        accessibilityRole="button"
+        accessibilityLabel="긴급 신호 보내기. 위험할 때 바로 보내요"
+        style={({ pressed }) => [styles.emergency, pressed && styles.emergencyPressed]}
+      >
+        <View style={styles.emergencyIcon}>
+          <Icon name="warning" size={22} color={colors.surface} strokeWidth={2.6} />
+        </View>
+        <View style={styles.flex}>
+          <Text variant="heading" style={styles.emergencyTitle}>
+            긴급 신호
+          </Text>
+          <Text variant="caption" color="dangerFg">
+            위험할 때 바로 보내요
+          </Text>
+        </View>
+        <Icon name="chevron-right" size={22} color={colors.dangerFg} strokeWidth={2.6} />
+      </Pressable>
       {refreshError && <Text accessibilityRole="alert">{`${refreshError} 마지막으로 확인한 상태를 표시하고 있어요.`}</Text>}
 
       <Card>
@@ -109,7 +123,8 @@ export default function GuardianHomeScreen({
             <ListRow
               key={item.id}
               title={item.signalName}
-              subtitle={`${item.sentAt} 보냄`}
+              icon={item.received ? 'arrow-in' : 'arrow-out'}
+              subtitle={`${item.received ? '받음' : '보냄'} · ${item.sentAt}`}
               divider
               trailing={<StatusChip status={item.status} />}
               onPress={() => (item.status === 'noReply' ? onOpenNoReply(item.id) : onOpenRecord(item.id))}
@@ -138,4 +153,27 @@ const styles = StyleSheet.create({
   tile: {
     flex: 1,
   },
+  flex: { flex: 1 },
+  emergency: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[3],
+    minHeight: 72,
+    paddingHorizontal: space[4],
+    paddingVertical: space[3],
+    borderRadius: radius.lg,
+    borderWidth: 1.5,
+    borderColor: colors.emergency,
+    backgroundColor: colors.dangerBg,
+  },
+  emergencyPressed: { opacity: 0.8 },
+  emergencyIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.emergency,
+  },
+  emergencyTitle: { color: colors.dangerFg },
 });

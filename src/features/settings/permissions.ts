@@ -9,11 +9,13 @@ export async function readSettingsPermissions(): Promise<SettingsPermissions> {
   const location = async (): Promise<LocationPermission> => {
     if (Platform.OS !== 'android') return 'unknown';
     try {
-      const [fine, coarse] = await Promise.all([
+      const [fine, coarse, always] = await Promise.all([
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION),
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION),
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION).catch(() => false),
       ]);
-      return fine ? 'whileInUse' : coarse ? 'approximate' : 'denied';
+      // '항상 허용'이면 앱이 꺼져 있어도 보호자의 위치 확인에 답할 수 있다
+      return fine ? (always ? 'granted' : 'whileInUse') : coarse ? 'approximate' : 'denied';
     } catch { return 'unknown'; }
   };
   const notification = async (): Promise<NotificationPermission> => {

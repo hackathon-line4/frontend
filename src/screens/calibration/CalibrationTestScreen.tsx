@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Stack, Text } from '@/components';
 import {
+  FIXED_REPEAT,
   ProgressPill,
   TEST_LEAD_IN_MS,
   TestMark,
@@ -34,7 +35,8 @@ export default function CalibrationTestScreen({ values, onFinish, onStop }: Prop
     finishRef.current = onFinish;
   }, [onFinish]);
 
-  const total = values.repeat;
+  // 테스트는 항상 2번 (반복 횟수 설정은 없앰)
+  const total = FIXED_REPEAT;
   const progress = `${total}번 중 ${step}번째`;
   const summary = summarize(values);
 

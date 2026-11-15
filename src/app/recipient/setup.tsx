@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
@@ -34,6 +34,9 @@ const on = (value: boolean): SetupStatus => (value ? 'on' : 'off');
 
 // 당사자 폰 설정 안내 (B-9). 설정 앱에 다녀오면 상태를 다시 읽는다.
 export default function RecipientSetupRoute() {
+  // 계정 연결 직후(from=link)에는 '설정 완료'로 대기 화면에 간다
+  const { from } = useLocalSearchParams<{ from?: string }>();
+  const afterLink = from === 'link';
   const [state, setState] = useState(readDeviceState);
   const refresh = useCallback(() => setState(readDeviceState()), []);
 
@@ -110,7 +113,8 @@ export default function RecipientSetupRoute() {
   return (
     <RecipientSetupScreen
       items={items}
-      onBack={() => (router.canGoBack() ? router.back() : router.replace('/recipient/settings'))}
+      onBack={() => (afterLink ? router.replace('/recipient') : router.canGoBack() ? router.back() : router.replace('/recipient/settings'))}
+      onDone={afterLink ? () => router.replace('/recipient') : undefined}
     />
   );
 }

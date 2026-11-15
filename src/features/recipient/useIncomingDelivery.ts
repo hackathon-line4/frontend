@@ -4,6 +4,7 @@ import { AppState } from 'react-native';
 
 import { getSession, getSessionRevision } from '@/features/session/store';
 import { playFeedback, repeatSignal } from '@/features/vibration';
+import { setKeepScreenOn } from '@/native/screen';
 
 import { recipientApi } from './api';
 import { createIncomingDelivery } from './delivery';
@@ -24,13 +25,15 @@ export function useIncomingDelivery(signal: IncomingSignal | null, preview: bool
     },
   }), [signal, preview, revision]);
   useFocusEffect(useCallback(() => {
+    // 수신 중에는 화면이 자동으로 꺼지지 않게 한다. 꺼지면 앱이 백그라운드가 되어 반복 진동이 멈춘다
+    setKeepScreenOn(true);
     setReplying(false);
     if (!AppState.currentState || AppState.currentState === 'active') delivery?.resume();
     const subscription = AppState.addEventListener('change', (state) => {
       if (state === 'active') delivery?.resume();
       else delivery?.pause();
     });
-    return () => { subscription.remove(); delivery?.pause(); };
+    return () => { subscription.remove(); delivery?.pause(); setKeepScreenOn(false); };
   }, [delivery]));
   // Focus cleanup cancels all work; returning to a covered screen resumes the pending touch.
   return { replying, reply: () => delivery?.respond(), dismiss: () => delivery?.dismiss() };
