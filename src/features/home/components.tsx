@@ -155,10 +155,7 @@ export function SignalListRow({ signal, onPress, divider = true, favorite }: Sig
         </Row>
         <Rhythm beats={signal.beats} size="sm" />
       </Stack>
-      {/* 별이 있는 목록은 오른쪽을 별 하나만 두고, 없을 때만 화살표로 누를 수 있음을 알린다 */}
-      {!favorite && !signal.untrained && (
-        <Icon name="chevron-right" size={20} color={colors.textSecondary} strokeWidth={2.4} />
-      )}
+      {!favorite && <Icon name="chevron-right" size={20} color={colors.textSecondary} strokeWidth={2.4} />}
     </Pressable>
   );
   if (!favorite) return row;
@@ -174,6 +171,16 @@ export function SignalListRow({ signal, onPress, divider = true, favorite }: Sig
         disabled={favorite.disabled}
         onPress={favorite.onToggle}
       />
+      {/* 줄을 누르면 상세가 열린다는 단서. 오른쪽 끝은 모든 줄이 '☆ ›'로 같다 (화살표도 상세를 연다) */}
+      <Pressable
+        onPress={onPress}
+        importantForAccessibility="no-hide-descendants"
+        accessibilityElementsHidden
+        hitSlop={8}
+        style={styles.chevron}
+      >
+        <Icon name="chevron-right" size={18} color={colors.textSecondary} strokeWidth={2.2} />
+      </Pressable>
     </View>
   );
 }
@@ -229,6 +236,7 @@ export function DeliveryTimeline({ steps }: { steps: readonly DeliveryStep[] }) 
 }
 
 const styles = StyleSheet.create({
+  chevron: { paddingLeft: 2, paddingRight: 4, alignSelf: 'stretch', justifyContent: 'center' },
   favoriteRow: { flexDirection: 'row', alignItems: 'center' },
   flex: { flex: 1 },
   pressed: { opacity: 0.7 },
