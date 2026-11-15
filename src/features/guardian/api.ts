@@ -45,6 +45,15 @@ export function createGuardianApi(client: Pick<ReturnType<typeof createApiClient
         method: 'POST', creation: true, idempotencyKey: key, body: { signalId }, signal,
       }));
     },
+    /**
+     * 알려주기(연습 신호): 당사자 휴대폰에 이 신호의 리듬을 연습용으로 울린다 (kind=PRACTICE, 응답 대기 없음).
+     * 당사자 기기가 ack하면 서버가 신호를 practiced=true로 바꾼다. Idempotency-Key 필수
+     */
+    async practice(id: string, signalId: string, key: string, signal?: AbortSignal) {
+      return client.request<GuardianMessage>(`${link(id)}/signals/${encodeURIComponent(signalId)}/practice`, {
+        method: 'POST', creation: true, idempotencyKey: key, body: {}, signal,
+      });
+    },
     async resend(id: string, key: string, signal?: AbortSignal) {
       return check(await client.request<GuardianMessage>(`${message(id)}/resend`, { method: 'POST', creation: true, idempotencyKey: key, signal }));
     },

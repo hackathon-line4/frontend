@@ -2,9 +2,10 @@ import { useSession } from '@/features/session';
 import Preview from '@/features/guardian/preview/signal';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
+import { randomUUID } from 'expo-crypto';
 import { signalApi } from '@/features/addSignal/client';
 import { ConfirmDialog } from '@/features/guardian/ConfirmDialog';
-import { guardianStore } from '@/features/guardian/client';
+import { guardianApi, guardianStore } from '@/features/guardian/client';
 import { useGuardianMutation, useGuardianState } from '@/features/guardian/hooks';
 import { GuardianFeedback } from '@/features/guardian/Feedback';
 import { toSignal } from '@/features/guardian/models';
@@ -32,6 +33,14 @@ function ConnectedDetail({ id }: { id: string }) {
     <SignalDetailScreen signal={signal}
       recipientName={data?.home?.recipient.name ?? '당사자'} onBack={() => router.back()}
       onSend={(s, abort) => guardianStore.send(s.id, abort)}
+      onTeach={s => {
+        if (!scope) return;
+        // 알려주기: 당사자 휴대폰에 연습 진동. 당사자가 받으면(ack) 서버가 '연습 전'을 해제한다
+        void mutation.run(async abort => {
+          await guardianApi.practice(scope.linkId, s.id, randomUUID(), abort);
+          void guardianStore.loadSignals(true);
+        });
+      }}
       onEdit={s => router.push({ pathname: '/guardian/signal/edit/[id]', params: { id: s.id } })}
       onDelete={() => setConfirmDelete(true)} />
     <ConfirmDialog
